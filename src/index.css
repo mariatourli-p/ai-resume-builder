@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  /* ─── Semantic color tokens ───────────────────────── */
+  --color-accent: var(--palette-accent);
+  --color-accent-light: var(--palette-accent-light);
+  --color-accent-dark: var(--palette-accent-dark);
+
+  --color-surface: var(--palette-surface);
+  --color-surface-raised: var(--palette-surface-raised);
+  --color-surface-sunken: var(--palette-surface-sunken);
+
+  --color-text-primary: var(--palette-text-primary);
+  --color-text-secondary: var(--palette-text-secondary);
+  --color-text-muted: var(--palette-text-muted);
+  --color-text-on-accent: var(--palette-text-on-accent);
+
+  --color-border: var(--palette-border);
+  --color-border-strong: var(--palette-border-strong);
+
+  /* ─── Fonts ───────────────────────────────────────── */
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* ─── Palette: Slate (default) ──────────────────────── */
+:root {
+  --palette-accent: #475569;
+  --palette-accent-light: #94a3b8;
+  --palette-accent-dark: #1e293b;
+
+  --palette-surface: #ffffff;
+  --palette-surface-raised: #f8fafc;
+  --palette-surface-sunken: #f1f5f9;
+
+  --palette-text-primary: #0f172a;
+  --palette-text-secondary: #334155;
+  --palette-text-muted: #94a3b8;
+  --palette-text-on-accent: #ffffff;
+
+  --palette-border: #e2e8f0;
+  --palette-border-strong: #cbd5e1;
+}
+
+/* ─── Palette: Ocean ────────────────────────────────── */
+.palette-ocean {
+  --palette-accent: #0284c7;
+  --palette-accent-light: #38bdf8;
+  --palette-accent-dark: #0c4a6e;
+
+  --palette-surface: #ffffff;
+  --palette-surface-raised: #f0f9ff;
+  --palette-surface-sunken: #e0f2fe;
+
+  --palette-text-primary: #0c4a6e;
+  --palette-text-secondary: #075985;
+  --palette-text-muted: #7dd3fc;
+  --palette-text-on-accent: #ffffff;
+
+  --palette-border: #bae6fd;
+  --palette-border-strong: #7dd3fc;
+}
+
+/* ─── Palette: Ember ────────────────────────────────── */
+.palette-ember {
+  --palette-accent: #dc2626;
+  --palette-accent-light: #f87171;
+  --palette-accent-dark: #7f1d1d;
+
+  --palette-surface: #ffffff;
+  --palette-surface-raised: #fff7f7;
+  --palette-surface-sunken: #fee2e2;
+
+  --palette-text-primary: #1a0000;
+  --palette-text-secondary: #7f1d1d;
+  --palette-text-muted: #fca5a5;
+  --palette-text-on-accent: #ffffff;
+
+  --palette-border: #fecaca;
+  --palette-border-strong: #f87171;
+}
