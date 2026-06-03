@@ -1,27 +1,69 @@
 @import "tailwindcss";
 
 @theme {
-  /* ─── Semantic color tokens ───────────────────────── */
-  --color-accent: var(--palette-accent);
-  --color-accent-light: var(--palette-accent-light);
-  --color-accent-dark: var(--palette-accent-dark);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Literata", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Space Grotesk", sans-serif;
+}
 
-  --color-surface: var(--palette-surface);
-  --color-surface-raised: var(--palette-surface-raised);
-  --color-surface-sunken: var(--palette-surface-sunken);
+/* Custom visual utilities representing Active Intelligence layers */
+.ai-shimmer {
+  background: linear-gradient(
+    90deg,
+    #4b41e1,
+    #10b981,
+    #6366f1,
+    #10b981,
+    #4b41e1
+  );
+  background-size: 200% auto;
+  animation: shimmer 5s linear infinite;
+}
 
-  --color-text-primary: var(--palette-text-primary);
-  --color-text-secondary: var(--palette-text-secondary);
-  --color-text-muted: var(--palette-text-muted);
-  --color-text-on-accent: var(--palette-text-on-accent);
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
 
-  --color-border: var(--palette-border);
-  --color-border-strong: var(--palette-border-strong);
+/* Custom Scrollbar for sleek aesthetic */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
 
-  /* ─── Fonts ───────────────────────────────────────── */
-  --font-sans: "DM Sans", sans-serif;
-  --font-serif: "Playfair Display", serif;
-  --font-mono: "JetBrains Mono", monospace;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Interactive subtle pulse of live syncing indicators */
+@keyframes syncPulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+}
+
+.sync-pulse {
+  animation: syncPulse 2s infinite ease-in-out;
 }
 
 /* ─── Palette: Slate (default) ──────────────────────── */
