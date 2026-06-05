@@ -6,14 +6,14 @@ import {
   IconEducation,
   IconSkills,
   IconProjects,
-} from "@/assets/icons";
+} from "@/assets/Icons";
 import { SidePanelItem } from "./SidePanelItem";
 import { enTokens } from "@/locale/en/en-tokens";
 
 const { personalInfo, workExperience, education } = enTokens.sections;
 
 const meta: Meta<typeof SidePanelItem> = {
-  title: "Navigation/SidePanelItem",
+  title: "Components/SidePanel/SidePanelItem",
   tags: ["nav", "sidebar", "list", "item"],
   component: SidePanelItem,
   decorators: [

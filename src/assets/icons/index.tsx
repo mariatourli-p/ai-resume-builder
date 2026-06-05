@@ -88,3 +88,9 @@ export const IconEmail = ({ size = ICON_SIZE, className }: IconProps) => (
 export const IconLocation = ({ size = ICON_SIZE, className }: IconProps) => (
   <MapPin size={size} className={className} />
 );
+
+import { LayoutTemplate } from "lucide-react";
+
+export const IconTemplate = ({ size = ICON_SIZE, className }: IconProps) => (
+  <LayoutTemplate size={size} className={className} />
+);

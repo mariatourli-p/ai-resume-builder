@@ -5,7 +5,7 @@ import {
   IconEducation,
   IconSkills,
   IconProjects,
-} from "@/assets/icons";
+} from "@/assets/Icons";
 import { SidePanel } from "./SidePanel";
 import { useState } from "react";
 import { enTokens } from "@/locale/en/en-tokens";
@@ -37,7 +37,7 @@ const defaultItems = [
 ];
 
 const meta: Meta<typeof SidePanel> = {
-  title: "Navigation/SidePanel",
+  title: "Components/SidePanel/SidePanel",
   tags: ["nav", "sidebar", "list"],
   component: SidePanel,
   decorators: [
