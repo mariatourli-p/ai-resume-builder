@@ -9,31 +9,16 @@ import {
 import { SidePanel } from "./SidePanel";
 import { useState } from "react";
 import { enTokens } from "@/locale/en/en-tokens";
-import { PALETTE } from "@/styles/palette";
+import { themeConfig } from "@/theme";
 
 const { personalInfo, workExperience, education } = enTokens.sections;
 
 const defaultItems = [
-  {
-    text: personalInfo.title,
-    icon: <IconPersonal />,
-  },
-  {
-    text: workExperience.title,
-    icon: <IconExperience />,
-  },
-  {
-    text: education.title,
-    icon: <IconEducation />,
-  },
-  {
-    text: "Skills",
-    icon: <IconSkills />,
-  },
-  {
-    text: "Projects",
-    icon: <IconProjects />,
-  },
+  { text: personalInfo.title, icon: <IconPersonal /> },
+  { text: workExperience.title, icon: <IconExperience /> },
+  { text: education.title, icon: <IconEducation /> },
+  { text: "Skills", icon: <IconSkills /> },
+  { text: "Projects", icon: <IconProjects /> },
 ];
 
 const meta: Meta<typeof SidePanel> = {
@@ -56,16 +41,12 @@ const meta: Meta<typeof SidePanel> = {
       control: "select",
       options: defaultItems.map((i) => i.text),
       description: "Currently active item",
-      table: {
-        type: { summary: "string" },
-      },
+      table: { type: { summary: "string" } },
     },
     onItemClick: {
       action: "itemClicked",
       description: "Callback fired when an item is clicked",
-      table: {
-        type: { summary: "(text: string) => void" },
-      },
+      table: { type: { summary: "(text: string) => void" } },
     },
   },
 };
@@ -81,8 +62,8 @@ export const MenuPanel: Story = {
         items={defaultItems.map((item) => ({
           ...item,
           style: {
-            backgroundColor: PALETTE.ocean.accent,
-            color: PALETTE.ocean.accentLight,
+            backgroundColor: themeConfig.colors.primary.DEFAULT,
+            color: "#ffffff",
           },
         }))}
         activeItem={active}

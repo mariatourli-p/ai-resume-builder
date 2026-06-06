@@ -1,6 +1,6 @@
 import { Box, MenuList } from "@mui/material";
-import { type SidePanelItemProps } from "../Buttons/SidePanelItem/SidePanelItem";
-import { SidePanelItemView } from "../Buttons/SidePanelItem/SidePanelItemView";
+import { SidePanelItemView } from "./SidePanelItem/SidePanelItemView";
+import type { SidePanelItemProps } from "./SidePanelItem";
 
 export type SidePanelProps = {
   items: SidePanelItemProps[];

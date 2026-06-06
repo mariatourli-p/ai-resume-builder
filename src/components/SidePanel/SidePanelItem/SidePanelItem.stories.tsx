@@ -9,6 +9,7 @@ import {
 } from "@/assets/Icons";
 import { SidePanelItem } from "./SidePanelItem";
 import { enTokens } from "@/locale/en/en-tokens";
+import { themeConfig } from "@/theme";
 
 const { personalInfo, workExperience, education } = enTokens.sections;
 
@@ -29,9 +30,8 @@ const meta: Meta<typeof SidePanelItem> = {
     icon: <IconPersonal />,
     focused: false,
     style: {
-      backgroundColor: "#6C63FF",
-      color: "#fff",
-      "& .MuiListItemIcon-root": { color: "#fff" },
+      backgroundColor: themeConfig.colors.primary.DEFAULT,
+      color: "#ffffff",
     },
   },
   argTypes: {

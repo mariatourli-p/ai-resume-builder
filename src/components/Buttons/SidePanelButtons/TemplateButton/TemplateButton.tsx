@@ -7,6 +7,16 @@ export type TemplateButtonProps = {
   sx: SxProps;
 };
 
+/**
+ * A pre-labeled typography button for the Templates settings entry point.
+ *
+ * Renders an overline `Typography` with a template icon and a label sourced
+ * from `enTokens.settings.templates` — no text prop needed.
+ * Accepts `sx` for style overrides.
+ *
+ * @example
+ * <TemplateButton sx={{}} />
+ */
 export const TemplateButton = ({ sx }: TemplateButtonProps) => {
   const { templates } = enTokens.settings;
 
