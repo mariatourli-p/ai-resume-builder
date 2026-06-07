@@ -7,9 +7,9 @@ import {
   IconSkills,
   IconProjects,
 } from "@/assets/Icons";
-import { SidePanelItem } from "./SidePanelItem";
 import { enTokens } from "@/locale/en/en-tokens";
 import { themeConfig } from "@/theme";
+import { SidePanelItem } from "./SidePanelItem";
 
 const { personalInfo, workExperience, education } = enTokens.sections;
 

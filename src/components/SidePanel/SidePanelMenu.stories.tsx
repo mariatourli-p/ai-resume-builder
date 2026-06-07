@@ -6,10 +6,10 @@ import {
   IconSkills,
   IconProjects,
 } from "@/assets/Icons";
-import { SidePanel } from "./SidePanel";
 import { useState } from "react";
 import { enTokens } from "@/locale/en/en-tokens";
 import { themeConfig } from "@/theme";
+import { SidePanelMenu } from "./SidePanelMenu";
 
 const { personalInfo, workExperience, education } = enTokens.sections;
 
@@ -21,10 +21,17 @@ const defaultItems = [
   { text: "Projects", icon: <IconProjects /> },
 ];
 
-const meta: Meta<typeof SidePanel> = {
-  title: "Components/SidePanel/SidePanel",
+const templateItems = [
+  { text: "Executive Serif", icon: null },
+  { text: "Classic Modern", icon: null },
+  { text: "Compact Minimalist", icon: null },
+  { text: "Technical Mono", icon: null },
+];
+
+const meta: Meta<typeof SidePanelMenu> = {
+  title: "Components/SidePanel/SidePanelMenu",
   tags: ["nav", "sidebar", "list"],
-  component: SidePanel,
+  component: SidePanelMenu,
   decorators: [
     (Story) => (
       <div style={{ width: 280, padding: 16, background: "#f8fafc" }}>
@@ -52,18 +59,38 @@ const meta: Meta<typeof SidePanel> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof SidePanel>;
+type Story = StoryObj<typeof SidePanelMenu>;
 
-export const MenuPanel: Story = {
+export const Menu: Story = {
   render: () => {
     const [active, setActive] = useState<string>(personalInfo.title);
     return (
-      <SidePanel
+      <SidePanelMenu
         items={defaultItems.map((item) => ({
           ...item,
           style: {
             backgroundColor: themeConfig.colors.primary.DEFAULT,
             color: "#ffffff",
+          },
+        }))}
+        activeItem={active}
+        onItemClick={setActive}
+      />
+    );
+  },
+};
+
+export const Template: Story = {
+  render: () => {
+    const [active, setActive] = useState<string>("Classic Modern");
+    return (
+      <SidePanelMenu
+        items={templateItems.map((item) => ({
+          ...item,
+          style: {
+            border: "1.5px solid #6366f1",
+            backgroundColor: "#f0f0ff",
+            color: "#6366f1",
           },
         }))}
         activeItem={active}

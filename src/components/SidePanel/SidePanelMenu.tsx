@@ -2,7 +2,7 @@ import { Box, MenuList } from "@mui/material";
 import { SidePanelItemView } from "./SidePanelItem/SidePanelItemView";
 import type { SidePanelItemProps } from "./SidePanelItem";
 
-export type SidePanelProps = {
+export type SidePanelMenuProps = {
   items: SidePanelItemProps[];
   activeItem: string;
   onItemClick: (text: string) => void;
@@ -17,11 +17,11 @@ export type SidePanelProps = {
  * @param activeItem - The text of the currently selected item.
  * @param onItemClick - Callback fired when the user clicks an item, receives the item text.
  */
-export const SidePanel = ({
+export const SidePanelMenu = ({
   items,
   activeItem,
   onItemClick,
-}: SidePanelProps) => {
+}: SidePanelMenuProps) => {
   return (
     <Box sx={{ width: 250 }}>
       <MenuList

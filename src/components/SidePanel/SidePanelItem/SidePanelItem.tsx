@@ -63,5 +63,3 @@ export const SidePanelItem = forwardRef<HTMLLIElement, SidePanelItemProps>(
     );
   },
 );
-
-SidePanelItem.displayName = "SidePanelItem";
