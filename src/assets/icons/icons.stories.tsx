@@ -29,7 +29,9 @@ export default meta;
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type IconComponent = React.ComponentType<{ size?: number; className?: string }>;
+type IconComponent = React.ComponentType<
+  { size?: number } & React.SVGProps<SVGSVGElement>
+>;
 
 interface IconEntry {
   name: string;
