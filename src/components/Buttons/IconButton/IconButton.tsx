@@ -5,11 +5,12 @@ export type IconButtonProps = {
   sx?: SxProps;
   text: string;
   icon: React.ReactNode;
+  onPress?: () => void;
 };
 
-export const IconButton = ({ sx, text, icon }: IconButtonProps) => {
+export const IconButton = ({ sx, text, icon, onPress }: IconButtonProps) => {
   return (
-    <Button variant="outlined" startIcon={icon} sx={sx}>
+    <Button variant="outlined" startIcon={icon} onClick={onPress} sx={sx}>
       {text}
     </Button>
   );

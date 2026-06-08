@@ -85,6 +85,8 @@ export const enTokens = {
     templates: "Templates",
     styles: "Styles",
     optimize_all: "Optimize All",
+    optimize_resume: "Optimize Resume",
+    optimizing: "Optimizing...",
   },
   errors: {
     missingKey: "Please add your API key in Settings",

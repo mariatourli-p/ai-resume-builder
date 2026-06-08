@@ -1,5 +1,8 @@
+import {
+  SectionButton,
+  type SectionButtonProps,
+} from "@/components/Buttons/SectionButton";
 import { enTokens } from "@/locale/en/en-tokens";
-import { SectionButton, type SectionButtonProps } from "../../SectionButton";
 
 export type ResumeButtonProps = Omit<SectionButtonProps, "text">;
 

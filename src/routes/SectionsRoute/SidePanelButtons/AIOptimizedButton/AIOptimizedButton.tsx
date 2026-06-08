@@ -1,5 +1,8 @@
+import {
+  IconButton,
+  type IconButtonProps,
+} from "@/components/Buttons/IconButton";
 import { enTokens } from "@/locale/en/en-tokens";
-import { IconButton, type IconButtonProps } from "../../IconButton";
 import { themeConfig } from "@/theme/themeConfig";
 
 export type AIOptimizedButtonProps = IconButtonProps;

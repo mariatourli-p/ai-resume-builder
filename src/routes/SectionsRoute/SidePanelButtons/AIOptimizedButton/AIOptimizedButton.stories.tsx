@@ -3,7 +3,7 @@ import { AIOptimizedButton } from "./AIOptimizedButton";
 import { SparkleIcon } from "lucide-react";
 
 const meta: Meta<typeof AIOptimizedButton> = {
-  title: "Components/SidePanel/Buttons/AIOptimizedButton",
+  title: "Components/SectionsButtons/AIOptimizedButton",
   component: AIOptimizedButton,
   parameters: {
     layout: "centered",

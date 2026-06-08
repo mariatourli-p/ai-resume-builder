@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ResumeButton } from "./ResumeButton";
 
 const meta: Meta<typeof ResumeButton> = {
-  title: "Components/SidePanel/Buttons/ResumeButton",
+  title: "Components/SectionsButtons/ResumeButton",
   component: ResumeButton,
   parameters: {
     layout: "centered",
