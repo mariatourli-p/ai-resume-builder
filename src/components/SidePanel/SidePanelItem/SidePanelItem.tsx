@@ -13,6 +13,7 @@ export type SidePanelItemProps = {
   focused?: boolean;
   onClick?: () => void;
   style?: SxProps;
+  baseStyle?: SxProps;
 };
 
 /**
@@ -25,15 +26,17 @@ export type SidePanelItemProps = {
  * @param focused - Whether this item is currently selected/focused.
  * @param onClick - Callback fired when the item is clicked.
  * @param style - Optional MUI `SxProps` applied when the item is selected.
+ * @param baseStyle - Optional MUI `SxProps` applied to the base item.
  */
 export const SidePanelItem = forwardRef<HTMLLIElement, SidePanelItemProps>(
-  ({ text, icon, focused, onClick, style }, ref) => {
+  ({ text, icon, focused, onClick, style, baseStyle }, ref) => {
     const computedSx = useMemo(
       () => ({
+        ...baseStyle,
         "&.Mui-selected": { ...style },
         "&.Mui-selected:hover": { ...style },
       }),
-      [style],
+      [baseStyle, style],
     );
 
     return (

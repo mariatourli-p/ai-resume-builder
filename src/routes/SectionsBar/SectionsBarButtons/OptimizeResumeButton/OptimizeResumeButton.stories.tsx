@@ -3,7 +3,7 @@ import { OptimizeResumeButton } from "./OptimizeResumeButton";
 import { IconAI } from "@/assets/Icons";
 
 const meta: Meta<typeof OptimizeResumeButton> = {
-  title: "Components/SectionsButtons/OptimizeResumeButton",
+  title: "Components/SectionsBarButtons/OptimizeResumeButton",
   component: OptimizeResumeButton,
   parameters: {
     layout: "centered",

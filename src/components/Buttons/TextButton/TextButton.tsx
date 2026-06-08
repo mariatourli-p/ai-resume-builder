@@ -1,8 +1,7 @@
-import { IconTemplate } from "@/assets/Icons";
 import { Typography } from "@mui/material";
 import type { SxProps } from "node_modules/@mui/material";
 
-export type SectionButtonProps = {
+export type TextButtonProps = {
   sx?: SxProps;
   iconStyle?: string;
   text: string;
@@ -22,13 +21,12 @@ export type SectionButtonProps = {
  * <SectionButton text="Resume Sections" />
  *
  */
-export const SectionButton = ({ sx, iconStyle, text }: SectionButtonProps) => {
+export const TextButton = ({ sx, text }: TextButtonProps) => {
   return (
     <Typography
       variant="overline"
       sx={{ display: "flex", alignItems: "center", gap: 1, ...sx }}
     >
-      <IconTemplate size={16} className={iconStyle} />
       {text}
     </Typography>
   );

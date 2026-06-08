@@ -61,7 +61,7 @@ export const enTokens = {
     builder: "Builder",
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
-    ai_optimized: "AI Optimized",
+    ai_optimized: "AI Optimized Engine",
   },
   nav: {
     settings: "Settings",

@@ -1,9 +1,11 @@
 import { Box, MenuList } from "@mui/material";
 import type { SidePanelItemProps } from "../SidePanelItem";
 import { SidePanelItemView } from "../SidePanelItem/SidePanelItemView";
+import type { SxProps } from "node_modules/@mui/material/styles";
 
 export type SidePanelMenuProps = {
   items: SidePanelItemProps[];
+  itemStyle?: SxProps;
   activeItem: string;
   onItemClick: (text: string) => void;
 };
@@ -36,10 +38,8 @@ export const SidePanelMenu = ({
         {items.map((item) => (
           <SidePanelItemView
             key={item.text}
-            text={item.text}
-            icon={item.icon}
+            {...item}
             focused={activeItem === item.text}
-            style={item.style}
             onClick={() => onItemClick(item.text)}
           />
         ))}

@@ -3,7 +3,7 @@ import type { SxProps } from "node_modules/@mui/material";
 
 export type IconButtonProps = {
   sx?: SxProps;
-  text: string;
+  text?: string;
   icon: React.ReactNode;
   onPress?: () => void;
 };

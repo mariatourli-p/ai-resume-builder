@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ResumeButton } from "./ResumeButton";
 
 const meta: Meta<typeof ResumeButton> = {
-  title: "Components/SectionsButtons/ResumeButton",
+  title: "Components/SectionsBarButtons/ResumeButton",
   component: ResumeButton,
   parameters: {
     layout: "centered",
@@ -19,6 +19,6 @@ export const DefaultResumeButton: Story = {
 
 export const MutedResumeButton: Story = {
   args: {
-    sx: { color: "text.secondary" },
+    style: { color: "text.secondary" },
   },
 };

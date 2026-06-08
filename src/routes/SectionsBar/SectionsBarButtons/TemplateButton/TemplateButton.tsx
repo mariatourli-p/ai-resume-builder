@@ -4,7 +4,7 @@ import { Typography } from "@mui/material";
 import type { SxProps } from "node_modules/@mui/material";
 
 export type TemplateButtonProps = {
-  sx: SxProps;
+  sx?: SxProps;
 };
 
 /**
