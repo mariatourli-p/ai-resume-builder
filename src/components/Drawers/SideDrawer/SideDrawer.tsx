@@ -1,12 +1,11 @@
 import { Box, Stack, Divider, Drawer } from "@mui/material";
-import { SidePanelMenu } from "@/components/SidePanel/SidePanelMenu";
-
 import { IconAI } from "@/assets/Icons";
 import { themeConfig } from "@/theme";
 import { ResumeButton } from "@/components/Buttons/SectionsBarButtons/ResumeButton";
 import { AIOptimizedButton } from "@/components/Buttons/SectionsBarButtons/AIOptimizedButton";
 import { TemplateButton } from "@/components/Buttons/SectionsBarButtons/TemplateButton";
 import { OptimizeResumeButton } from "@/components/Buttons/SectionsBarButtons/OptimizeResumeButton/OptimizeResumeButton";
+import { SidePanelMenu } from "@/components/AppBars/Sections/SidePanelMenu";
 
 const DRAWER_WIDTH = 280;
 
