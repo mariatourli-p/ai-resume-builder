@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { AppHeader } from "./AppHeader";
+import { HeaderBar } from "./HeaderBar";
 
-const meta: Meta<typeof AppHeader> = {
-  title: "Components/AppBars/AppHeader",
-  component: AppHeader,
+const meta: Meta<typeof HeaderBar> = {
+  title: "Components/AppBars/HeaderBar",
+  component: HeaderBar,
   parameters: {
     layout: "fullscreen",
   },
@@ -12,7 +12,7 @@ const meta: Meta<typeof AppHeader> = {
 
 export default meta;
 
-type Story = StoryObj<typeof AppHeader>;
+type Story = StoryObj<typeof HeaderBar>;
 
 export const Default: Story = {
   render: () => {
@@ -23,7 +23,7 @@ export const Default: Story = {
       useState<HTMLButtonElement | null>(null);
 
     return (
-      <AppHeader
+      <HeaderBar
         activeTab={activeTab}
         onTabChange={setActiveTab}
         settingsAnchor={settingsAnchor}
@@ -43,7 +43,7 @@ export const AnalysisTab: Story = {
       useState<HTMLButtonElement | null>(null);
 
     return (
-      <AppHeader
+      <HeaderBar
         activeTab={activeTab}
         onTabChange={setActiveTab}
         settingsAnchor={settingsAnchor}

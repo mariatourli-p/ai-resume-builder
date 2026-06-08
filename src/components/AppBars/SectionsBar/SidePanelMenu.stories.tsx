@@ -29,7 +29,7 @@ const templateItems = [
 ];
 
 const meta: Meta<typeof SidePanelMenu> = {
-  title: "Components/SidePanel/SidePanelMenu",
+  title: "Components/SectionsBar/SidePanelMenu",
   tags: ["nav", "sidebar", "list"],
   component: SidePanelMenu,
   decorators: [

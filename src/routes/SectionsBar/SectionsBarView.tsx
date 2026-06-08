@@ -10,6 +10,16 @@ import { enTokens } from "@/locale/en/en-tokens";
 import { themeConfig } from "@/theme";
 import { useState } from "react";
 
+/**
+ * SectionsBarView manages all state for the resume builder's side navigation drawer.
+ *
+ * Owns the active section, active template, active branding color, and the
+ * static lists of section items, template items, and branding colors.
+ * Delegates all rendering to `SideDrawer`, keeping it purely presentational.
+ *
+ * @example
+ * <SectionsBarView />
+ */
 export const SectionsBarView = () => {
   const { personalInfo, workExperience, education } = enTokens.sections;
 

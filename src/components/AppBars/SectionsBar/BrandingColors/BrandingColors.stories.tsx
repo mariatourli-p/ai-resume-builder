@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BrandingColorsView } from "./BrandingColorsView";
 
 const meta: Meta<typeof BrandingColorsView> = {
-  title: "Components/SidePanel/BrandingColors",
+  title: "Components/SectionsBar/BrandingColors",
   tags: ["color", "palette", "branding"],
   component: BrandingColorsView,
   decorators: [

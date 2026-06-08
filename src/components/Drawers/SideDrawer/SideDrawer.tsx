@@ -5,7 +5,7 @@ import { ResumeButton } from "@/components/Buttons/SectionsBarButtons/ResumeButt
 import { AIOptimizedButton } from "@/components/Buttons/SectionsBarButtons/AIOptimizedButton";
 import { TemplateButton } from "@/components/Buttons/SectionsBarButtons/TemplateButton";
 import { OptimizeResumeButton } from "@/components/Buttons/SectionsBarButtons/OptimizeResumeButton/OptimizeResumeButton";
-import { SidePanelMenu } from "@/components/AppBars/Sections/SidePanelMenu";
+import { SidePanelMenu } from "@/components/AppBars/SectionsBar";
 
 const DRAWER_WIDTH = 280;
 

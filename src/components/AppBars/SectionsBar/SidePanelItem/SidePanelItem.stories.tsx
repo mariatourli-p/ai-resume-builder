@@ -14,7 +14,7 @@ import { SidePanelItem } from "./SidePanelItem";
 const { personalInfo, workExperience, education } = enTokens.sections;
 
 const meta: Meta<typeof SidePanelItem> = {
-  title: "Components/SidePanel/SidePanelItem",
+  title: "Components/SectionsBar/SidePanelItem",
   tags: ["nav", "sidebar", "list", "item"],
   component: SidePanelItem,
   decorators: [

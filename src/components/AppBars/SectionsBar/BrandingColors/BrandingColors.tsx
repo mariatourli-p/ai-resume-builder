@@ -9,6 +9,21 @@ export type BrandingColorsProps = {
   onColorSelect: (value: string) => void;
 };
 
+/**
+ * BrandingColors renders a row of color swatches for selecting the resume accent color.
+ *
+ * Each swatch shows a tooltip with the palette name on hover, scales up on hover,
+ * and displays a checkmark when selected. The active color gets an outline ring.
+ *
+ * @param activeColor - The currently selected color value (hex string).
+ * @param onColorSelect - Callback fired when the user clicks a swatch, receives the color value.
+ *
+ * @example
+ * <BrandingColors
+ *   activeColor={activeColor}
+ *   onColorSelect={setActiveColor}
+ * />
+ */
 export const BrandingColors = ({
   activeColor,
   onColorSelect,

@@ -20,7 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 
-export type AppHeaderProps = {
+export type HeaderBarProps = {
   activeTab: "builder" | "analysis";
   onTabChange: (tab: "builder" | "analysis") => void;
   settingsAnchor: HTMLButtonElement | null;
@@ -28,13 +28,37 @@ export type AppHeaderProps = {
   onSettingsClose: () => void;
 };
 
-export const AppHeader = ({
+/**
+ * HeaderBar is the pure UI component for the application's top navigation bar.
+ *
+ * Renders the CareerFlow AI logo, Builder/Analysis tab switcher, autosave status,
+ * action icon buttons (refresh, history, settings), a settings popover placeholder,
+ * and the Save Draft / Export PDF action buttons.
+ *
+ * All state is managed externally and passed in as props — this component is purely presentational.
+ *
+ * @param activeTab - The currently selected tab ("builder" or "analysis").
+ * @param onTabChange - Callback fired when the user switches tabs.
+ * @param settingsAnchor - The DOM element that anchors the settings popover.
+ * @param onSettingsOpen - Callback fired when the settings icon is clicked.
+ * @param onSettingsClose - Callback fired when the settings popover is closed.
+ *
+ * @example
+ * <HeaderBar
+ *   activeTab="builder"
+ *   onTabChange={setActiveTab}
+ *   settingsAnchor={anchor}
+ *   onSettingsOpen={handleOpen}
+ *   onSettingsClose={handleClose}
+ * />
+ */
+export const HeaderBar = ({
   activeTab,
   onTabChange,
   settingsAnchor,
   onSettingsOpen,
   onSettingsClose,
-}: AppHeaderProps) => {
+}: HeaderBarProps) => {
   const settingsOpen = Boolean(settingsAnchor);
   return (
     <AppBar

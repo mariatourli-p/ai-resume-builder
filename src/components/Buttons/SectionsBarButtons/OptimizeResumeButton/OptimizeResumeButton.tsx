@@ -8,6 +8,26 @@ export type OptimizeResumeButtonProps = Omit<IconButtonProps, "text"> & {
   onOptimize?: () => Promise<void>;
 };
 
+/**
+ * OptimizeResumeButton triggers an AI-powered resume optimization process.
+ *
+ * While optimizing, the button text changes to "Optimizing..." and the icon
+ * animates with a stepped rotation. Pressing the button again while loading
+ * cancels the optimization.
+ *
+ * All styling uses `themeConfig` tokens — dark background with a green AI accent icon.
+ *
+ * @param icon - The icon to display inside the button (animates while loading).
+ * @param sx - Optional MUI `SxProps` to override default styles.
+ * @param onOptimize - Async callback fired when the button is pressed. The button
+ * resets to idle state once the promise resolves.
+ *
+ * @example
+ * <OptimizeResumeButton
+ *   icon={<IconAI />}
+ *   onOptimize={async () => { await optimizeResume(); }}
+ * />
+ */
 export const OptimizeResumeButton = ({
   icon,
   sx,
