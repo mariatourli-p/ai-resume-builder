@@ -1,10 +1,7 @@
-import {
-  IconButton,
-  type IconButtonProps,
-} from "@/components/Buttons/IconButton";
 import { enTokens } from "@/locale/en/en-tokens";
 import { themeConfig } from "@/theme/themeConfig";
 import { useCallback, useState } from "react";
+import { IconButton, type IconButtonProps } from "../../BaseButtons/IconButton";
 
 export type OptimizeResumeButtonProps = Omit<IconButtonProps, "text"> & {
   iconClassName?: string;

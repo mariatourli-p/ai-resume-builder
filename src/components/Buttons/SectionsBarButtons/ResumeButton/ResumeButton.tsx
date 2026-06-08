@@ -1,6 +1,6 @@
-import { TextButton } from "@/components/Buttons/TextButton";
 import { enTokens } from "@/locale/en/en-tokens";
 import type { SxProps } from "node_modules/@mui/material/styles";
+import { TextButton } from "../../BaseButtons/TextButton";
 
 export type ResumeButtonProps = { style?: SxProps };
 
