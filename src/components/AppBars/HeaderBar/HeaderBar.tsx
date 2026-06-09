@@ -18,7 +18,10 @@ import {
   Tabs,
   Toolbar,
   Typography,
+  type SxProps,
 } from "@mui/material";
+
+export const APP_BAR_HEIGHT = "65px";
 
 export type HeaderBarProps = {
   activeTab: "builder" | "analysis";
@@ -26,6 +29,7 @@ export type HeaderBarProps = {
   settingsAnchor: HTMLButtonElement | null;
   onSettingsOpen: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onSettingsClose: () => void;
+  sx?: SxProps;
 };
 
 /**
@@ -42,6 +46,7 @@ export type HeaderBarProps = {
  * @param settingsAnchor - The DOM element that anchors the settings popover.
  * @param onSettingsOpen - Callback fired when the settings icon is clicked.
  * @param onSettingsClose - Callback fired when the settings popover is closed.
+ * @param sx - Callback fired when the settings popover is closed.
  *
  * @example
  * <HeaderBar
@@ -58,6 +63,7 @@ export const HeaderBar = ({
   settingsAnchor,
   onSettingsOpen,
   onSettingsClose,
+  sx,
 }: HeaderBarProps) => {
   const settingsOpen = Boolean(settingsAnchor);
   return (
@@ -68,6 +74,7 @@ export const HeaderBar = ({
         backgroundColor: "#ffffff",
         borderBottom: `1px solid ${themeConfig.colors.sidebar.border}`,
         zIndex: (theme) => theme.zIndex.drawer + 1,
+        ...sx,
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>

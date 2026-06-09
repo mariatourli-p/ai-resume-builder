@@ -1,7 +1,12 @@
 import { HeaderBar } from "@/components/AppBars/HeaderBar/HeaderBar";
+import type { SxProps } from "@mui/material";
 import { useState } from "react";
 
 export type Tab = "builder" | "analysis";
+
+export type HeaderBarViewProps = {
+  sx?: SxProps;
+};
 
 /**
  * TopBar manages the state for the application's top navigation bar
@@ -13,7 +18,7 @@ export type Tab = "builder" | "analysis";
  * @example
  * <TopBar />
  */
-export const TopBar = () => {
+export const HeaderBarView = ({ sx }: HeaderBarViewProps) => {
   const [activeTab, setActiveTab] = useState<Tab>("builder");
   const [settingsAnchor, setSettingsAnchor] =
     useState<HTMLButtonElement | null>(null);
@@ -25,6 +30,10 @@ export const TopBar = () => {
       settingsAnchor={settingsAnchor}
       onSettingsOpen={(e) => setSettingsAnchor(e.currentTarget)}
       onSettingsClose={() => setSettingsAnchor(null)}
+      sx={{
+        marginBottom: "2rem",
+        ...sx,
+      }}
     />
   );
 };

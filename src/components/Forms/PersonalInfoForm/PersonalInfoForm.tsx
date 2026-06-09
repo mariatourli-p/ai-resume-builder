@@ -10,7 +10,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import { IconPersonal } from "@/assets/Icons";
 
-type PersonalInfoData = {
+export type PersonalInfoData = {
   fullName: string;
   professionalTitle: string;
   emailAddress: string;
@@ -25,19 +25,19 @@ type PersonalInfoData = {
  */
 export type PersonalInfoFormProps = {
   /** All field values for the personal info section. When omitted, all fields render empty. */
-  data?: PersonalInfoData;
+  data: PersonalInfoData;
   /** When `true`, the Enhance button shows a loading label and is disabled. */
-  isEnhancing?: boolean;
+  isEnhancing: boolean;
   /** When `true`, the Smart Rewrite button shows a loading label and is disabled. */
-  isRewriting?: boolean;
+  isRewriting: boolean;
   /** Disables both the Enhance and Smart Rewrite buttons (e.g. when the API key is missing). */
   isEnhanceDisabled: boolean;
   /** Fired when the Enhance button is clicked. */
-  onEnhance?: () => void;
+  onEnhance: () => void;
   /** Fired when the Smart Rewrite button inside the summary field is clicked. */
   onSmartRewrite?: () => void;
   /** Fired on every field change. Receives the field key and the new value. */
-  onChange?: (field: keyof PersonalInfoData, value: string) => void;
+  onChange: (field: keyof PersonalInfoData, value: string) => void;
 };
 
 /**

@@ -11,7 +11,7 @@ import { themeConfig } from "@/theme/themeConfig";
 
 const primary = themeConfig.colors.primary;
 
-type EducationEntry = {
+export type EducationEntry = {
   id: string;
   institution: string;
   degree: string;

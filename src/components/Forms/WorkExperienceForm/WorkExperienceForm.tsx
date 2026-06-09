@@ -19,7 +19,7 @@ import { themeConfig } from "@/theme/themeConfig";
 
 const primary = themeConfig.colors.primary;
 
-type WorkExperienceEntry = {
+export type WorkExperienceEntry = {
   id: string;
   roleTitle: string;
   company: string;

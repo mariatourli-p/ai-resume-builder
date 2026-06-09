@@ -1,4 +1,4 @@
-import { Box, Stack, Divider, Drawer } from "@mui/material";
+import { Box, Stack, Divider, Drawer, type SxProps } from "@mui/material";
 import { IconAI } from "@/assets/Icons";
 import { themeConfig } from "@/theme";
 import { ResumeButton } from "@/components/Buttons/SectionsBarButtons/ResumeButton";
@@ -6,8 +6,9 @@ import { AIOptimizedButton } from "@/components/Buttons/SectionsBarButtons/AIOpt
 import { TemplateButton } from "@/components/Buttons/SectionsBarButtons/TemplateButton";
 import { OptimizeResumeButton } from "@/components/Buttons/SectionsBarButtons/OptimizeResumeButton/OptimizeResumeButton";
 import { SidePanelMenu } from "@/components/AppBars/SectionsBar";
+import { APP_BAR_HEIGHT } from "@/components/AppBars/HeaderBar";
 
-const DRAWER_WIDTH = 280;
+export const DRAWER_WIDTH = 280;
 
 export type SideDrawerProps = {
   sectionItems: { text: string; icon: React.ReactNode }[];
@@ -19,6 +20,7 @@ export type SideDrawerProps = {
   onTemplateClick: (text: string) => void;
   activeColor: string;
   onColorClick: (color: string) => void;
+  sx?: SxProps;
 };
 
 export const SideDrawer = ({
@@ -31,6 +33,7 @@ export const SideDrawer = ({
   onTemplateClick,
   activeColor,
   onColorClick,
+  sx,
 }: SideDrawerProps) => {
   return (
     <Drawer
@@ -41,14 +44,15 @@ export const SideDrawer = ({
         "& .MuiDrawer-paper": {
           width: DRAWER_WIDTH,
           boxSizing: "border-box",
+          top: APP_BAR_HEIGHT,
+          height: `calc(100vh - ${APP_BAR_HEIGHT})`,
           backgroundColor: themeConfig.colors.sidebar.surface,
           borderRight: `1px solid ${themeConfig.colors.sidebar.border}`,
           overflowY: "auto",
-          scrollbarWidth: "none", // Firefox
-          "&::-webkit-scrollbar": {
-            display: "none", // Chrome/Safari
-          },
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": { display: "none" },
         },
+        ...sx,
       }}
     >
       <Stack sx={{ height: "100%", justifyContent: "space-between" }}>

@@ -8,8 +8,12 @@ import {
 import { SideDrawer } from "@/components/Drawers/SideDrawer/SideDrawer";
 import { enTokens } from "@/locale/en/en-tokens";
 import { themeConfig } from "@/theme";
+import type { SxProps } from "@mui/material";
 import { useState } from "react";
 
+export type SectionsBarViewProps = {
+  sx?: SxProps;
+};
 /**
  * SectionsBarView manages all state for the resume builder's side navigation drawer.
  *
@@ -20,7 +24,7 @@ import { useState } from "react";
  * @example
  * <SectionsBarView />
  */
-export const SectionsBarView = () => {
+export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
   const { personalInfo, workExperience, education } = enTokens.sections;
 
   const sectionItems = [
@@ -66,6 +70,7 @@ export const SectionsBarView = () => {
       onTemplateClick={setActiveTemplate}
       activeColor={activeColor}
       onColorClick={setActiveColor}
+      sx={sx}
     />
   );
 };
