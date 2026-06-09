@@ -75,6 +75,14 @@ export const enTokens = {
     loading: "Improving...",
     undo: "Undo",
   },
+  skillsForm: {
+    title: "Skills & Core Competencies",
+    addButton: "Add",
+    inputPlaceholder: "Type tech stack keyword or skill, and hit Enter",
+    currentSkillsLabel: "Current Skills Applied",
+    suggestedLabel: "Suggested for",
+    clickToAdd: "Click tag to add instantly",
+  },
   settings: {
     title: "Settings",
     apiKey: "Anthropic API Key",

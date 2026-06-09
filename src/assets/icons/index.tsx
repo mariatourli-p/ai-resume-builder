@@ -17,6 +17,9 @@ import {
   LayoutTemplate,
   RefreshCw,
   History,
+  ChevronUp,
+  ChevronDown,
+  Pencil,
 } from "lucide-react";
 
 const ICON_SIZE = 20;
@@ -101,4 +104,16 @@ export const IconHistory = ({ size = ICON_SIZE, ...props }: IconProps) => (
 
 export const IconRefresh = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <RefreshCw size={size} {...props} />
+);
+
+export const IconChevronUp = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <ChevronUp size={size} {...props} />
+);
+
+export const IconChevronDown = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <ChevronDown size={size} {...props} />
+);
+
+export const IconEdit = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Pencil size={size} {...props} />
 );
