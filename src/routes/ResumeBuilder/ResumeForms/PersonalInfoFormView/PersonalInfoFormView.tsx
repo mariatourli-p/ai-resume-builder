@@ -3,6 +3,8 @@ import {
   type PersonalInfoData,
 } from "@/components/Forms/PersonalInfoForm";
 import { useCallback, useState } from "react";
+import { useAI } from "@hooks/useAI";
+import { AI_PROMPTS } from "@/services/aiPrompts";
 
 const initialData: PersonalInfoData = {
   fullName: "",
@@ -16,8 +18,7 @@ const initialData: PersonalInfoData = {
 
 export const PersonalInfoFormView = () => {
   const [data, setData] = useState<PersonalInfoData>(initialData);
-  const [isEnhancing, setIsEnhancing] = useState(false);
-  const [isRewriting, setIsRewriting] = useState(false);
+  const { improve, isLoading: isEnhancing } = useAI();
 
   const handleChange = useCallback(
     (field: keyof PersonalInfoData, value: string) => {
@@ -27,26 +28,23 @@ export const PersonalInfoFormView = () => {
   );
 
   const handleEnhance = useCallback(async () => {
-    setIsEnhancing(true);
-    // TODO: call AI enhance API
-    setIsEnhancing(false);
-  }, []);
-
-  const handleSmartRewrite = useCallback(async () => {
-    setIsRewriting(true);
-    // TODO: call AI rewrite API
-    setIsRewriting(false);
-  }, []);
+    const improved = await improve(
+      AI_PROMPTS.smartRewrite as keyof typeof AI_PROMPTS,
+      data.professionalSummary,
+    );
+    if (improved)
+      setData((prev) => ({ ...prev, professionalSummary: improved }));
+  }, [improve, data.professionalSummary]);
 
   return (
     <PersonalInfoForm
       data={data}
       isEnhancing={isEnhancing}
-      isRewriting={isRewriting}
+      isRewriting={isEnhancing}
       isEnhanceDisabled={false}
       onChange={handleChange}
       onEnhance={handleEnhance}
-      onSmartRewrite={handleSmartRewrite}
+      onSmartRewrite={handleEnhance}
     />
   );
 };

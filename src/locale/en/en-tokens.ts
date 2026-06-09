@@ -16,6 +16,7 @@ const SECTIONS = {
           label: "Professional Summary",
           placeholder: "Tell your story...",
           aiButton: "Rewrite with AI",
+          hint: "Use 2–3 impact sentences.",
         },
       },
     },
@@ -73,6 +74,8 @@ export const enTokens = {
     improve: "✨ Improve with AI",
     suggest: "✨ Suggest skills with AI",
     loading: "Improving...",
+    rewriting: "Rewriting...",
+    smartRewrite: "Smart Rewrite",
     undo: "Undo",
   },
   skillsForm: {

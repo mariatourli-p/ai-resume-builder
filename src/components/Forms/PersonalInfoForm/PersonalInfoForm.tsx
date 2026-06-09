@@ -1,14 +1,9 @@
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Paper,
-  InputAdornment,
-} from "@mui/material";
+import { Box, TextField, Button, Typography, Paper } from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import { IconPersonal } from "@/assets/Icons";
+import { enTokens } from "@/locale/en/en-tokens";
+import { themeConfig } from "@/theme";
 
 export type PersonalInfoData = {
   fullName: string;
@@ -73,6 +68,9 @@ export const PersonalInfoForm = ({
   onChange,
   isEnhanceDisabled,
 }: PersonalInfoFormProps) => {
+  const { personalInfo } = enTokens.sections;
+  const primary = themeConfig.colors.primary;
+
   return (
     <Paper
       elevation={0}
@@ -93,7 +91,7 @@ export const PersonalInfoForm = ({
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconPersonal style={{ color: "#6C63FF" }} />
+          <IconPersonal style={{ color: primary.DEFAULT }} />
           <Typography
             component="span"
             sx={{ fontWeight: 600, userSelect: "none" }}
@@ -107,12 +105,12 @@ export const PersonalInfoForm = ({
           disabled={isEnhanceDisabled || isEnhancing}
           onClick={onEnhance}
           sx={{
-            borderRadius: "20px",
-            bgcolor: "#6C63FF",
+            borderRadius: themeConfig.borderRadius.full,
+            bgcolor: primary.DEFAULT,
             textTransform: "uppercase",
-            fontSize: "0.75rem",
+            fontSize: themeConfig.fontSize.xs,
             letterSpacing: "0.08em",
-            "&:hover": { bgcolor: "#5a52e0" },
+            "&:hover": { bgcolor: primary.text },
           }}
         >
           {isEnhancing ? "Enhancing..." : "Enhance"}
@@ -183,54 +181,52 @@ export const PersonalInfoForm = ({
         <TextField
           label="PROFESSIONAL SUMMARY"
           multiline
-          minRows={4}
           fullWidth
-          sx={{ userSelect: "none" }}
           value={data?.professionalSummary ?? ""}
           onChange={(e) => onChange?.("professionalSummary", e.target.value)}
           slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  sx={{ alignSelf: "flex-end", mb: 1 }}
-                >
-                  <Button
-                    size="small"
-                    disabled={isRewriting || isEnhanceDisabled}
-                    onClick={onSmartRewrite}
-                    startIcon={<AutoAwesomeIcon sx={{ fontSize: 14 }} />}
-                    sx={{
-                      borderRadius: "20px",
-                      border: "1px solid #d4cfff",
-                      color: "#6C63FF",
-                      fontSize: "0.7rem",
-                      textTransform: "none",
-                      px: 1.5,
-                      "&:hover": { bgcolor: "#f3f2ff" },
-                    }}
-                  >
-                    {isRewriting ? "Rewriting..." : "Smart Rewrite"}
-                  </Button>
-                </InputAdornment>
-              ),
+            htmlInput: {
+              sx: {
+                resize: "vertical",
+                minHeight: "100px",
+                overflow: "auto",
+              },
             },
           }}
-          helperText={
-            <Box
-              component="span"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 0.5,
-                justifyContent: "flex-end",
-              }}
-            >
-              <LightbulbOutlinedIcon sx={{ fontSize: 14 }} />
-              Use 2–3 impact sentences.
-            </Box>
-          }
         />
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mt: 0.5,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <LightbulbOutlinedIcon
+              sx={{ fontSize: 14, color: "text.secondary" }}
+            />
+            <Typography variant="caption" color="text.secondary">
+              {personalInfo.fields.professionalSummary.hint}
+            </Typography>
+          </Box>
+          <Button
+            size="small"
+            disabled={isRewriting || isEnhanceDisabled}
+            onClick={onSmartRewrite}
+            startIcon={<AutoAwesomeIcon sx={{ fontSize: 14 }} />}
+            sx={{
+              borderRadius: "20px",
+              border: `1px solid ${primary.border}`,
+              color: primary.text,
+              fontSize: themeConfig.fontSize.xs,
+              textTransform: "none",
+              px: 1.5,
+            }}
+          >
+            {isRewriting ? enTokens.ai.rewriting : enTokens.ai.smartRewrite}
+          </Button>
+        </Box>
       </Box>
     </Paper>
   );

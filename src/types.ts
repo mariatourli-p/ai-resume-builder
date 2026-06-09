@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 export interface PersonalInfo {
   fullName: string;
   professionalTitle: string;
