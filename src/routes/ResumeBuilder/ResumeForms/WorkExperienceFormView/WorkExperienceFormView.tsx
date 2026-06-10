@@ -1,30 +1,29 @@
+import { WorkExperienceForm } from "@/components/Forms/WorkExperienceForm";
+import { useWorkExperienceSelector, shallowEqual } from "@/redux/selectors";
+import { useAppDispatch } from "@/redux/store";
 import {
-  WorkExperienceForm,
+  addWorkExperience,
+  removeWorkExperience,
+  updateWorkExperienceField,
   type WorkExperienceEntry,
-} from "@/components/Forms/WorkExperienceForm";
+} from "@/redux/resume/resume-reducer";
 import { useState, useCallback } from "react";
 
 export const WorkExperienceFormView = () => {
-  const [entries, setEntries] = useState<WorkExperienceEntry[]>([]);
+  const dispatch = useAppDispatch();
+  const entries = useWorkExperienceSelector((s) => s, shallowEqual);
   const [improvingIds, setImprovingIds] = useState<Set<string>>(new Set());
 
   const handleAdd = useCallback(() => {
-    setEntries((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        roleTitle: "",
-        company: "",
-        duration: "",
-        location: "",
-        achievements: "",
-      },
-    ]);
-  }, []);
+    dispatch(addWorkExperience());
+  }, [dispatch]);
 
-  const handleDelete = useCallback((id: string) => {
-    setEntries((prev) => prev.filter((e) => e.id !== id));
-  }, []);
+  const handleDelete = useCallback(
+    (id: string) => {
+      dispatch(removeWorkExperience(id));
+    },
+    [dispatch],
+  );
 
   const handleChange = useCallback(
     (
@@ -32,11 +31,9 @@ export const WorkExperienceFormView = () => {
       field: keyof Omit<WorkExperienceEntry, "id">,
       value: string,
     ) => {
-      setEntries((prev) =>
-        prev.map((e) => (e.id === id ? { ...e, [field]: value } : e)),
-      );
+      dispatch(updateWorkExperienceField({ id, field, value }));
     },
-    [],
+    [dispatch],
   );
 
   const handleImprove = useCallback(async (id: string) => {

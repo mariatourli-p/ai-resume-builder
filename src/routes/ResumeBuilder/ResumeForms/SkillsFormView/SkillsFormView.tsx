@@ -1,9 +1,13 @@
 import { SkillsForm } from "@/components/Forms/SkillsForm";
+import { useSkillsSelector, shallowEqual } from "@/redux/selectors";
+import { useAppDispatch } from "@/redux/store";
+import { addSkill, removeSkill } from "@/redux/resume/resume-reducer";
 import { useState, useCallback } from "react";
 import type { KeyboardEvent } from "react";
 
 export const SkillsFormView = () => {
-  const [skills, setSkills] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+  const skills = useSkillsSelector((s) => s, shallowEqual);
   const [suggestedSkills, setSuggestedSkills] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [isSuggesting, setIsSuggesting] = useState(false);
@@ -12,16 +16,19 @@ export const SkillsFormView = () => {
     (skill: string) => {
       const trimmed = skill.trim();
       if (trimmed && !skills.includes(trimmed)) {
-        setSkills((prev) => [...prev, trimmed]);
+        dispatch(addSkill(trimmed));
       }
       setInput("");
     },
-    [skills],
+    [dispatch, skills],
   );
 
-  const handleRemove = useCallback((skill: string) => {
-    setSkills((prev) => prev.filter((s) => s !== skill));
-  }, []);
+  const handleRemove = useCallback(
+    (skill: string) => {
+      dispatch(removeSkill(skill));
+    },
+    [dispatch],
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {

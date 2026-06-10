@@ -1,30 +1,25 @@
-import {
-  PersonalInfoForm,
-  type PersonalInfoData,
-} from "@/components/Forms/PersonalInfoForm";
-import { useCallback, useState } from "react";
+import { PersonalInfoForm } from "@/components/Forms/PersonalInfoForm";
+import { useCallback } from "react";
 import { useAI } from "@hooks/useAI";
 import { AI_PROMPTS } from "@/services/aiPrompts";
-
-const initialData: PersonalInfoData = {
-  fullName: "",
-  professionalTitle: "",
-  emailAddress: "",
-  phone: "",
-  location: "",
-  portfolio: "",
-  professionalSummary: "",
-};
+import { useAppDispatch } from "@/redux/store";
+import { usePersonalInfoSelector, shallowEqual } from "@/redux/selectors";
+import {
+  updatePersonalInfoField,
+  setPersonalInfo,
+  type PersonalInfoData,
+} from "@/redux/resume/resume-reducer";
 
 export const PersonalInfoFormView = () => {
-  const [data, setData] = useState<PersonalInfoData>(initialData);
+  const dispatch = useAppDispatch();
+  const data = usePersonalInfoSelector((s) => s, shallowEqual);
   const { improve, isLoading: isEnhancing } = useAI();
 
   const handleChange = useCallback(
     (field: keyof PersonalInfoData, value: string) => {
-      setData((prev) => ({ ...prev, [field]: value }));
+      dispatch(updatePersonalInfoField({ field, value }));
     },
-    [],
+    [dispatch],
   );
 
   const handleEnhance = useCallback(async () => {
@@ -32,9 +27,10 @@ export const PersonalInfoFormView = () => {
       AI_PROMPTS.smartRewrite as keyof typeof AI_PROMPTS,
       data.professionalSummary,
     );
-    if (improved)
-      setData((prev) => ({ ...prev, professionalSummary: improved }));
-  }, [improve, data.professionalSummary]);
+    if (improved) {
+      dispatch(setPersonalInfo({ ...data, professionalSummary: improved }));
+    }
+  }, [improve, data, dispatch]);
 
   return (
     <PersonalInfoForm

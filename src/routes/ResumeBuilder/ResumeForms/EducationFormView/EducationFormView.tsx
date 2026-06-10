@@ -1,36 +1,34 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
+import { EducationForm } from "@/components/Forms/EducationForm";
+import { useEducationSelector, shallowEqual } from "@/redux/selectors";
+import { useAppDispatch } from "@/redux/store";
 import {
-  EducationForm,
+  addEducation,
+  removeEducation,
+  updateEducationField,
   type EducationEntry,
-} from "@/components/Forms/EducationForm";
+} from "@/redux/resume/resume-reducer";
 
 export const EducationFormView = () => {
-  const [entries, setEntries] = useState<EducationEntry[]>([]);
+  const dispatch = useAppDispatch();
+  const entries = useEducationSelector((s) => s, shallowEqual);
 
   const handleAdd = useCallback(() => {
-    setEntries((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        institution: "",
-        degree: "",
-        graduationDate: "",
-        location: "",
-      },
-    ]);
-  }, []);
+    dispatch(addEducation());
+  }, [dispatch]);
 
-  const handleDelete = useCallback((id: string) => {
-    setEntries((prev) => prev.filter((e) => e.id !== id));
-  }, []);
+  const handleDelete = useCallback(
+    (id: string) => {
+      dispatch(removeEducation(id));
+    },
+    [dispatch],
+  );
 
   const handleChange = useCallback(
     (id: string, field: keyof Omit<EducationEntry, "id">, value: string) => {
-      setEntries((prev) =>
-        prev.map((e) => (e.id === id ? { ...e, [field]: value } : e)),
-      );
+      dispatch(updateEducationField({ id, field, value }));
     },
-    [],
+    [dispatch],
   );
 
   return (
