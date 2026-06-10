@@ -7,34 +7,32 @@ import { TemplateButton } from "@/components/Buttons/SectionsBarButtons/Template
 import { OptimizeResumeButton } from "@/components/Buttons/SectionsBarButtons/OptimizeResumeButton/OptimizeResumeButton";
 import { SidePanelMenu } from "@/components/AppBars/SectionsBar";
 import { APP_BAR_HEIGHT } from "@/components/AppBars/HeaderBar";
+import { BrandingColorsView } from "@/components/AppBars/SectionsBar/BrandingColors/BrandingColorsView";
+import { useAccentColorSelector } from "@/redux/selectors";
 
 export const DRAWER_WIDTH = 280;
 
 export type SideDrawerProps = {
   sectionItems: { text: string; icon: React.ReactNode }[];
   templateItems: { text: string; icon: React.ReactNode | null }[];
-  brandingColors: string[];
   activeSection: string;
   onSectionClick: (text: string) => void;
   activeTemplate: string;
   onTemplateClick: (text: string) => void;
-  activeColor: string;
-  onColorClick: (color: string) => void;
   sx?: SxProps;
 };
 
 export const SideDrawer = ({
   sectionItems,
   templateItems,
-  brandingColors,
   activeSection,
   onSectionClick,
   activeTemplate,
   onTemplateClick,
-  activeColor,
-  onColorClick,
   sx,
 }: SideDrawerProps) => {
+  const accentColor = useAccentColorSelector((s) => s);
+
   return (
     <Drawer
       variant="permanent"
@@ -72,8 +70,7 @@ export const SideDrawer = ({
               ...item,
               baseStyle: { height: themeConfig.spacing[48] },
               style: {
-                backgroundColor: themeConfig.colors.primary.DEFAULT,
-                color: "#ffffff",
+                backgroundColor: accentColor,
               },
             }))}
             activeItem={activeSection}
@@ -91,9 +88,9 @@ export const SideDrawer = ({
             items={templateItems.map((item) => ({
               ...item,
               style: {
-                border: `1.5px solid ${themeConfig.colors.primary.DEFAULT}`,
-                backgroundColor: themeConfig.colors.primary.surface,
-                color: themeConfig.colors.primary.text,
+                border: `1.5px solid ${accentColor}`,
+                backgroundColor: `${accentColor}18`,
+                color: accentColor,
               },
             }))}
             activeItem={activeTemplate}
@@ -108,28 +105,7 @@ export const SideDrawer = ({
           </Box>
 
           <Box sx={{ display: "flex", gap: 1, px: 2, pb: 2 }}>
-            {brandingColors.map((color) => (
-              <Box
-                key={color}
-                onClick={() => onColorClick(color)}
-                sx={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: "50%",
-                  backgroundColor: color,
-                  cursor: "pointer",
-                  border:
-                    activeColor === color
-                      ? `2px solid ${themeConfig.colors.sidebar.cta}`
-                      : "2px solid transparent",
-                  outline:
-                    activeColor === color
-                      ? `2px solid ${color}`
-                      : "2px solid transparent",
-                  transition: "outline 0.15s ease",
-                }}
-              />
-            ))}
+            <BrandingColorsView />
           </Box>
         </Box>
 

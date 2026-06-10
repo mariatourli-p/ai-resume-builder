@@ -1,18 +1,13 @@
-import {
-  IconAI,
-  IconDownload,
-  IconSettings,
-  IconHistory,
-  IconRefresh,
-} from "@/assets/Icons";
+import { IconAI, IconDownload, IconHistory, IconRefresh } from "@/assets/Icons";
+import { PopOverButton } from "@/components/Buttons/PopOverButton";
 import { enTokens } from "@/locale/en/en-tokens";
+import { SettingsView } from "@/routes/HeaderBar/SettingsView";
 import { themeConfig } from "@/theme";
 import {
   AppBar,
   Box,
   Button,
   IconButton,
-  Popover,
   Stack,
   Tab,
   Tabs,
@@ -57,15 +52,7 @@ export type HeaderBarProps = {
  *   onSettingsClose={handleClose}
  * />
  */
-export const HeaderBar = ({
-  activeTab,
-  onTabChange,
-  settingsAnchor,
-  onSettingsOpen,
-  onSettingsClose,
-  sx,
-}: HeaderBarProps) => {
-  const settingsOpen = Boolean(settingsAnchor);
+export const HeaderBar = ({ activeTab, onTabChange, sx }: HeaderBarProps) => {
   return (
     <AppBar
       position="fixed"
@@ -183,26 +170,9 @@ export const HeaderBar = ({
             />
           </IconButton>
 
-          <IconButton size="small" onClick={onSettingsOpen}>
-            <IconSettings
-              size={16}
-              color={themeConfig.colors.sidebar.textMuted}
-            />
-          </IconButton>
-
-          <Popover
-            open={settingsOpen}
-            anchorEl={settingsAnchor}
-            onClose={onSettingsClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-          >
-            <Box sx={{ p: 2, width: 300 }}>
-              <Typography sx={{ fontWeight: 700 }}>
-                Visual Style Customizer
-              </Typography>
-            </Box>
-          </Popover>
+          <PopOverButton>
+            <SettingsView />
+          </PopOverButton>
 
           <Button
             variant="outlined"

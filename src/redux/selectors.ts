@@ -29,4 +29,9 @@ export const useEducationSelector = <T>(
   equalityFn?: EqualityFn<T>,
 ) => useAppSelector((s) => project(s.resume.education), equalityFn);
 
+export const useAccentColorSelector = <T>(
+  project: (slice: string) => T,
+  equalityFn?: EqualityFn<T>,
+) => useAppSelector((s) => project(s.resume.accentColor), equalityFn);
+
 export { shallowEqual };

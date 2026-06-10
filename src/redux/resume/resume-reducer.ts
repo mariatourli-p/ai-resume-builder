@@ -2,6 +2,7 @@
  * Reducer for resume form data.
  * Manages all resume sections: personal info, skills, work experience, and education.
  */
+import { DEFAULT_ACCENT_COLOR } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 // --- Types ---
@@ -37,6 +38,7 @@ export type ResumeState = {
   skills: string[];
   workExperience: WorkExperienceEntry[];
   education: EducationEntry[];
+  accentColor: string;
 };
 
 // --- Initial State ---
@@ -50,6 +52,7 @@ const initialState: ResumeState = {
     portfolio: "",
     professionalSummary: "",
   },
+  accentColor: DEFAULT_ACCENT_COLOR,
   skills: [],
   workExperience: [],
   education: [],
@@ -140,6 +143,10 @@ const resumeSlice = createSlice({
     resetResume() {
       return initialState;
     },
+
+    setAccentColor(state, action: PayloadAction<string>) {
+      state.accentColor = action.payload;
+    },
   },
 });
 
@@ -155,6 +162,7 @@ export const {
   updateEducationField,
   removeEducation,
   resetResume,
+  setAccentColor,
 } = resumeSlice.actions;
 
 export const resumeReducer = resumeSlice.reducer;

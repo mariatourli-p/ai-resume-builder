@@ -1,0 +1,47 @@
+import { useCallback } from "react";
+import { Box } from "@mui/material";
+import { useAppDispatch } from "@/redux/store";
+import { useAccentColorSelector } from "@/redux/selectors";
+import { setAccentColor } from "@/redux/resume/resume-reducer";
+
+import { BRANDING_PALETTES } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
+import { SettingsHeader } from "@/components/Settings/SettingsHeader";
+import { SettingsColorPalette } from "@/components/Settings/SettingsColorPalette";
+import { SettingsFooter } from "@/components/Settings/SettingsFooter";
+
+export const SettingsView = () => {
+  const dispatch = useAppDispatch();
+  const activeColor = useAccentColorSelector((s) => s);
+
+  const handleColorSelect = useCallback(
+    (value: string) => {
+      dispatch(setAccentColor(value));
+    },
+    [dispatch],
+  );
+
+  return (
+    <Box>
+      <SettingsHeader
+        title="Visual Style Customizer"
+        description="Adjust configurations here to automatically update both editor fields and resume preview sheets!"
+      />
+      <Box sx={{ px: 2.5, py: 2 }}>
+        <SettingsColorPalette
+          palettes={BRANDING_PALETTES}
+          activeColor={activeColor}
+          onColorSelect={handleColorSelect}
+        />
+      </Box>
+      <SettingsFooter
+        title="Personal Anthropic API Key"
+        inputLabel="PERSONAL ANTHROPIC API KEY"
+        linkLabel="Get free key ↗"
+        linkHref="https://console.anthropic.com"
+        inputPlaceholder="Anthropic API Key (sk-ant-...)"
+        footerText="Provide your own Anthropic API Key to enable AI features. Your key is stored securely in localStorage."
+        storageKey="resume_anthropic_key"
+      />
+    </Box>
+  );
+};

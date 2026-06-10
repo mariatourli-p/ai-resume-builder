@@ -7,7 +7,6 @@ import {
 } from "@/assets/Icons";
 import { SideDrawer } from "@/components/Drawers/SideDrawer/SideDrawer";
 import { enTokens } from "@/locale/en/en-tokens";
-import { themeConfig } from "@/theme";
 import type { SxProps } from "@mui/material";
 import { useState } from "react";
 
@@ -40,17 +39,6 @@ export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
   );
   const [activeTemplate, setActiveTemplate] =
     useState<string>("Classic Modern");
-  const [activeColor, setActiveColor] = useState<string>(
-    themeConfig.colors.palette.indigo.primary,
-  );
-
-  const brandingColors = [
-    themeConfig.colors.palette.indigo.primary,
-    themeConfig.colors.palette.emerald.primary,
-    themeConfig.colors.palette.amber.primary,
-    themeConfig.colors.palette.rose.primary,
-    themeConfig.colors.palette.slate.primary,
-  ];
 
   const templateItems = [
     { text: "Executive Serif", icon: null },
@@ -63,13 +51,10 @@ export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
     <SideDrawer
       sectionItems={sectionItems}
       templateItems={templateItems}
-      brandingColors={brandingColors}
       activeSection={activeSection}
       onSectionClick={setActiveSection}
       activeTemplate={activeTemplate}
       onTemplateClick={setActiveTemplate}
-      activeColor={activeColor}
-      onColorClick={setActiveColor}
       sx={sx}
     />
   );

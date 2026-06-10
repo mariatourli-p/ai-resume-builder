@@ -9,8 +9,10 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
+  createMigrate,
 } from "redux-persist";
 import { reducer, type RootState } from "./reducer";
+import { DEFAULT_ACCENT_COLOR } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
 
 const storage = {
   getItem: (key: string) => Promise.resolve(localStorage.getItem(key)),
@@ -19,8 +21,39 @@ const storage = {
   removeItem: (key: string) => Promise.resolve(localStorage.removeItem(key)),
 };
 
+type MigrationState = {
+  _persist: { version: number; rehydrated: boolean };
+  resume: {
+    personalInfo: Record<string, string>;
+    skills: string[];
+    workExperience: unknown[];
+    education: unknown[];
+    accentColor?: string;
+  };
+};
+
+const migrations = {
+  1: (state: MigrationState): MigrationState => ({
+    ...state,
+    resume: {
+      ...state.resume,
+      accentColor: state.resume.accentColor ?? DEFAULT_ACCENT_COLOR,
+    },
+  }),
+};
+
 const persistedReducer = persistReducer(
-  { key: "resume_builder", storage },
+  {
+    key: "resume_builder",
+    storage,
+    version: 1,
+    migrate: createMigrate(
+      migrations as unknown as Parameters<typeof createMigrate>[0],
+      {
+        debug: false,
+      },
+    ),
+  },
   reducer,
 );
 

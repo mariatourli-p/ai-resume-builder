@@ -2,7 +2,7 @@
 import { Box, Typography, Tooltip } from "@mui/material";
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import CheckIcon from "@mui/icons-material/Check";
-import { BRANDING_PALETTES, DEFAULT_ACCENT_COLOR } from "./constants";
+import { BRANDING_PALETTES } from "./constants";
 
 export type BrandingColorsProps = {
   activeColor: string;
@@ -55,7 +55,6 @@ export const BrandingColors = ({
                 alignItems: "center",
                 justifyContent: "center",
                 outline: activeColor === value ? `3px solid ${value}` : "none",
-                activeColor: DEFAULT_ACCENT_COLOR,
                 outlineOffset: "2px",
                 transition: "outline 0.15s ease, transform 0.15s ease",
                 "&:hover": { transform: "scale(1.1)" },

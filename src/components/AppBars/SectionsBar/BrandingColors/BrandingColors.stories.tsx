@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BrandingColorsView } from "./BrandingColorsView";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 const meta: Meta<typeof BrandingColorsView> = {
   title: "Components/SectionsBar/BrandingColors",
@@ -7,9 +9,11 @@ const meta: Meta<typeof BrandingColorsView> = {
   component: BrandingColorsView,
   decorators: [
     (Story) => (
-      <div style={{ width: 280, padding: 16, background: "#f8fafc" }}>
-        <Story />
-      </div>
+      <Provider store={store}>
+        <div style={{ width: 280, padding: 16, background: "#f8fafc" }}>
+          <Story />
+        </div>
+      </Provider>
     ),
   ],
 };

@@ -1,13 +1,19 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { BrandingColors } from "./BrandingColors";
-import { DEFAULT_ACCENT_COLOR } from "./constants";
+import { useAppDispatch } from "@/redux/store";
+import { useAccentColorSelector } from "@/redux/selectors";
+import { setAccentColor } from "@/redux/resume/resume-reducer";
 
 export const BrandingColorsView = () => {
-  const [activeColor, setActiveColor] = useState<string>(DEFAULT_ACCENT_COLOR);
+  const dispatch = useAppDispatch();
+  const activeColor = useAccentColorSelector((s) => s);
 
-  const handleColorSelect = useCallback((value: string) => {
-    setActiveColor(value);
-  }, []);
+  const handleColorSelect = useCallback(
+    (value: string) => {
+      dispatch(setAccentColor(value));
+    },
+    [dispatch],
+  );
 
   return (
     <BrandingColors
