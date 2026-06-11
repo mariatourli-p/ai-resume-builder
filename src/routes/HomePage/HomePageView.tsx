@@ -1,8 +1,9 @@
+import { APP_BAR_HEIGHT } from "@/components/AppBars/HeaderBar";
+import { ResumePreviewView } from "@/components/ResumePreview/ResumePreviewView";
 import { Box } from "@mui/material";
+import { HeaderBarView } from "../HeaderBar";
 import { ResumeBuilder } from "../ResumeBuilder";
 import { SectionsBarView } from "../SectionsBar";
-import { HeaderBarView } from "../HeaderBar";
-import { APP_BAR_HEIGHT } from "@/components/AppBars/HeaderBar";
 
 export const HomePageView = () => {
   return (
@@ -28,6 +29,7 @@ export const HomePageView = () => {
         >
           <ResumeBuilder />
         </Box>
+        <ResumePreviewView />
       </Box>
     </Box>
   );
