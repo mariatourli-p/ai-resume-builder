@@ -7,7 +7,7 @@
   --font-display: "Space Grotesk", sans-serif;
 }
 
-/* Custom visual utilities representing Active Intelligence layers */
+/* ─── Animations ─────────────────────────────────────── */
 .ai-shimmer {
   background: linear-gradient(
     90deg,
@@ -27,26 +27,6 @@
   }
 }
 
-/* Custom Scrollbar for sleek aesthetic */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Interactive subtle pulse of live syncing indicators */
 @keyframes syncPulse {
   0% {
     transform: scale(0.95);
@@ -66,59 +46,18 @@
   animation: syncPulse 2s infinite ease-in-out;
 }
 
-/* ─── Palette: Slate (default) ──────────────────────── */
-:root {
-  --palette-accent: #475569;
-  --palette-accent-light: #94a3b8;
-  --palette-accent-dark: #1e293b;
-
-  --palette-surface: #ffffff;
-  --palette-surface-raised: #f8fafc;
-  --palette-surface-sunken: #f1f5f9;
-
-  --palette-text-primary: #0f172a;
-  --palette-text-secondary: #334155;
-  --palette-text-muted: #94a3b8;
-  --palette-text-on-accent: #ffffff;
-
-  --palette-border: #e2e8f0;
-  --palette-border-strong: #cbd5e1;
+/* ─── Scrollbar ──────────────────────────────────────── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
 }
-
-/* ─── Palette: Ocean ────────────────────────────────── */
-.palette-ocean {
-  --palette-accent: #0284c7;
-  --palette-accent-light: #38bdf8;
-  --palette-accent-dark: #0c4a6e;
-
-  --palette-surface: #ffffff;
-  --palette-surface-raised: #f0f9ff;
-  --palette-surface-sunken: #e0f2fe;
-
-  --palette-text-primary: #0c4a6e;
-  --palette-text-secondary: #075985;
-  --palette-text-muted: #7dd3fc;
-  --palette-text-on-accent: #ffffff;
-
-  --palette-border: #bae6fd;
-  --palette-border-strong: #7dd3fc;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
-
-/* ─── Palette: Ember ────────────────────────────────── */
-.palette-ember {
-  --palette-accent: #dc2626;
-  --palette-accent-light: #f87171;
-  --palette-accent-dark: #7f1d1d;
-
-  --palette-surface: #ffffff;
-  --palette-surface-raised: #fff7f7;
-  --palette-surface-sunken: #fee2e2;
-
-  --palette-text-primary: #1a0000;
-  --palette-text-secondary: #7f1d1d;
-  --palette-text-muted: #fca5a5;
-  --palette-text-on-accent: #ffffff;
-
-  --palette-border: #fecaca;
-  --palette-border-strong: #f87171;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

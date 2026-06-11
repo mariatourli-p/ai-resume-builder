@@ -1,73 +1,97 @@
-# React + TypeScript + Vite
+# AI Resume Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered resume builder that helps anyone create a polished, professional resume in minutes — no design or writing skills required.
 
-Currently, two official plugins are available:
+> 🚧 This project is in early scaffolding stage. The features below marked as ✅ are implemented. Everything else is planned and actively being built.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Current Status
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Feature                        | Status         |
+| ------------------------------ | -------------- |
+| Project architecture & routing | ✅ Done        |
+| Component library (Storybook)  | ✅ Done        |
+| Side panel UI                  | ✅ Done        |
+| Icons system                   | ✅ Done        |
+| Resume form inputs             | 🔄 In progress |
+| Live preview                   | 🔄 In progress |
+| Claude AI text improvement     | 📋 Planned     |
+| Multiple templates             | 📋 Planned     |
+| Skills suggestion by AI        | 📋 Planned     |
+| Autosave to localStorage       | 📋 Planned     |
+| PDF export                     | 📋 Planned     |
+| Settings / API key storage     | 📋 Planned     |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Overview
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Users will fill in their details, and the app will use Claude AI (Anthropic) to improve their text, suggest skills, and generate a beautiful resume in real time.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Category       | Technology            |
+| -------------- | --------------------- |
+| Framework      | React 19 + TypeScript |
+| Build tool     | Vite                  |
+| UI library     | MUI (Material UI) v9  |
+| Styling        | Tailwind CSS v4       |
+| Routing        | React Router v7       |
+| State          | Preact Signals        |
+| Icons          | Lucide React          |
+| AI             | Anthropic Claude API  |
+| Component docs | Storybook 10          |
+| Testing        | Vitest + Playwright   |
+
+## Project Structure
+
+```
+src/
+├── assets/         # Icons and static assets
+├── components/     # Reusable UI components
+│   ├── Buttons/
+│   └── SidePanel/
+├── hooks/          # Custom React hooks
+├── locale/         # i18n tokens
+├── routes/         # Page-level components
+│   ├── HomePage/
+│   └── ProfileBuilder/
+├── styles/         # Theme and palette
+├── types.ts        # Shared TypeScript types
+└── utils/          # Utility functions
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18+
+- An Anthropic API key — get one at [console.anthropic.com](https://console.anthropic.com/)
+
+### Installation
+
+```bash
+git clone https://github.com/mariatourli-p/ai-resume-builder.git
+cd ai-resume-builder
+npm install
+npm run dev
 ```
+
+### Storybook
+
+```bash
+npm run storybook
+```
+
+## Branch Strategy
+
+| Branch   | Purpose                        |
+| -------- | ------------------------------ |
+| `main`   | Stable code                    |
+| `dev`    | Active development             |
+| `feat/*` | Feature branches → PR into dev |
+
+## License
+
+GPL v3 — see [LICENSE](./LICENSE) for details.

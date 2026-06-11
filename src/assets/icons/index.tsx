@@ -14,83 +14,106 @@ import {
   MapPin,
   FolderOpen,
   AlertCircle,
+  LayoutTemplate,
+  RefreshCw,
+  History,
+  ChevronUp,
+  ChevronDown,
+  Pencil,
 } from "lucide-react";
 
 const ICON_SIZE = 20;
 
 type IconProps = {
   size?: number;
-  className?: string;
-};
+} & React.SVGProps<SVGSVGElement>;
 
 // ── Section Icons ─────────────────────────────────────────────────────────────
 
-export const IconPersonal = ({ size = ICON_SIZE, className }: IconProps) => (
-  <User size={size} className={className} />
+export const IconPersonal = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <User size={size} {...props} />
 );
 
-export const IconExperience = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Briefcase size={size} className={className} />
+export const IconExperience = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Briefcase size={size} {...props} />
 );
 
-export const IconEducation = ({ size = ICON_SIZE, className }: IconProps) => (
-  <GraduationCap size={size} className={className} />
+export const IconEducation = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <GraduationCap size={size} {...props} />
 );
 
-export const IconSkills = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Brain size={size} className={className} />
+export const IconSkills = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Brain size={size} {...props} />
 );
 
-export const IconProjects = ({ size = ICON_SIZE, className }: IconProps) => (
-  <FolderOpen size={size} className={className} />
+export const IconProjects = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <FolderOpen size={size} {...props} />
 );
 
 // ── Action Icons ──────────────────────────────────────────────────────────────
 
-export const IconAI = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Sparkles size={size} className={className} />
+export const IconAI = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Sparkles size={size} {...props} />
 );
 
-export const IconDownload = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Download size={size} className={className} />
+export const IconDownload = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Download size={size} {...props} />
 );
 
-export const IconSettings = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Settings size={size} className={className} />
+export const IconSettings = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Settings size={size} {...props} />
 );
 
-export const IconAdd = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Plus size={size} className={className} />
+export const IconAdd = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Plus size={size} {...props} />
 );
 
-export const IconUndo = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Undo2 size={size} className={className} />
+export const IconUndo = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Undo2 size={size} {...props} />
 );
 
-export const IconSaved = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Check size={size} className={className} />
+export const IconSaved = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Check size={size} {...props} />
 );
 
-export const IconDelete = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Trash2 size={size} className={className} />
+export const IconDelete = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Trash2 size={size} {...props} />
 );
 
-export const IconError = ({ size = ICON_SIZE, className }: IconProps) => (
-  <AlertCircle size={size} className={className} />
+export const IconError = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <AlertCircle size={size} {...props} />
 );
 
 // ── Contact Icons ─────────────────────────────────────────────────────────────
 
-export const IconEmail = ({ size = ICON_SIZE, className }: IconProps) => (
-  <Mail size={size} className={className} />
+export const IconEmail = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Mail size={size} {...props} />
 );
 
-export const IconLocation = ({ size = ICON_SIZE, className }: IconProps) => (
-  <MapPin size={size} className={className} />
+export const IconLocation = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <MapPin size={size} {...props} />
 );
 
-import { LayoutTemplate } from "lucide-react";
+export const IconTemplate = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <LayoutTemplate size={size} {...props} />
+);
 
-export const IconTemplate = ({ size = ICON_SIZE, className }: IconProps) => (
-  <LayoutTemplate size={size} className={className} />
+export const IconHistory = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <History size={size} {...props} />
+);
+
+export const IconRefresh = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <RefreshCw size={size} {...props} />
+);
+
+export const IconChevronUp = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <ChevronUp size={size} {...props} />
+);
+
+export const IconChevronDown = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <ChevronDown size={size} {...props} />
+);
+
+export const IconEdit = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Pencil size={size} {...props} />
 );

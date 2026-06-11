@@ -1,7 +1,7 @@
 const SECTIONS = {
   sections: {
     personalInfo: {
-      title: "Personal",
+      title: "Personal Info",
       enhanceButton: "Enhance",
       fields: {
         fullName: {
@@ -16,6 +16,7 @@ const SECTIONS = {
           label: "Professional Summary",
           placeholder: "Tell your story...",
           aiButton: "Rewrite with AI",
+          hint: "Use 2–3 impact sentences.",
         },
       },
     },
@@ -57,11 +58,11 @@ const SECTIONS = {
 
 export const enTokens = {
   app: {
-    title: "CareerFlow AI",
+    title: "CareerFlow",
     builder: "Builder",
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
-    ai_optimized: "AI Optimized",
+    ai_optimized: "AI Optimized Engine",
   },
   nav: {
     settings: "Settings",
@@ -73,7 +74,17 @@ export const enTokens = {
     improve: "✨ Improve with AI",
     suggest: "✨ Suggest skills with AI",
     loading: "Improving...",
+    rewriting: "Rewriting...",
+    smartRewrite: "Smart Rewrite",
     undo: "Undo",
+  },
+  skillsForm: {
+    title: "Skills & Core Competencies",
+    addButton: "Add",
+    inputPlaceholder: "Type tech stack keyword or skill, and hit Enter",
+    currentSkillsLabel: "Current Skills Applied",
+    suggestedLabel: "Suggested for",
+    clickToAdd: "Click tag to add instantly",
   },
   settings: {
     title: "Settings",
@@ -85,6 +96,8 @@ export const enTokens = {
     templates: "Templates",
     styles: "Styles",
     optimize_all: "Optimize All",
+    optimize_resume: "Optimize Resume",
+    optimizing: "Optimizing...",
   },
   errors: {
     missingKey: "Please add your API key in Settings",
@@ -95,6 +108,7 @@ export const enTokens = {
   export: {
     export_pdf: "Export PDF",
     save_draft: "Save Draft",
+    draft_saved: "Draft saved in live memory",
   },
   confirmations: {
     newResume: "This will clear everything. Are you sure?",
