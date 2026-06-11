@@ -22,6 +22,5 @@ export const Default: Story = {
     inputPlaceholder: "Anthropic API Key (sk-ant-...)",
     footerText:
       "Provide your own Anthropic API Key to enable AI features. Your key is stored securely in localStorage.",
-    storageKey: "resume_anthropic_key",
   },
 };

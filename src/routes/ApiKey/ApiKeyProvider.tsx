@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ApiKeyContext } from "./ApiKeyContext";
 
-const API_KEY_STORAGE_KEY = "resume_api_key";
+export const API_KEY_STORAGE_KEY = "resume_api_key";
 
 export const ApiKeyProvider = ({ children }: { children: React.ReactNode }) => {
   const [apiKey, setApiKeyState] = useState<string>(

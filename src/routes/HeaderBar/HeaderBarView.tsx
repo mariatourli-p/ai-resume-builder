@@ -1,6 +1,9 @@
 import { HeaderBar } from "@/components/AppBars/HeaderBar/HeaderBar";
+import { persistor, resetAll, useAppDispatch } from "@/redux/store";
+import { useIsDefaultState } from "@hooks/useIsDefaultState";
 import type { SxProps } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useApiKey } from "../ApiKey/useApiKey";
 
 export type Tab = "builder" | "analysis";
 
@@ -16,24 +19,27 @@ export type HeaderBarViewProps = {
  * keeping `HeaderBar` purely presentational.
  *
  * @example
- * <TopBar />
+ * <HeaderBar />
  */
-export const HeaderBarView = ({ sx }: HeaderBarViewProps) => {
+export const HeaderBarView = () => {
   const [activeTab, setActiveTab] = useState<Tab>("builder");
-  const [settingsAnchor, setSettingsAnchor] =
-    useState<HTMLButtonElement | null>(null);
+  const dispatch = useAppDispatch();
+  const isDefault = useIsDefaultState();
+  const { clearApiKey } = useApiKey();
+
+  const onRefresh = useCallback(async () => {
+    // clears localStorage
+    await persistor.purge();
+    clearApiKey();
+    dispatch(resetAll()); // resets redux state
+  }, [clearApiKey, dispatch]);
 
   return (
     <HeaderBar
       activeTab={activeTab}
       onTabChange={setActiveTab}
-      settingsAnchor={settingsAnchor}
-      onSettingsOpen={(e) => setSettingsAnchor(e.currentTarget)}
-      onSettingsClose={() => setSettingsAnchor(null)}
-      sx={{
-        marginBottom: "2rem",
-        ...sx,
-      }}
+      onRefresh={onRefresh}
+      isDefaultState={isDefault}
     />
   );
 };

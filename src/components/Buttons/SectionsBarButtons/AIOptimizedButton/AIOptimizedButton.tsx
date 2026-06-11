@@ -1,4 +1,6 @@
 import { enTokens } from "@/locale/en/en-tokens";
+import { useAccentColorSelector } from "@/redux/selectors";
+import { PALETTE_MAP } from "@/theme";
 import { themeConfig } from "@/theme/themeConfig";
 import { IconButton, type IconButtonProps } from "../../BaseButtons/IconButton";
 
@@ -16,15 +18,16 @@ export type AIOptimizedButtonProps = IconButtonProps;
  */
 export const AIOptimizedButton = ({ sx, icon }: AIOptimizedButtonProps) => {
   const { ai_optimized } = enTokens.app;
+  const accentColor = useAccentColorSelector((s) => s);
 
   return (
     <IconButton
       text={ai_optimized}
       icon={icon}
       sx={{
-        backgroundColor: themeConfig.colors.ai.surface,
-        color: themeConfig.colors.ai.accent,
-        borderColor: themeConfig.colors.ai.border,
+        backgroundColor: PALETTE_MAP[accentColor]?.light,
+        color: accentColor,
+        borderColor: accentColor,
         borderRadius: themeConfig.borderRadius.full,
         borderWidth: themeConfig.borderWidth[1],
         textTransform: "none",

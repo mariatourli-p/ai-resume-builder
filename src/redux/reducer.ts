@@ -2,11 +2,25 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { resumeReducer } from "./resume/resume-reducer";
 
 const projectReducers = {
-  resume: resumeReducer, // Reducer for resume data
+  resume: resumeReducer,
 };
 
-export const reducer = combineReducers({
+const appReducer = combineReducers({
   ...projectReducers,
 });
 
-export type RootState = ReturnType<typeof reducer>;
+type AppState = ReturnType<typeof appReducer>;
+
+export const reducer = (
+  state: AppState | undefined,
+  action: { type: string },
+): AppState => {
+  if (action.type === "RESET_ALL") {
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
+
+export const initialState = appReducer(undefined, { type: "@@INIT" });
+
+export type RootState = ReturnType<typeof appReducer>;

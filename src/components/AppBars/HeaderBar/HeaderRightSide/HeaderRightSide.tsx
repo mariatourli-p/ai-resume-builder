@@ -1,4 +1,4 @@
-import { IconDownload, IconHistory, IconRefresh } from "@/assets/Icons";
+import { IconDownload, IconRefresh } from "@/assets/Icons";
 import { PopOverButton } from "@/components/Buttons/PopOverButton";
 import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
@@ -6,7 +6,15 @@ import { SettingsView } from "@/routes/HeaderBar/SettingsView";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import { Button, IconButton, Stack, Typography } from "@mui/material";
 
-export const HeaderRightSide = () => {
+export type HeaderRightSideProps = {
+  onRefresh: () => void;
+  isDefaultState: boolean;
+};
+
+export const HeaderRightSide = ({
+  onRefresh,
+  isDefaultState,
+}: HeaderRightSideProps) => {
   const accentColor = useAccentColorSelector((s) => s);
 
   return (
@@ -17,15 +25,13 @@ export const HeaderRightSide = () => {
           color: themeConfig.colors.sidebar.textMuted,
         }}
       >
-        {enTokens.export.draft_saved}
+        {isDefaultState
+          ? enTokens.export.save_draft
+          : enTokens.export.draft_saved}
       </Typography>
 
-      <IconButton size="small">
+      <IconButton size="small" onClick={onRefresh}>
         <IconRefresh size={16} color={themeConfig.colors.sidebar.textMuted} />
-      </IconButton>
-
-      <IconButton size="small">
-        <IconHistory size={16} color={themeConfig.colors.sidebar.textMuted} />
       </IconButton>
 
       <PopOverButton>

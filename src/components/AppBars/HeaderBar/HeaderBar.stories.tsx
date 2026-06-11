@@ -27,8 +27,14 @@ export const Default: Story = {
     const [activeTab, setActiveTab] = useState<"builder" | "analysis">(
       "builder",
     );
-
-    return <HeaderBar activeTab={activeTab} onTabChange={setActiveTab} />;
+    return (
+      <HeaderBar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onRefresh={() => {}}
+        isDefaultState={false}
+      />
+    );
   },
 };
 
@@ -37,7 +43,13 @@ export const AnalysisTab: Story = {
     const [activeTab, setActiveTab] = useState<"builder" | "analysis">(
       "analysis",
     );
-
-    return <HeaderBar activeTab={activeTab} onTabChange={setActiveTab} />;
+    return (
+      <HeaderBar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onRefresh={() => {}}
+        isDefaultState={false}
+      />
+    );
   },
 };

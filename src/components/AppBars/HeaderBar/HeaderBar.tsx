@@ -4,11 +4,11 @@ import {
   HeaderLeftSide,
   type HeaderLeftSideProps,
 } from "./HeaderLeftSide/HeaderLeftSide";
-import { HeaderRightSide } from "./HeaderRightSide";
+import { HeaderRightSide, type HeaderRightSideProps } from "./HeaderRightSide";
 
 export const APP_BAR_HEIGHT = "65px";
 
-export type HeaderBarProps = HeaderLeftSideProps;
+export type HeaderBarProps = HeaderLeftSideProps & HeaderRightSideProps;
 
 /**
  * HeaderBar is the pure UI component for the application's top navigation bar.
@@ -26,9 +26,15 @@ export type HeaderBarProps = HeaderLeftSideProps;
  * <HeaderBar
  *   activeTab="builder"
  *   onTabChange={setActiveTab}
+ *   onRefresh= {onRefresh}
  * />
  */
-export const HeaderBar = ({ activeTab, onTabChange }: HeaderBarProps) => {
+export const HeaderBar = ({
+  activeTab,
+  onTabChange,
+  onRefresh,
+  isDefaultState,
+}: HeaderBarProps) => {
   return (
     <AppBar
       position="fixed"
@@ -40,9 +46,11 @@ export const HeaderBar = ({ activeTab, onTabChange }: HeaderBarProps) => {
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
-        {/* Left — Logo + Tabs */}
         <HeaderLeftSide activeTab={activeTab} onTabChange={onTabChange} />
-        <HeaderRightSide />
+        <HeaderRightSide
+          onRefresh={onRefresh}
+          isDefaultState={isDefaultState}
+        />
       </Toolbar>
     </AppBar>
   );

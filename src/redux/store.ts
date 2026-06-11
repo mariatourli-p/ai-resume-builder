@@ -1,18 +1,18 @@
+import { DEFAULT_ACCENT_COLOR } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
 import { configureStore } from "@reduxjs/toolkit";
-import { useDispatch, useSelector, useStore, shallowEqual } from "react-redux";
+import { shallowEqual, useDispatch, useSelector, useStore } from "react-redux";
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
+  REHYDRATE,
   createMigrate,
+  persistReducer,
+  persistStore,
 } from "redux-persist";
 import { reducer, type RootState } from "./reducer";
-import { DEFAULT_ACCENT_COLOR } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
 
 const storage = {
   getItem: (key: string) => Promise.resolve(localStorage.getItem(key)),
@@ -80,5 +80,7 @@ export const useAppSelector = <T>(
 ): T => useSelector(selector, equalityFn);
 
 export const useAppStore = useStore.withTypes<AppStore>();
+
+export const resetAll = () => ({ type: "RESET_ALL" as const });
 
 export { shallowEqual };

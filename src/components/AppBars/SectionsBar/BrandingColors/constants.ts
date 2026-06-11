@@ -9,4 +9,4 @@ export const BRANDING_PALETTES = [
   { label: "Slate", value: themeConfig.colors.palette.slate.primary },
 ] as const;
 
-export const DEFAULT_ACCENT_COLOR = themeConfig.colors.palette.slate.primary; // "#334155"
+export const DEFAULT_ACCENT_COLOR = themeConfig.colors.palette.indigo.primary; // "#334155"

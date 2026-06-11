@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material";
-import { themeConfig } from "@/theme";
+import { useAccentColorSelector } from "@/redux/selectors";
+import { PALETTE_MAP } from "@/theme";
+import { Box, Typography, type SxProps } from "@mui/material";
 import type { ReactNode } from "react";
 
 export type SettingsHeaderProps = {
@@ -9,6 +10,8 @@ export type SettingsHeaderProps = {
   title: string;
   /** Description shown in the colored banner below the title */
   description?: string;
+  sxHeader?: SxProps;
+  sxDescription?: SxProps;
 };
 
 /**
@@ -33,7 +36,7 @@ export const SettingsHeader = ({
   title,
   description,
 }: SettingsHeaderProps) => {
-  const primary = themeConfig.colors.primary;
+  const accentColor = useAccentColorSelector((s) => s);
 
   return (
     <Box sx={{ p: 2.5, pb: 0 }}>
@@ -63,14 +66,13 @@ export const SettingsHeader = ({
       {description && (
         <Box
           sx={{
-            bgcolor: primary.surface,
+            bgcolor: accentColor,
+            color: PALETTE_MAP[accentColor]?.light,
             borderRadius: 2,
             p: 1.5,
           }}
         >
-          <Typography sx={{ fontSize: 12, color: primary.text }}>
-            {description}
-          </Typography>
+          <Typography sx={{ fontSize: 12 }}>{description}</Typography>
         </Box>
       )}
     </Box>

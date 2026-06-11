@@ -1,3 +1,7 @@
+import { useAccentColorSelector } from "@/redux/selectors";
+import { themeConfig } from "@/theme";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Box,
   Divider,
@@ -7,25 +11,18 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useState } from "react";
-import { themeConfig } from "@/theme";
 
 export type SettingsFooterProps = {
-  /** Title shown at the top of the settings panel */
   title: string;
-  /** Label shown above the input field */
   inputLabel: string;
-  /** Label and href for the helper link next to the input label */
   linkLabel: string;
   linkHref: string;
-  /** Placeholder text for the input */
   inputPlaceholder: string;
-  /** Footer description text below the input */
   footerText: string;
-  /** localStorage key to persist the value */
-  storageKey: string;
+  apiKey: string;
+  onSave: (key: string) => void;
+  onClear: () => void;
 };
 
 export const SettingsFooter = ({
@@ -35,18 +32,14 @@ export const SettingsFooter = ({
   linkHref,
   inputPlaceholder,
   footerText,
-  storageKey,
+  apiKey,
+  onSave,
 }: SettingsFooterProps) => {
-  const [value, setValue] = useState(
-    () => localStorage.getItem(storageKey) ?? "",
-  );
   const [showValue, setShowValue] = useState(false);
-
-  const primary = themeConfig.colors.primary;
+  const accentColor = useAccentColorSelector((s) => s);
 
   return (
     <Box sx={{ p: 2.5 }}>
-      {/* Header */}
       <Box
         sx={{
           display: "flex",
@@ -69,7 +62,6 @@ export const SettingsFooter = ({
 
       <Divider sx={{ mb: 2 }} />
 
-      {/* Input label + link */}
       <Box
         sx={{
           display: "flex",
@@ -91,23 +83,19 @@ export const SettingsFooter = ({
         <Link
           href={linkHref}
           target="_blank"
-          sx={{ fontSize: 11, color: primary.DEFAULT }}
+          sx={{ fontSize: 11, color: accentColor }}
         >
           {linkLabel}
         </Link>
       </Box>
 
-      {/* Input */}
       <OutlinedInput
         fullWidth
         size="small"
         placeholder={inputPlaceholder}
         type={showValue ? "text" : "password"}
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          localStorage.setItem(storageKey, e.target.value);
-        }}
+        value={apiKey}
+        onChange={(e) => onSave(e.target.value)}
         endAdornment={
           <InputAdornment position="end">
             <IconButton size="small" onClick={() => setShowValue((p) => !p)}>
@@ -122,8 +110,7 @@ export const SettingsFooter = ({
         sx={{ borderRadius: 2, fontSize: 13 }}
       />
 
-      {/* Footer text */}
-      <Typography sx={{ fontSize: 11, color: "text.secondary", mt: 1 }}>
+      <Typography sx={{ fontSize: 11, color: themeConfig.colors.black, mt: 1 }}>
         {footerText}
       </Typography>
     </Box>
