@@ -1,5 +1,7 @@
+import { store } from "@/redux/store";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { Provider } from "react-redux";
 import { HeaderBar } from "./HeaderBar";
 
 const meta: Meta<typeof HeaderBar> = {
@@ -8,10 +10,16 @@ const meta: Meta<typeof HeaderBar> = {
   parameters: {
     layout: "fullscreen",
   },
+  decorators: [
+    (Story) => (
+      <Provider store={store}>
+        <Story />
+      </Provider>
+    ),
+  ],
 };
 
 export default meta;
-
 type Story = StoryObj<typeof HeaderBar>;
 
 export const Default: Story = {
@@ -19,18 +27,8 @@ export const Default: Story = {
     const [activeTab, setActiveTab] = useState<"builder" | "analysis">(
       "builder",
     );
-    const [settingsAnchor, setSettingsAnchor] =
-      useState<HTMLButtonElement | null>(null);
 
-    return (
-      <HeaderBar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        settingsAnchor={settingsAnchor}
-        onSettingsOpen={(e) => setSettingsAnchor(e.currentTarget)}
-        onSettingsClose={() => setSettingsAnchor(null)}
-      />
-    );
+    return <HeaderBar activeTab={activeTab} onTabChange={setActiveTab} />;
   },
 };
 
@@ -39,17 +37,7 @@ export const AnalysisTab: Story = {
     const [activeTab, setActiveTab] = useState<"builder" | "analysis">(
       "analysis",
     );
-    const [settingsAnchor, setSettingsAnchor] =
-      useState<HTMLButtonElement | null>(null);
 
-    return (
-      <HeaderBar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        settingsAnchor={settingsAnchor}
-        onSettingsOpen={(e) => setSettingsAnchor(e.currentTarget)}
-        onSettingsClose={() => setSettingsAnchor(null)}
-      />
-    );
+    return <HeaderBar activeTab={activeTab} onTabChange={setActiveTab} />;
   },
 };

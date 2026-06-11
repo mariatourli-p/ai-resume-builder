@@ -1,9 +1,10 @@
-import { Box, TextField, Button, Typography, Paper } from "@mui/material";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import { IconPersonal } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
-import { themeConfig } from "@/theme";
+import { useAccentColorSelector } from "@/redux/selectors";
+import { PALETTE_MAP, themeConfig } from "@/theme";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 
 export type PersonalInfoData = {
   fullName: string;
@@ -69,7 +70,7 @@ export const PersonalInfoForm = ({
   isEnhanceDisabled,
 }: PersonalInfoFormProps) => {
   const { personalInfo } = enTokens.sections;
-  const primary = themeConfig.colors.primary;
+  const accentColor = useAccentColorSelector((s) => s);
 
   return (
     <Paper
@@ -91,12 +92,12 @@ export const PersonalInfoForm = ({
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconPersonal style={{ color: primary.DEFAULT }} />
+          <IconPersonal style={{ color: accentColor }} />
           <Typography
             component="span"
             sx={{ fontWeight: 600, userSelect: "none" }}
           >
-            Personal Info
+            {enTokens.sections.personalInfo.title}
           </Typography>
         </Box>
         <Button
@@ -106,11 +107,11 @@ export const PersonalInfoForm = ({
           onClick={onEnhance}
           sx={{
             borderRadius: themeConfig.borderRadius.full,
-            bgcolor: primary.DEFAULT,
+            bgcolor: accentColor,
             textTransform: "uppercase",
             fontSize: themeConfig.fontSize.xs,
             letterSpacing: "0.08em",
-            "&:hover": { bgcolor: primary.text },
+            "&:hover": { bgcolor: accentColor },
           }}
         >
           {isEnhancing ? "Enhancing..." : "Enhance"}
@@ -203,9 +204,7 @@ export const PersonalInfoForm = ({
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <LightbulbOutlinedIcon
-              sx={{ fontSize: 14, color: "text.secondary" }}
-            />
+            <LightbulbOutlinedIcon sx={{ fontSize: 14 }} />
             <Typography variant="caption" color="text.secondary">
               {personalInfo.fields.professionalSummary.hint}
             </Typography>
@@ -217,8 +216,9 @@ export const PersonalInfoForm = ({
             startIcon={<AutoAwesomeIcon sx={{ fontSize: 14 }} />}
             sx={{
               borderRadius: "20px",
-              border: `1px solid ${primary.border}`,
-              color: primary.text,
+              border: `1px solid ${accentColor}`,
+              color: PALETTE_MAP[accentColor].dark,
+              backgroundColor: PALETTE_MAP[accentColor].light,
               fontSize: themeConfig.fontSize.xs,
               textTransform: "none",
               px: 1.5,

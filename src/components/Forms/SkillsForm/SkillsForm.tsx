@@ -1,10 +1,11 @@
-import type { KeyboardEvent } from "react";
-import { Box, TextField, Button, Typography, Paper, Chip } from "@mui/material";
-import { IconSkills, IconAI } from "@/assets/Icons";
-import { themeConfig } from "@/theme/themeConfig";
+import { IconAI, IconSkills } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
+import { useAccentColorSelector } from "@/redux/selectors";
+import { PALETTE_MAP } from "@/theme";
+import { themeConfig } from "@/theme/themeConfig";
+import { Box, Button, Chip, Paper, TextField, Typography } from "@mui/material";
+import type { KeyboardEvent } from "react";
 
-const primary = themeConfig.colors.primary;
 const t = enTokens.skillsForm;
 const ai = enTokens.ai;
 
@@ -75,6 +76,8 @@ export const SkillsForm = ({
   onSuggest,
   appliedSet = new Set(skills),
 }: SkillsFormProps) => {
+  const accentColor = useAccentColorSelector((s) => s);
+
   return (
     <Paper
       elevation={0}
@@ -87,7 +90,7 @@ export const SkillsForm = ({
     >
       {/* Header */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2.5 }}>
-        <IconSkills color={primary.DEFAULT} />
+        <IconSkills color={accentColor} />
         <Typography
           component="span"
           sx={{ fontWeight: 600, userSelect: "none" }}
@@ -110,13 +113,12 @@ export const SkillsForm = ({
           onClick={() => onAdd(input)}
           disabled={!input.trim()}
           sx={{
-            bgcolor: primary.DEFAULT,
+            bgcolor: accentColor,
             borderRadius: 2,
             px: 3,
             textTransform: "none",
             fontWeight: 600,
             whiteSpace: "nowrap",
-            "&:hover": { bgcolor: primary.text },
           }}
         >
           {t.addButton}
@@ -129,7 +131,7 @@ export const SkillsForm = ({
           <Typography
             variant="caption"
             sx={{
-              color: "text.secondary",
+              color: accentColor,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
               display: "block",
@@ -148,7 +150,7 @@ export const SkillsForm = ({
                   borderRadius: themeConfig.borderRadius.full,
                   border: "1px solid",
                   borderColor: "divider",
-                  bgcolor: "background.paper",
+                  bgcolor: accentColor,
                   fontSize: "0.8rem",
                 }}
               />
@@ -171,7 +173,7 @@ export const SkillsForm = ({
             <Typography
               variant="caption"
               sx={{
-                color: "text.secondary",
+                color: accentColor,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
               }}
@@ -179,8 +181,8 @@ export const SkillsForm = ({
               {jobTitle ? `${t.suggestedLabel} "${jobTitle}"` : t.title}
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <IconAI size={13} color={primary.text} />
-              <Typography variant="caption" sx={{ color: primary.text }}>
+              <IconAI size={13} color={accentColor} />
+              <Typography variant="caption" sx={{ color: accentColor }}>
                 {t.clickToAdd}
               </Typography>
             </Box>
@@ -196,18 +198,15 @@ export const SkillsForm = ({
                     borderRadius: themeConfig.borderRadius.full,
                     fontSize: "0.8rem",
                     cursor: isApplied ? "default" : "pointer",
-                    bgcolor: isApplied ? primary.DEFAULT : "background.paper",
-                    color: isApplied ? "white" : "text.primary",
+                    bgcolor: isApplied ? accentColor : "background.paper",
+                    color: isApplied ? "white" : accentColor,
                     border: "1px solid",
-                    borderColor: isApplied ? primary.DEFAULT : "divider",
+                    borderColor: isApplied ? accentColor : "divider",
                     fontWeight: isApplied ? 600 : 400,
                     "& .MuiChip-label": {
                       display: "flex",
                       alignItems: "center",
                       gap: "4px",
-                    },
-                    "&:hover": {
-                      bgcolor: isApplied ? primary.DEFAULT : primary.surface,
                     },
                   }}
                   label={
@@ -235,12 +234,12 @@ export const SkillsForm = ({
           startIcon={<IconAI size={13} />}
           sx={{
             borderRadius: themeConfig.borderRadius.full,
-            border: `1px solid ${primary.border}`,
-            color: primary.text,
+            border: `1px solid ${accentColor}`,
+            color: accentColor,
             fontSize: "0.75rem",
             textTransform: "none",
             px: 1.5,
-            "&:hover": { bgcolor: primary.surface },
+            "&:hover": { bgcolor: PALETTE_MAP[accentColor]?.light },
           }}
         >
           {isSuggesting ? ai.loading : ai.suggest}

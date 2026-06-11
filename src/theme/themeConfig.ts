@@ -8,6 +8,7 @@ export const themeConfig = {
   colors: {
     transparent: "transparent",
     white: "#ffffff",
+    black: "#030712",
     // ─── AI / Emerald ──────────────────────────────────
     ai: {
       surface: "#ecfdf5",

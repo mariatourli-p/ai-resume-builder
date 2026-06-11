@@ -1,7 +1,7 @@
 const SECTIONS = {
   sections: {
     personalInfo: {
-      title: "Personal",
+      title: "Personal Info",
       enhanceButton: "Enhance",
       fields: {
         fullName: {
@@ -58,7 +58,7 @@ const SECTIONS = {
 
 export const enTokens = {
   app: {
-    title: "CareerFlow AI",
+    title: "CareerFlow",
     builder: "Builder",
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
@@ -108,6 +108,7 @@ export const enTokens = {
   export: {
     export_pdf: "Export PDF",
     save_draft: "Save Draft",
+    draft_saved: "Draft saved in live memory",
   },
   confirmations: {
     newResume: "This will clear everything. Are you sure?",

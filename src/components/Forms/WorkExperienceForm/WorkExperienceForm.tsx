@@ -1,23 +1,23 @@
 import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Paper,
-  IconButton,
-} from "@mui/material";
-import {
-  IconAI,
-  IconExperience,
-  IconDelete,
   IconAdd,
-  IconChevronUp,
+  IconAI,
   IconChevronDown,
+  IconChevronUp,
+  IconDelete,
   IconEdit,
+  IconExperience,
 } from "@/assets/Icons";
+import { useAccentColorSelector } from "@/redux/selectors";
+import { PALETTE_MAP } from "@/theme";
 import { themeConfig } from "@/theme/themeConfig";
-
-const primary = themeConfig.colors.primary;
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 export type WorkExperienceEntry = {
   id: string;
@@ -84,6 +84,8 @@ export const WorkExperienceForm = ({
   onImprove,
   improvingIds = new Set(),
 }: WorkExperienceFormProps) => {
+  const accentColor = useAccentColorSelector((s) => s);
+
   return (
     <Box>
       {/* Header */}
@@ -96,7 +98,7 @@ export const WorkExperienceForm = ({
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconExperience color={primary.DEFAULT} />
+          <IconExperience color={accentColor} />
           <Typography
             component="span"
             sx={{ fontWeight: 600, userSelect: "none" }}
@@ -108,10 +110,14 @@ export const WorkExperienceForm = ({
           startIcon={<IconAdd size={16} />}
           onClick={onAdd}
           sx={{
-            color: primary.text,
+            color: themeConfig.colors.black,
             fontSize: "0.8rem",
             textTransform: "none",
-            "&:hover": { bgcolor: primary.surface },
+            "&:hover": {
+              bgcolor: PALETTE_MAP[accentColor]?.light,
+              color: accentColor,
+              border: `1px solid ${accentColor}`,
+            },
           }}
         >
           Add Experience
@@ -200,7 +206,7 @@ export const WorkExperienceForm = ({
                   <Typography
                     variant="caption"
                     sx={{
-                      color: "text.secondary",
+                      color: themeConfig.colors.black,
                       letterSpacing: "0.08em",
                       textTransform: "uppercase",
                     }}
@@ -209,7 +215,7 @@ export const WorkExperienceForm = ({
                   </Typography>
                   <Typography
                     variant="caption"
-                    sx={{ color: "text.secondary" }}
+                    sx={{ color: themeConfig.colors.black }}
                   >
                     Separate points with a new line
                   </Typography>
@@ -258,12 +264,12 @@ export const WorkExperienceForm = ({
                     startIcon={<IconAI size={13} />}
                     sx={{
                       borderRadius: themeConfig.borderRadius.full,
-                      border: `1px solid ${primary.border}`,
-                      color: primary.text,
+                      border: `1px solid ${accentColor}`,
+                      color: accentColor,
                       fontSize: "0.7rem",
                       textTransform: "none",
                       px: 1.5,
-                      "&:hover": { bgcolor: primary.surface },
+                      "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
                     }}
                   >
                     {isImproving ? "Improving..." : "quantify metrics"}
@@ -275,12 +281,12 @@ export const WorkExperienceForm = ({
                     startIcon={<IconAI size={13} />}
                     sx={{
                       borderRadius: themeConfig.borderRadius.full,
-                      border: `1px solid ${primary.border}`,
-                      color: primary.text,
+                      border: `1px solid ${accentColor}`,
+                      color: accentColor,
                       fontSize: "0.7rem",
                       textTransform: "none",
                       px: 1.5,
-                      "&:hover": { bgcolor: primary.surface },
+                      "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
                     }}
                   >
                     stronger verbs

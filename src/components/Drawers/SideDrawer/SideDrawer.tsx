@@ -1,6 +1,6 @@
 import { Box, Stack, Divider, Drawer, type SxProps } from "@mui/material";
 import { IconAI } from "@/assets/Icons";
-import { themeConfig } from "@/theme";
+import { PALETTE_MAP, themeConfig } from "@/theme";
 import { ResumeButton } from "@/components/Buttons/SectionsBarButtons/ResumeButton";
 import { AIOptimizedButton } from "@/components/Buttons/SectionsBarButtons/AIOptimizedButton";
 import { TemplateButton } from "@/components/Buttons/SectionsBarButtons/TemplateButton";
@@ -89,7 +89,7 @@ export const SideDrawer = ({
               ...item,
               style: {
                 border: `1.5px solid ${accentColor}`,
-                backgroundColor: `${accentColor}18`,
+                backgroundColor: PALETTE_MAP[accentColor]?.light,
                 color: accentColor,
               },
             }))}

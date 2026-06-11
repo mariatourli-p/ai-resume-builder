@@ -1,14 +1,14 @@
 import { PersonalInfoForm } from "@/components/Forms/PersonalInfoForm";
-import { useCallback } from "react";
-import { useAI } from "@hooks/useAI";
-import { AI_PROMPTS } from "@/services/aiPrompts";
-import { useAppDispatch } from "@/redux/store";
-import { usePersonalInfoSelector, shallowEqual } from "@/redux/selectors";
 import {
-  updatePersonalInfoField,
   setPersonalInfo,
+  updatePersonalInfoField,
   type PersonalInfoData,
 } from "@/redux/resume/resume-reducer";
+import { shallowEqual, usePersonalInfoSelector } from "@/redux/selectors";
+import { useAppDispatch } from "@/redux/store";
+import { AI_PROMPTS } from "@/services/aiPrompts";
+import { useAI } from "@hooks/useAI";
+import { useCallback } from "react";
 
 export const PersonalInfoFormView = () => {
   const dispatch = useAppDispatch();

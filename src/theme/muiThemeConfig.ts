@@ -3,7 +3,7 @@ import { themeConfig } from "./themeConfig";
 
 const { palette } = themeConfig.colors;
 
-const PALETTE_MAP: Record<
+export const PALETTE_MAP: Record<
   string,
   { main: string; light: string; dark: string; contrastText: string }
 > = {

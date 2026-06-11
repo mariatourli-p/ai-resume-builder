@@ -1,15 +1,13 @@
+import { IconAdd, IconDelete, IconEducation } from "@/assets/Icons";
+import { useAccentColorSelector } from "@/redux/selectors";
 import {
   Box,
-  TextField,
   Button,
-  Typography,
-  Paper,
   IconButton,
+  Paper,
+  TextField,
+  Typography,
 } from "@mui/material";
-import { IconEducation, IconDelete, IconAdd } from "@/assets/Icons";
-import { themeConfig } from "@/theme/themeConfig";
-
-const primary = themeConfig.colors.primary;
 
 export type EducationEntry = {
   id: string;
@@ -62,6 +60,8 @@ export const EducationForm = ({
   onDelete,
   onChange,
 }: EducationFormProps) => {
+  const accentColor = useAccentColorSelector((s) => s);
+
   return (
     <Box>
       {/* Header */}
@@ -74,7 +74,7 @@ export const EducationForm = ({
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconEducation color={primary.DEFAULT} />
+          <IconEducation color={accentColor} />
           <Typography
             component="span"
             sx={{ fontWeight: 600, userSelect: "none" }}
@@ -86,10 +86,9 @@ export const EducationForm = ({
           startIcon={<IconAdd size={16} />}
           onClick={onAdd}
           sx={{
-            color: primary.text,
+            color: accentColor,
             fontSize: "0.8rem",
             textTransform: "none",
-            "&:hover": { bgcolor: primary.surface },
           }}
         >
           Add Degree
