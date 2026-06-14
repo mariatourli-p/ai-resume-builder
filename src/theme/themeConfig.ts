@@ -1,9 +1,18 @@
 export const themeConfig = {
+  sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+  serif: ["Literata", "Georgia", "serif"],
+  mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+  display: ["Space Grotesk", "sans-serif"],
   fontFamily: {
     sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
     serif: ["Literata", "Georgia", "serif"],
     mono: ["JetBrains Mono", "ui-monospace", "monospace"],
     display: ["Space Grotesk", "sans-serif"],
+    templates: {
+      "Executive Serif": ["Literata", "Georgia", "serif"], // elegant serif
+      "Classic Modern": ["Inter", "ui-sans-serif", "sans-serif"], // clean sans
+      "Technical Mono": ["JetBrains Mono", "ui-monospace", "monospace"], // mono
+    },
   },
   colors: {
     transparent: "transparent",

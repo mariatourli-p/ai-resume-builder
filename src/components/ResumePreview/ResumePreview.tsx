@@ -14,6 +14,7 @@ export type ResumePreviewProps = {
   education: EducationEntry[];
   skills: string[];
   accentColor: string;
+  fontFamily: string;
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -130,6 +131,7 @@ export const ResumePreview = ({
   education,
   skills,
   accentColor,
+  fontFamily,
 }: ResumePreviewProps) => {
   const {
     fullName,
@@ -154,7 +156,7 @@ export const ResumePreview = ({
         boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
         borderRadius: 1,
         p: "12mm",
-        fontFamily: themeConfig.fontFamily.sans.join(", "),
+        fontFamily,
         boxSizing: "border-box",
       }}
     >
@@ -167,6 +169,7 @@ export const ResumePreview = ({
             letterSpacing: "-0.01em",
             color: themeConfig.colors.sidebar.cta,
             lineHeight: 1.1,
+            fontFamily: "inherit",
           }}
         >
           {fullName || "Your Name"}
@@ -179,6 +182,7 @@ export const ResumePreview = ({
               color: "text.secondary",
               mt: 0.5,
               letterSpacing: "0.02em",
+              fontFamily: "inherit",
             }}
           >
             {contactParts.join("  ·  ")}
@@ -194,6 +198,7 @@ export const ResumePreview = ({
               textTransform: "uppercase",
               color: accentColor,
               mt: 0.75,
+              fontFamily: "inherit",
             }}
           >
             {professionalTitle}
@@ -208,7 +213,14 @@ export const ResumePreview = ({
             title="Professional Summary"
             accentColor={accentColor}
           />
-          <Typography sx={{ fontSize: 8.5, lineHeight: 1.7, color: "#374151" }}>
+          <Typography
+            sx={{
+              fontSize: 8.5,
+              lineHeight: 1.7,
+              color: "#374151",
+              fontFamily: "inherit",
+            }}
+          >
             {professionalSummary}
           </Typography>
         </Box>
@@ -241,7 +253,14 @@ export const ResumePreview = ({
             title="Skills & Core Competencies"
             accentColor={accentColor}
           />
-          <Typography sx={{ fontSize: 8.5, lineHeight: 1.7, color: "#374151" }}>
+          <Typography
+            sx={{
+              fontSize: 8.5,
+              lineHeight: 1.7,
+              color: "#374151",
+              fontFamily: "inherit",
+            }}
+          >
             {skills.join("  ·  ")}
           </Typography>
         </Box>

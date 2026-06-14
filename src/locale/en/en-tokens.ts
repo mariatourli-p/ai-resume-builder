@@ -53,6 +53,15 @@ const SECTIONS = {
         },
       },
     },
+    skills: {
+      title: "Skills & Core Competencies",
+      addButton: "Add",
+      inputPlaceholder: "Type tech stack keyword or skill, and hit Enter",
+      currentSkillsLabel: "Current Skills Applied",
+      suggestedLabel: "Suggested for",
+      clickToAdd: "Click tag to add instantly",
+      skills: "Skills",
+    },
   },
 } as const;
 
@@ -63,6 +72,7 @@ export const enTokens = {
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
     ai_optimized: "AI Optimized Engine",
+    projects: "Projects",
   },
   nav: {
     settings: "Settings",
@@ -77,14 +87,6 @@ export const enTokens = {
     rewriting: "Rewriting...",
     smartRewrite: "Smart Rewrite",
     undo: "Undo",
-  },
-  skillsForm: {
-    title: "Skills & Core Competencies",
-    addButton: "Add",
-    inputPlaceholder: "Type tech stack keyword or skill, and hit Enter",
-    currentSkillsLabel: "Current Skills Applied",
-    suggestedLabel: "Suggested for",
-    clickToAdd: "Click tag to add instantly",
   },
   settings: {
     title: "Settings",

@@ -39,6 +39,7 @@ export type ResumeState = {
   workExperience: WorkExperienceEntry[];
   education: EducationEntry[];
   accentColor: string;
+  activeTemplate: string;
 };
 
 // --- Initial State ---
@@ -56,6 +57,7 @@ const initialState: ResumeState = {
   skills: [],
   workExperience: [],
   education: [],
+  activeTemplate: "Classic Modern",
 };
 
 // --- Slice ---
@@ -147,6 +149,10 @@ const resumeSlice = createSlice({
     setAccentColor(state, action: PayloadAction<string>) {
       state.accentColor = action.payload;
     },
+
+    setActiveTemplate: (state, action: PayloadAction<string>) => {
+      state.activeTemplate = action.payload;
+    },
   },
 });
 
@@ -163,6 +169,7 @@ export const {
   removeEducation,
   resetResume,
   setAccentColor,
+  setActiveTemplate,
 } = resumeSlice.actions;
 
 export const resumeReducer = resumeSlice.reducer;

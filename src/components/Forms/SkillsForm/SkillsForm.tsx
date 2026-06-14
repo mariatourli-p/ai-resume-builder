@@ -6,7 +6,6 @@ import { themeConfig } from "@/theme/themeConfig";
 import { Box, Button, Chip, Paper, TextField, Typography } from "@mui/material";
 import type { KeyboardEvent } from "react";
 
-const t = enTokens.skillsForm;
 const ai = enTokens.ai;
 
 export type SkillsFormProps = {
@@ -77,6 +76,14 @@ export const SkillsForm = ({
   appliedSet = new Set(skills),
 }: SkillsFormProps) => {
   const accentColor = useAccentColorSelector((s) => s);
+  const {
+    title,
+    inputPlaceholder,
+    addButton,
+    currentSkillsLabel,
+    suggestedLabel,
+    clickToAdd,
+  } = enTokens.sections.skills;
 
   return (
     <Paper
@@ -95,7 +102,7 @@ export const SkillsForm = ({
           component="span"
           sx={{ fontWeight: 600, userSelect: "none" }}
         >
-          {t.title}
+          {title}
         </Typography>
       </Box>
 
@@ -103,7 +110,7 @@ export const SkillsForm = ({
       <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
         <TextField
           fullWidth
-          placeholder={t.inputPlaceholder}
+          placeholder={inputPlaceholder}
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={onKeyDown}
@@ -121,7 +128,7 @@ export const SkillsForm = ({
             whiteSpace: "nowrap",
           }}
         >
-          {t.addButton}
+          {addButton}
         </Button>
       </Box>
 
@@ -138,7 +145,7 @@ export const SkillsForm = ({
               mb: 1.5,
             }}
           >
-            {t.currentSkillsLabel}
+            {currentSkillsLabel}
           </Typography>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
             {skills.map((skill) => (
@@ -178,12 +185,12 @@ export const SkillsForm = ({
                 textTransform: "uppercase",
               }}
             >
-              {jobTitle ? `${t.suggestedLabel} "${jobTitle}"` : t.title}
+              {jobTitle ? `${suggestedLabel} "${jobTitle}"` : title}
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <IconAI size={13} color={accentColor} />
               <Typography variant="caption" sx={{ color: accentColor }}>
-                {t.clickToAdd}
+                {clickToAdd}
               </Typography>
             </Box>
           </Box>

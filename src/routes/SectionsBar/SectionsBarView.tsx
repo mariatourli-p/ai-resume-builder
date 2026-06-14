@@ -2,11 +2,13 @@ import {
   IconEducation,
   IconExperience,
   IconPersonal,
-  IconProjects,
   IconSkills,
 } from "@/assets/Icons";
 import { SideDrawer } from "@/components/Drawers/SideDrawer/SideDrawer";
 import { enTokens } from "@/locale/en/en-tokens";
+import { setActiveTemplate } from "@/redux/resume/resume-reducer";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useScrollStore } from "@/stores/useScrollStore";
 import type { SxProps } from "@mui/material";
 import { useState } from "react";
 
@@ -31,30 +33,40 @@ export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
     { text: workExperience.title, icon: <IconExperience /> },
     { text: education.title, icon: <IconEducation /> },
     { text: "Skills", icon: <IconSkills /> },
-    { text: "Projects", icon: <IconProjects /> },
   ];
 
   const [activeSection, setActiveSection] = useState<string>(
     personalInfo.title,
   );
-  const [activeTemplate, setActiveTemplate] =
-    useState<string>("Classic Modern");
+
+  const dispatch = useAppDispatch();
+  const activeTemplate = useAppSelector((s) => s.resume.activeTemplate);
 
   const templateItems = [
     { text: "Executive Serif", icon: null },
     { text: "Classic Modern", icon: null },
-    { text: "Compact Minimalist", icon: null },
     { text: "Technical Mono", icon: null },
   ];
+
+  const handleTemplateClick = (text: string) => {
+    dispatch(setActiveTemplate(text));
+  };
+
+  const scrollTo = useScrollStore((s) => s.scrollTo);
+
+  const handleSectionClick = (title: string) => {
+    setActiveSection(title);
+    scrollTo(title);
+  };
 
   return (
     <SideDrawer
       sectionItems={sectionItems}
       templateItems={templateItems}
       activeSection={activeSection}
-      onSectionClick={setActiveSection}
+      onSectionClick={handleSectionClick}
       activeTemplate={activeTemplate}
-      onTemplateClick={setActiveTemplate}
+      onTemplateClick={handleTemplateClick}
       sx={sx}
     />
   );

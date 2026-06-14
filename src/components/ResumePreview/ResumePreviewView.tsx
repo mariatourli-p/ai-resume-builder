@@ -1,5 +1,6 @@
 import { useAccentColorSelector } from "@/redux/selectors";
 import { useAppSelector } from "@/redux/store";
+import { themeConfig } from "@/theme";
 import { Box } from "@mui/material";
 import { ResumePreview } from "./ResumePreview";
 
@@ -8,6 +9,11 @@ export const ResumePreviewView = () => {
     (state) => state.resume,
   );
   const accentColor = useAccentColorSelector((s) => s);
+  const activeTemplate = useAppSelector((s) => s.resume.activeTemplate);
+  const fontFamily =
+    themeConfig.fontFamily.templates[
+      activeTemplate as keyof typeof themeConfig.fontFamily.templates
+    ] ?? themeConfig.fontFamily.sans;
 
   return (
     <Box
@@ -29,6 +35,7 @@ export const ResumePreviewView = () => {
         education={education}
         skills={skills}
         accentColor={accentColor}
+        fontFamily={fontFamily.join(", ")}
       />
     </Box>
   );
