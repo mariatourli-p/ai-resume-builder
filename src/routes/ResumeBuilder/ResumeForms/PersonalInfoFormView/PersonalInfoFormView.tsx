@@ -8,12 +8,26 @@ import { shallowEqual, usePersonalInfoSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
 import { AI_PROMPTS } from "@/services/aiPrompts";
 import { useAI } from "@hooks/useAI";
+import { useRequireApiKey } from "@hooks/useRequireApiKey";
 import { useCallback } from "react";
 
+/**
+ * View controller for the Personal Info form section.
+ *
+ * Connects the {@link PersonalInfoForm} UI to Redux state and AI enhancement logic.
+ * Handles field updates, AI-powered summary improvement, and API key validation
+ * before any AI action is triggered.
+ *
+ * @remarks
+ * - Field changes are dispatched via {@link updatePersonalInfoField}
+ * - AI enhancement uses {@link useAI} with prompts from {@link AI_PROMPTS}
+ * - If no API key is set, {@link useRequireApiKey} opens the missing key dialog automatically
+ */
 export const PersonalInfoFormView = () => {
   const dispatch = useAppDispatch();
   const data = usePersonalInfoSelector((s) => s, shallowEqual);
   const { improve, isLoading: isEnhancing } = useAI();
+  const { requireApiKey } = useRequireApiKey();
 
   const handleChange = useCallback(
     (field: keyof PersonalInfoData, value: string) => {
@@ -24,6 +38,8 @@ export const PersonalInfoFormView = () => {
 
   const handleEnhance = useCallback(
     async (prompt: keyof typeof AI_PROMPTS) => {
+      if (!requireApiKey()) return;
+
       const text =
         prompt === "smartRewrite"
           ? `Job title: ${data.professionalTitle}\nSummary: ${data.professionalSummary}`
@@ -34,7 +50,7 @@ export const PersonalInfoFormView = () => {
         dispatch(setPersonalInfo({ ...data, professionalSummary: improved }));
       }
     },
-    [improve, data, dispatch],
+    [requireApiKey, data, improve, dispatch],
   );
 
   return (

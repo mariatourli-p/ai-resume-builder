@@ -6,7 +6,7 @@ import { AIOptimizedButton } from "@/components/Buttons/SectionsBarButtons/AIOpt
 import { OptimizeResumeButton } from "@/components/Buttons/SectionsBarButtons/OptimizeResumeButton/OptimizeResumeButton";
 import { ResumeButton } from "@/components/Buttons/SectionsBarButtons/ResumeButton";
 import { TemplateButton } from "@/components/Buttons/SectionsBarButtons/TemplateButton";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { useAppSelector } from "@/redux/store";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import { Box, Divider, Drawer, Stack, type SxProps } from "@mui/material";
 
@@ -31,7 +31,7 @@ export const SideDrawer = ({
   onTemplateClick,
   sx,
 }: SideDrawerProps) => {
-  const accentColor = useAccentColorSelector((s) => s);
+  const accentColor = useAppSelector((s) => s.resume.accentColor);
 
   return (
     <Drawer

@@ -9,7 +9,24 @@ import { shallowEqual, useWorkExperienceSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
 import { AI_PROMPTS } from "@/services/aiPrompts";
 import { useAI } from "@hooks/useAI";
+import { useRequireApiKey } from "@hooks/useRequireApiKey";
 import { useCallback, useState } from "react";
+
+/**
+ * View controller for the Work Experience form section.
+ *
+ * Connects the {@link WorkExperienceForm} UI to Redux state and AI improvement logic.
+ * Manages per-entry loading states for two distinct AI actions: metric quantification
+ * and stronger verb rewrites.
+ *
+ * @remarks
+ * - Entries are stored in Redux and updated via {@link updateWorkExperienceField}
+ * - Each AI action tracks its loading state independently per entry id using `Set<string>`
+ * - `quantifyingIds` tracks entries currently being quantified
+ * - `verbIds` tracks entries currently undergoing verb improvement
+ * - AI actions are no-ops if the entry's achievements field is empty
+ * - {@link handleImprove} is a shared handler parameterized by prompt and state setter
+ */
 
 export const WorkExperienceFormView = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +34,7 @@ export const WorkExperienceFormView = () => {
   const [quantifyingIds, setQuantifyingIds] = useState<Set<string>>(new Set());
   const [verbIds, setVerbIds] = useState<Set<string>>(new Set());
   const { improve } = useAI();
+  const { requireApiKey } = useRequireApiKey();
 
   const handleAdd = useCallback(() => {
     dispatch(addWorkExperience());
@@ -46,6 +64,8 @@ export const WorkExperienceFormView = () => {
       prompt: keyof typeof AI_PROMPTS,
       setIds: React.Dispatch<React.SetStateAction<Set<string>>>,
     ) => {
+      if (!requireApiKey()) return;
+
       const entry = entries.find((e) => e.id === id);
       if (!entry?.achievements?.trim()) return;
 
@@ -66,7 +86,7 @@ export const WorkExperienceFormView = () => {
         return s;
       });
     },
-    [improve, entries, dispatch],
+    [requireApiKey, entries, improve, dispatch],
   );
 
   return (

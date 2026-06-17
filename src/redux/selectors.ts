@@ -1,13 +1,13 @@
 /**
  * Selector hooks for resume state.
  */
-import { useAppSelector, shallowEqual } from "./store";
 import { type EqualityFn } from "react-redux";
 import type {
+  EducationEntry,
   PersonalInfoData,
   WorkExperienceEntry,
-  EducationEntry,
 } from "./resume/resume-reducer";
+import { shallowEqual, useAppSelector } from "./store";
 
 export const usePersonalInfoSelector = <T>(
   project: (slice: PersonalInfoData) => T,

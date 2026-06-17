@@ -116,4 +116,16 @@ export const enTokens = {
     newResume: "This will clear everything. Are you sure?",
   },
   personal: {},
+  missingApiKeyDialog: {
+    title: "API Key Required",
+    subtitle: "AI Enhancement Feature Locked",
+    description:
+      "To protect your credentials and allow safe, unlimited open-source operation, this app utilizes your custom key. Simply click the",
+    settingsLink: "Settings gear icon",
+    descriptionSuffix:
+      "in the top-right header, paste your key, and you're good to go!",
+    getFreeKey: "Get free key",
+    addItNow: "I'll add it now",
+    getFreeKeyUrl: "https://console.anthropic.com/",
+  },
 };

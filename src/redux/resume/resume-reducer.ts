@@ -33,6 +33,8 @@ export type EducationEntry = {
   location: string;
 };
 
+export type DialogType = "missingApiKey" | null;
+
 export type ResumeState = {
   personalInfo: PersonalInfoData;
   skills: string[];
@@ -40,6 +42,7 @@ export type ResumeState = {
   education: EducationEntry[];
   accentColor: string;
   activeTemplate: string;
+  dialogType: DialogType;
 };
 
 // --- Initial State ---
@@ -58,6 +61,7 @@ const initialState: ResumeState = {
   workExperience: [],
   education: [],
   activeTemplate: "Classic Modern",
+  dialogType: null,
 };
 
 // --- Slice ---
@@ -153,6 +157,10 @@ const resumeSlice = createSlice({
     setActiveTemplate: (state, action: PayloadAction<string>) => {
       state.activeTemplate = action.payload;
     },
+
+    toggleDialog: (state, action: PayloadAction<DialogType>) => {
+      state.dialogType = action.payload;
+    },
   },
 });
 
@@ -170,6 +178,7 @@ export const {
   resetResume,
   setAccentColor,
   setActiveTemplate,
+  toggleDialog,
 } = resumeSlice.actions;
 
 export const resumeReducer = resumeSlice.reducer;
