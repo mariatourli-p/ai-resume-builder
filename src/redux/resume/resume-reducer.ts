@@ -33,7 +33,7 @@ export type EducationEntry = {
   location: string;
 };
 
-export type DialogType = "missingApiKey" | null;
+export type DialogType = "missingApiKey" | "keyError" | null;
 
 export type ResumeState = {
   personalInfo: PersonalInfoData;

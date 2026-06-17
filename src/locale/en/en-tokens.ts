@@ -128,4 +128,16 @@ export const enTokens = {
     addItNow: "I'll add it now",
     getFreeKeyUrl: "https://console.anthropic.com/",
   },
+  errorDialog: {
+    title: "API Key Verification Failed",
+    subtitle: "Authentication Error",
+    inputLabel: "Correct/Update API Key",
+    getFreeKey: "Get free key",
+    getFreeKeyUrl: "https://console.anthropic.com/",
+    responsLogLabel: "API Response Log:",
+    description:
+      "This verification failed because the key is incorrect, expired, or has blocked billing. Please verify your key.",
+    cancel: "Cancel",
+    saveAndRetry: "Save & Retry",
+  },
 };
