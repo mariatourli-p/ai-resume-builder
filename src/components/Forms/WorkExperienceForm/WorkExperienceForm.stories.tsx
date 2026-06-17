@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { store } from "@/redux/store";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { Provider } from "react-redux";
 import {
   WorkExperienceForm,
   type WorkExperienceFormProps,
@@ -53,14 +55,9 @@ const withState = (
   const handleDelete = (id: string) =>
     setEntries((prev) => prev.filter((e) => e.id !== id));
 
-  const handleChange = (
-    id: string,
-    field: keyof Omit<Entry, "id">,
-    value: string,
-  ) =>
-    setEntries((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, [field]: value } : e)),
-    );
+  const onQuantifyMetrics = (id: string) => {
+    console.log(id);
+  };
 
   const handleImprove = (id: string) => {
     setImprovingIds((prev) => new Set(prev).add(id));
@@ -76,15 +73,17 @@ const withState = (
   };
 
   return (
-    <WorkExperienceForm
-      {...context.args}
-      entries={entries}
-      improvingIds={improvingIds}
-      onAdd={handleAdd}
-      onDelete={handleDelete}
-      onChange={handleChange}
-      onImprove={handleImprove}
-    />
+    <Provider store={store}>
+      <WorkExperienceForm
+        {...context.args}
+        entries={entries}
+        improvingIds={improvingIds}
+        onAdd={handleAdd}
+        onDelete={handleDelete}
+        onQuantifyMetrics={onQuantifyMetrics}
+        onStrongerVerbs={handleImprove}
+      />
+    </Provider>
   );
 };
 
@@ -109,7 +108,7 @@ const meta: Meta<typeof WorkExperienceForm> = {
     onAdd: { action: "add clicked" },
     onDelete: { action: "delete clicked" },
     onChange: { action: "field changed" },
-    onImprove: { action: "improve clicked" },
+    onStrongerVerbs: { action: "improve verbs" },
   },
 };
 

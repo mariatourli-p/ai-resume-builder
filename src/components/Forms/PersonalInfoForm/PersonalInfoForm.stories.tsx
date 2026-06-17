@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { store } from "@/redux/store";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { Provider } from "react-redux";
 import {
   PersonalInfoForm,
   type PersonalInfoFormProps,
@@ -25,13 +27,15 @@ const withState = (
   const [data, setData] = useState<Data>(context.args.data ?? defaultData);
 
   return (
-    <PersonalInfoForm
-      {...context.args}
-      data={data}
-      onChange={(field, value) =>
-        setData((prev) => ({ ...prev, [field]: value }))
-      }
-    />
+    <Provider store={store}>
+      <PersonalInfoForm
+        {...context.args}
+        data={data}
+        onChange={(field, value) =>
+          setData((prev) => ({ ...prev, [field]: value }))
+        }
+      />
+    </Provider>
   );
 };
 

@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { store } from "@/redux/store";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { Provider } from "react-redux";
 import { EducationForm, type EducationFormProps } from "./EducationForm";
 
 type Entry = NonNullable<EducationFormProps["entries"]>[number];
@@ -44,13 +46,15 @@ const withState = (_Story: unknown, context: { args: EducationFormProps }) => {
     );
 
   return (
-    <EducationForm
-      {...context.args}
-      entries={entries}
-      onAdd={handleAdd}
-      onDelete={handleDelete}
-      onChange={handleChange}
-    />
+    <Provider store={store}>
+      <EducationForm
+        {...context.args}
+        entries={entries}
+        onAdd={handleAdd}
+        onDelete={handleDelete}
+        onChange={handleChange}
+      />
+    </Provider>
   );
 };
 

@@ -1,6 +1,7 @@
 import { IconPersonal } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
+import { AI_PROMPTS } from "@/services/aiPrompts";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -29,9 +30,9 @@ export type PersonalInfoFormProps = {
   /** Disables both the Enhance and Smart Rewrite buttons (e.g. when the API key is missing). */
   isEnhanceDisabled: boolean;
   /** Fired when the Enhance button is clicked. */
-  onEnhance: () => void;
+  onEnhance: (prompt: keyof typeof AI_PROMPTS) => void;
   /** Fired when the Smart Rewrite button inside the summary field is clicked. */
-  onSmartRewrite?: () => void;
+  onSmartRewrite: (prompt: keyof typeof AI_PROMPTS) => void;
   /** Fired on every field change. Receives the field key and the new value. */
   onChange: (field: keyof PersonalInfoData, value: string) => void;
 };
@@ -65,8 +66,8 @@ export const PersonalInfoForm = ({
   isEnhancing = false,
   isRewriting = false,
   onEnhance,
-  onSmartRewrite,
   onChange,
+  onSmartRewrite,
   isEnhanceDisabled,
 }: PersonalInfoFormProps) => {
   const { personalInfo } = enTokens.sections;
@@ -104,7 +105,7 @@ export const PersonalInfoForm = ({
           variant="contained"
           startIcon={<AutoAwesomeIcon />}
           disabled={isEnhanceDisabled || isEnhancing}
-          onClick={onEnhance}
+          onClick={() => onEnhance("enhance")}
           sx={{
             borderRadius: themeConfig.borderRadius.full,
             bgcolor: accentColor,
@@ -212,7 +213,7 @@ export const PersonalInfoForm = ({
           <Button
             size="small"
             disabled={isRewriting || isEnhanceDisabled}
-            onClick={onSmartRewrite}
+            onClick={() => onSmartRewrite("smartRewrite")}
             startIcon={<AutoAwesomeIcon sx={{ fontSize: 14 }} />}
             sx={{
               borderRadius: "20px",

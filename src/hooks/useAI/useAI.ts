@@ -1,23 +1,21 @@
 import { useApiKey } from "@/routes/ApiKey/useApiKey";
 import { improveText } from "@/services";
-import { AI_PROMPTS } from "@/services/aiPrompts";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export const useAI = () => {
   const { apiKey } = useApiKey();
   const [isLoading, setIsLoading] = useState(false);
+  console.log("🚀 1111", isLoading);
 
   const improve = useCallback(
-    async (
-      prompt: keyof typeof AI_PROMPTS,
-      text: string,
-    ): Promise<string | null> => {
+    async (prompt: string, text: string): Promise<string | null> => {
+      console.log("🚀 222", prompt, text);  
       if (!apiKey || !text) return null;
       setIsLoading(true);
       try {
-        return await improveText(apiKey, AI_PROMPTS[prompt], text);
+        return await improveText(apiKey, prompt, text);
       } catch {
-        // TODO: show error toast
+        // TODO
         return null;
       } finally {
         setIsLoading(false);

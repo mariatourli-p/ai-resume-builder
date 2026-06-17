@@ -46,10 +46,12 @@ export type WorkExperienceFormProps = {
     field: keyof Omit<WorkExperienceEntry, "id">,
     value: string,
   ) => void;
-  /** Fired when the AI improve button is clicked for an entry. Receives the entry `id`. */
-  onImprove?: (id: string) => void;
+  onQuantifyMetrics: (id: string) => void;
+  onStrongerVerbs: (id: string) => void;
   /** Set of entry ids currently being improved by AI. */
   improvingIds?: Set<string>;
+  quantifyingIds?: Set<string>;
+  verbIds?: Set<string>;
 };
 
 /**
@@ -81,8 +83,10 @@ export const WorkExperienceForm = ({
   onAdd,
   onDelete,
   onChange,
-  onImprove,
-  improvingIds = new Set(),
+  onQuantifyMetrics,
+  onStrongerVerbs,
+  quantifyingIds,
+  verbIds,
 }: WorkExperienceFormProps) => {
   const accentColor = useAccentColorSelector((s) => s);
 
@@ -127,7 +131,8 @@ export const WorkExperienceForm = ({
       {/* Entries */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {entries.map((entry) => {
-          const isImproving = improvingIds.has(entry.id);
+          const isQuantifying = quantifyingIds?.has(entry.id);
+          const isVerbing = verbIds?.has(entry.id);
           return (
             <Paper
               key={entry.id}
@@ -259,8 +264,12 @@ export const WorkExperienceForm = ({
                 <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
                   <Button
                     size="small"
-                    disabled={isAIDisabled || isImproving}
-                    onClick={() => onImprove?.(entry.id)}
+                    disabled={
+                      isAIDisabled ||
+                      isQuantifying ||
+                      !entry.achievements?.trim()
+                    }
+                    onClick={() => onQuantifyMetrics(entry.id)}
                     startIcon={<IconAI size={13} />}
                     sx={{
                       borderRadius: themeConfig.borderRadius.full,
@@ -272,12 +281,14 @@ export const WorkExperienceForm = ({
                       "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
                     }}
                   >
-                    {isImproving ? "Improving..." : "quantify metrics"}
+                    {isQuantifying ? "Improving..." : "quantify metrics"}
                   </Button>
                   <Button
                     size="small"
-                    disabled={isAIDisabled || isImproving}
-                    onClick={() => onImprove?.(entry.id)}
+                    disabled={
+                      isAIDisabled || isVerbing || !entry.achievements?.trim()
+                    }
+                    onClick={() => onStrongerVerbs(entry.id)}
                     startIcon={<IconAI size={13} />}
                     sx={{
                       borderRadius: themeConfig.borderRadius.full,
@@ -289,7 +300,7 @@ export const WorkExperienceForm = ({
                       "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
                     }}
                   >
-                    stronger verbs
+                    {isVerbing ? "Improving..." : "stronger verbs"}
                   </Button>
                   <Box sx={{ ml: "auto" }}>
                     <IconButton

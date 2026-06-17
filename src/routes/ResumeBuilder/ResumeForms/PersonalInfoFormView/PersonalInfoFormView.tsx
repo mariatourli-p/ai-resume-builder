@@ -22,15 +22,20 @@ export const PersonalInfoFormView = () => {
     [dispatch],
   );
 
-  const handleEnhance = useCallback(async () => {
-    const improved = await improve(
-      AI_PROMPTS.smartRewrite as keyof typeof AI_PROMPTS,
-      data.professionalSummary,
-    );
-    if (improved) {
-      dispatch(setPersonalInfo({ ...data, professionalSummary: improved }));
-    }
-  }, [improve, data, dispatch]);
+  const handleEnhance = useCallback(
+    async (prompt: keyof typeof AI_PROMPTS) => {
+      const text =
+        prompt === "smartRewrite"
+          ? `Job title: ${data.professionalTitle}\nSummary: ${data.professionalSummary}`
+          : data.professionalSummary;
+
+      const improved = await improve(AI_PROMPTS[prompt], text);
+      if (improved) {
+        dispatch(setPersonalInfo({ ...data, professionalSummary: improved }));
+      }
+    },
+    [improve, data, dispatch],
+  );
 
   return (
     <PersonalInfoForm

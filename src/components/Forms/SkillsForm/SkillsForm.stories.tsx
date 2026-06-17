@@ -1,6 +1,8 @@
-import { useState } from "react";
-import type { KeyboardEvent } from "react";
+import { store } from "@/redux/store";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { KeyboardEvent } from "react";
+import { useState } from "react";
+import { Provider } from "react-redux";
 import { SkillsForm, type SkillsFormProps } from "./SkillsForm";
 
 const defaultSkills = [
@@ -72,19 +74,21 @@ const withState = (_Story: unknown, context: { args: SkillsFormProps }) => {
   };
 
   return (
-    <SkillsForm
-      {...context.args}
-      input={input}
-      skills={skills}
-      suggestedSkills={suggestedSkills}
-      appliedSet={new Set(skills)}
-      isSuggesting={isSuggesting}
-      onInputChange={setInput}
-      onKeyDown={handleKeyDown}
-      onAdd={handleAdd}
-      onRemove={handleRemove}
-      onSuggest={handleSuggest}
-    />
+    <Provider store={store}>
+      <SkillsForm
+        {...context.args}
+        input={input}
+        skills={skills}
+        suggestedSkills={suggestedSkills}
+        appliedSet={new Set(skills)}
+        isSuggesting={isSuggesting}
+        onInputChange={setInput}
+        onKeyDown={handleKeyDown}
+        onAdd={handleAdd}
+        onRemove={handleRemove}
+        onSuggest={handleSuggest}
+      />
+    </Provider>
   );
 };
 

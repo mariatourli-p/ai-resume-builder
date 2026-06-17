@@ -1,18 +1,22 @@
 import { WorkExperienceForm } from "@/components/Forms/WorkExperienceForm";
-import { useWorkExperienceSelector, shallowEqual } from "@/redux/selectors";
-import { useAppDispatch } from "@/redux/store";
 import {
   addWorkExperience,
   removeWorkExperience,
   updateWorkExperienceField,
   type WorkExperienceEntry,
 } from "@/redux/resume/resume-reducer";
-import { useState, useCallback } from "react";
+import { shallowEqual, useWorkExperienceSelector } from "@/redux/selectors";
+import { useAppDispatch } from "@/redux/store";
+import { AI_PROMPTS } from "@/services/aiPrompts";
+import { useAI } from "@hooks/useAI";
+import { useCallback, useState } from "react";
 
 export const WorkExperienceFormView = () => {
   const dispatch = useAppDispatch();
   const entries = useWorkExperienceSelector((s) => s, shallowEqual);
-  const [improvingIds, setImprovingIds] = useState<Set<string>>(new Set());
+  const [quantifyingIds, setQuantifyingIds] = useState<Set<string>>(new Set());
+  const [verbIds, setVerbIds] = useState<Set<string>>(new Set());
+  const { improve } = useAI();
 
   const handleAdd = useCallback(() => {
     dispatch(addWorkExperience());
@@ -36,25 +40,49 @@ export const WorkExperienceFormView = () => {
     [dispatch],
   );
 
-  const handleImprove = useCallback(async (id: string) => {
-    setImprovingIds((prev) => new Set(prev).add(id));
-    // TODO: call AI improve API
-    setImprovingIds((prev) => {
-      const s = new Set(prev);
-      s.delete(id);
-      return s;
-    });
-  }, []);
+  const handleImprove = useCallback(
+    async (
+      id: string,
+      prompt: keyof typeof AI_PROMPTS,
+      setIds: React.Dispatch<React.SetStateAction<Set<string>>>,
+    ) => {
+      const entry = entries.find((e) => e.id === id);
+      if (!entry?.achievements?.trim()) return;
+
+      setIds((prev) => new Set(prev).add(id));
+      const improved = await improve(AI_PROMPTS[prompt], entry.achievements);
+      if (improved) {
+        dispatch(
+          updateWorkExperienceField({
+            id,
+            field: "achievements",
+            value: improved,
+          }),
+        );
+      }
+      setIds((prev) => {
+        const s = new Set(prev);
+        s.delete(id);
+        return s;
+      });
+    },
+    [improve, entries, dispatch],
+  );
 
   return (
     <WorkExperienceForm
       entries={entries}
-      improvingIds={improvingIds}
+      improvingIds={quantifyingIds}
       isAIDisabled={false}
       onAdd={handleAdd}
       onDelete={handleDelete}
       onChange={handleChange}
-      onImprove={handleImprove}
+      quantifyingIds={quantifyingIds}
+      verbIds={verbIds}
+      onQuantifyMetrics={(id) =>
+        handleImprove(id, "quantifyMetrics", setQuantifyingIds)
+      }
+      onStrongerVerbs={(id) => handleImprove(id, "strongerVerbs", setVerbIds)}
     />
   );
 };

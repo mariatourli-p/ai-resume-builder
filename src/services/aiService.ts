@@ -1,20 +1,28 @@
+import { AI_CONFIG } from "./constants";
+
 export const improveText = async (
   apiKey: string,
   prompt: string,
   text: string,
 ): Promise<string> => {
-  const response = await fetch("/api/anthropic/v1/messages", {
+  const body = {
+    model: AI_CONFIG.model,
+    max_tokens: AI_CONFIG.maxTokens,
+    system: prompt,
+    messages: [{ role: "user", content: text }],
+  };
+
+  console.log("📤 API body:", body);
+
+  const response = await fetch(AI_CONFIG.baseUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+      "anthropic-version": AI_CONFIG.apiVersion,
+      "anthropic-dangerous-direct-browser-access": "true",
     },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5",
-      max_tokens: 1024,
-      messages: [{ role: "user", content: `${prompt}\n\n${text}` }],
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) throw new Error("API request failed");

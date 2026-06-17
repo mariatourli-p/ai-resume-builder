@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SettingsHeader } from "./SettingsHeader";
 import { IconSettings } from "@/assets/Icons";
 import { themeConfig } from "@/theme";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { SettingsHeader } from "./SettingsHeader";
 
 const meta: Meta<typeof SettingsHeader> = {
   title: "Components/Settings/SettingsHeader",

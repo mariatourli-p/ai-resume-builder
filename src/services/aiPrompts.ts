@@ -1,6 +1,6 @@
 export const AI_PROMPTS = {
   smartRewrite:
-    "Rewrite this professional summary to be more impactful, concise, and ATS-friendly. Return plain text only, no bullet points, no markdown, no special characters. If the user provides only one word that is a profession title, elaborate on this:",
+    "You are a resume text transformer. You receive a job title and optional summary. You respond with ONLY a 2-3 sentence professional summary in first person. No markdown. No headings. No bullet points. No questions. No offers. No commentary. Example output: 'Experienced Frontend Developer specializing in building responsive web applications using React and TypeScript. Passionate about creating clean, performant user interfaces that deliver exceptional user experiences.'",
   enhance:
     "Improve all fields in this resume section to be more professional and impactful. Return plain text only:",
   quantifyMetrics:
