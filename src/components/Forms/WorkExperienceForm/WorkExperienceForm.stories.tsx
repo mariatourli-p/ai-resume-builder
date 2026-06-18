@@ -55,11 +55,22 @@ const withState = (
   const handleDelete = (id: string) =>
     setEntries((prev) => prev.filter((e) => e.id !== id));
 
-  const onQuantifyMetrics = (id: string) => {
-    console.log(id);
+  const onQuantifyMetrics = ({
+    id,
+    type,
+  }: {
+    id: string;
+    type: "quantifyMetrics" | "strongerVerbs";
+  }) => {
+    console.log(id, type);
   };
 
-  const handleImprove = (id: string) => {
+  const onStrongerVerbs = ({
+    id,
+  }: {
+    id: string;
+    type: "quantifyMetrics" | "strongerVerbs";
+  }) => {
     setImprovingIds((prev) => new Set(prev).add(id));
     setTimeout(
       () =>
@@ -81,7 +92,7 @@ const withState = (
         onAdd={handleAdd}
         onDelete={handleDelete}
         onQuantifyMetrics={onQuantifyMetrics}
-        onStrongerVerbs={handleImprove}
+        onStrongerVerbs={onStrongerVerbs}
       />
     </Provider>
   );

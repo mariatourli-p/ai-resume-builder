@@ -7,10 +7,10 @@ import {
 } from "@/redux/resume/resume-reducer";
 import { shallowEqual, useWorkExperienceSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
-import { AI_PROMPTS } from "@/services/aiPrompts";
+import type { WORK_EXPERIENCE_PROMPTS } from "@/services/aiPrompts";
 import { useAI } from "@hooks/useAI";
 import { useRequireApiKey } from "@hooks/useRequireApiKey";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 /**
  * View controller for the Work Experience form section.
@@ -31,8 +31,6 @@ import { useCallback, useState } from "react";
 export const WorkExperienceFormView = () => {
   const dispatch = useAppDispatch();
   const entries = useWorkExperienceSelector((s) => s, shallowEqual);
-  const [quantifyingIds, setQuantifyingIds] = useState<Set<string>>(new Set());
-  const [verbIds, setVerbIds] = useState<Set<string>>(new Set());
   const { improve } = useAI();
   const { requireApiKey } = useRequireApiKey();
 
@@ -58,51 +56,44 @@ export const WorkExperienceFormView = () => {
     [dispatch],
   );
 
-  const handleImprove = useCallback(
-    async (
-      id: string,
-      prompt: keyof typeof AI_PROMPTS,
-      setIds: React.Dispatch<React.SetStateAction<Set<string>>>,
-    ) => {
+  const onQuantifyMetrics = useCallback(
+    async ({
+      id,
+      type,
+    }: {
+      id: string;
+      type: keyof typeof WORK_EXPERIENCE_PROMPTS;
+    }) => {
       if (!requireApiKey()) return;
 
       const entry = entries.find((e) => e.id === id);
-      if (!entry?.achievements?.trim()) return;
 
-      setIds((prev) => new Set(prev).add(id));
-      const improved = await improve(AI_PROMPTS[prompt], entry.achievements);
+      const achievementsUpdated = `Key achievements and milestones: ${entry?.achievements}`;
+
+      const improved = await improve(type, achievementsUpdated);
       if (improved) {
-        dispatch(
-          updateWorkExperienceField({
-            id,
-            field: "achievements",
-            value: improved,
-          }),
-        );
+        // dispatch(
+        //   updateWorkExperienceField({ ...data, professionalSummary: improved }),
+        // );
       }
-      setIds((prev) => {
-        const s = new Set(prev);
-        s.delete(id);
-        return s;
-      });
     },
-    [requireApiKey, entries, improve, dispatch],
+    [requireApiKey, entries, improve],
   );
+
+  const onStrongerVerbs = useCallback(() => {}, []);
 
   return (
     <WorkExperienceForm
       entries={entries}
-      improvingIds={quantifyingIds}
+      // improvingIds={quantifyingIds}
       isAIDisabled={false}
       onAdd={handleAdd}
       onDelete={handleDelete}
       onChange={handleChange}
-      quantifyingIds={quantifyingIds}
-      verbIds={verbIds}
-      onQuantifyMetrics={(id) =>
-        handleImprove(id, "quantifyMetrics", setQuantifyingIds)
-      }
-      onStrongerVerbs={(id) => handleImprove(id, "strongerVerbs", setVerbIds)}
+      // quantifyingIds={quantifyingIds}
+      // verbIds={verbIds}
+      onQuantifyMetrics={onQuantifyMetrics}
+      onStrongerVerbs={onStrongerVerbs}
     />
   );
 };

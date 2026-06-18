@@ -1,5 +1,6 @@
 import { ErrorDialog } from "@/components/Dialogs/ErrorDialog";
 import { MissingApiKeyDialog } from "@/components/Dialogs/MissingApiKeyDialog";
+import { MoreContextDialog } from "@/components/Dialogs/MoreContextDialog";
 import { toggleDialog } from "@/redux/resume/resume-reducer";
 import { useAppDispatch } from "@/redux/store";
 import { useApiKey } from "@/routes/ApiKey/useApiKey";
@@ -27,6 +28,7 @@ export const ErrorDialogView = () => {
       {dialogType === "keyError" && (
         <ErrorDialog onClose={close} onRetry={handleRetry} />
       )}
+      {dialogType === "moreContext" && <MoreContextDialog onClose={close} />}
     </>
   );
 };

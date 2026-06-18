@@ -8,6 +8,7 @@ import {
   IconExperience,
 } from "@/assets/Icons";
 import { useAccentColorSelector } from "@/redux/selectors";
+import type { WORK_EXPERIENCE_PROMPTS } from "@/services/aiPrompts";
 import { PALETTE_MAP } from "@/theme";
 import { themeConfig } from "@/theme/themeConfig";
 import {
@@ -46,8 +47,14 @@ export type WorkExperienceFormProps = {
     field: keyof Omit<WorkExperienceEntry, "id">,
     value: string,
   ) => void;
-  onQuantifyMetrics: (id: string) => void;
-  onStrongerVerbs: (id: string) => void;
+  onQuantifyMetrics: (params: {
+    id: string;
+    type: keyof typeof WORK_EXPERIENCE_PROMPTS;
+  }) => void;
+  onStrongerVerbs: (params: {
+    id: string;
+    type: keyof typeof WORK_EXPERIENCE_PROMPTS;
+  }) => void;
   /** Set of entry ids currently being improved by AI. */
   improvingIds?: Set<string>;
   quantifyingIds?: Set<string>;
@@ -269,7 +276,12 @@ export const WorkExperienceForm = ({
                       isQuantifying ||
                       !entry.achievements?.trim()
                     }
-                    onClick={() => onQuantifyMetrics(entry.id)}
+                    onClick={() =>
+                      onQuantifyMetrics({
+                        id: entry.id,
+                        type: "quantifyMetrics",
+                      })
+                    }
                     startIcon={<IconAI size={13} />}
                     sx={{
                       borderRadius: themeConfig.borderRadius.full,
@@ -288,7 +300,12 @@ export const WorkExperienceForm = ({
                     disabled={
                       isAIDisabled || isVerbing || !entry.achievements?.trim()
                     }
-                    onClick={() => onStrongerVerbs(entry.id)}
+                    onClick={() =>
+                      onStrongerVerbs({
+                        id: entry.id,
+                        type: "strongerVerbs",
+                      })
+                    }
                     startIcon={<IconAI size={13} />}
                     sx={{
                       borderRadius: themeConfig.borderRadius.full,

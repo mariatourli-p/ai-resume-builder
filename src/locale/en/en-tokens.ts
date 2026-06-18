@@ -140,4 +140,15 @@ export const enTokens = {
     cancel: "Cancel",
     saveAndRetry: "Save & Retry",
   },
+  moreContextDialog: {
+    title: "More context needed",
+    subtitle: "AI context checklist",
+    description:
+      "The AI needs a real achievement to work with. Try describing a task, result, or responsibility from your role — even a rough sentence is enough.",
+    structureLabel: "Recommended structure",
+    structureExample:
+      '"[Action verb] the [task/project] which resulted in [outcome or improvement]."',
+    hint: "Once you expand your description, tap the AI button again.",
+    cta: "I'll add more details now",
+  },
 };

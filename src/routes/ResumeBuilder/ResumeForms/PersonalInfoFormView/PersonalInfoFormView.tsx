@@ -36,7 +36,7 @@ export const PersonalInfoFormView = () => {
     [dispatch],
   );
 
-  const handleEnhance = useCallback(
+  const onEnhance = useCallback(
     async (prompt: keyof typeof AI_PROMPTS) => {
       if (!requireApiKey()) return;
 
@@ -45,7 +45,7 @@ export const PersonalInfoFormView = () => {
           ? `Job title: ${data.professionalTitle}\nSummary: ${data.professionalSummary}`
           : data.professionalSummary;
 
-      const improved = await improve(AI_PROMPTS[prompt], text);
+      const improved = await improve(prompt, text);
       if (improved) {
         dispatch(setPersonalInfo({ ...data, professionalSummary: improved }));
       }
@@ -60,8 +60,8 @@ export const PersonalInfoFormView = () => {
       isRewriting={isEnhancing}
       isEnhanceDisabled={false}
       onChange={handleChange}
-      onEnhance={handleEnhance}
-      onSmartRewrite={handleEnhance}
+      onEnhance={onEnhance}
+      onSmartRewrite={onEnhance}
     />
   );
 };
