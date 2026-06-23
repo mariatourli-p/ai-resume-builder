@@ -34,6 +34,7 @@ export const HeaderBar = ({
   onTabChange,
   onRefresh,
   isDefaultState,
+  onExport,
 }: HeaderBarProps) => {
   return (
     <AppBar
@@ -49,6 +50,7 @@ export const HeaderBar = ({
         <HeaderLeftSide activeTab={activeTab} onTabChange={onTabChange} />
         <HeaderRightSide
           onRefresh={onRefresh}
+          onExport={onExport}
           isDefaultState={isDefaultState}
         />
       </Toolbar>

@@ -32,6 +32,7 @@ export const Default: Story = {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onRefresh={() => {}}
+        onExport={() => {}}
         isDefaultState={false}
       />
     );
@@ -48,6 +49,7 @@ export const AnalysisTab: Story = {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onRefresh={() => {}}
+        onExport={() => {}}
         isDefaultState={false}
       />
     );

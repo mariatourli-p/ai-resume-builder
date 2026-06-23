@@ -95,7 +95,7 @@ export const SettingsFooter = ({
         placeholder={inputPlaceholder}
         type={showValue ? "text" : "password"}
         value={apiKey}
-        onChange={(e) => onSave(e.target.value)}
+        onChange={(e) => onSave(e.target.value.trim())}
         endAdornment={
           <InputAdornment position="end">
             <IconButton size="small" onClick={() => setShowValue((p) => !p)}>

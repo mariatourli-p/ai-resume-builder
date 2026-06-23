@@ -8,12 +8,14 @@ import { Button, IconButton, Stack, Typography } from "@mui/material";
 
 export type HeaderRightSideProps = {
   onRefresh: () => void;
+  onExport: () => void;
   isDefaultState: boolean;
 };
 
 export const HeaderRightSide = ({
   onRefresh,
   isDefaultState,
+  onExport,
 }: HeaderRightSideProps) => {
   const accentColor = useAccentColorSelector((s) => s);
 
@@ -56,6 +58,7 @@ export const HeaderRightSide = ({
       </Button>
 
       <Button
+        onClick={onExport}
         variant="contained"
         size="small"
         startIcon={<IconDownload size={14} />}

@@ -79,7 +79,7 @@ export const HeaderLeftSide = ({
             },
           }}
         />
-        <Tab
+        {/* <Tab
           value="analysis"
           disableRipple
           sx={{
@@ -101,7 +101,7 @@ export const HeaderLeftSide = ({
               />
             </Stack>
           }
-        />
+        /> */}
       </Tabs>
     </Stack>
   );

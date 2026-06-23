@@ -72,12 +72,16 @@ export const WorkExperienceFormView = () => {
 
       const improved = await improve(type, achievementsUpdated);
       if (improved) {
-        // dispatch(
-        //   updateWorkExperienceField({ ...data, professionalSummary: improved }),
-        // );
+        dispatch(
+          updateWorkExperienceField({
+            id,
+            field: "achievements",
+            value: improved,
+          }),
+        );
       }
     },
-    [requireApiKey, entries, improve],
+    [requireApiKey, entries, improve, dispatch],
   );
 
   const onStrongerVerbs = useCallback(() => {}, []);

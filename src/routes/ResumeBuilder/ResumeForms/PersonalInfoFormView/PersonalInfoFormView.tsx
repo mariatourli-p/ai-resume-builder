@@ -42,8 +42,10 @@ export const PersonalInfoFormView = () => {
 
       const text =
         prompt === "smartRewrite"
-          ? `Job title: ${data.professionalTitle}\nSummary: ${data.professionalSummary}`
+          ? `You are a resume writing expert. Rewrite the following text to be concise, professional, and impactful. 
+Return ONLY the improved text. No questions, no options, no markdown, no explanations. Just the rewritten content.;. Job title: ${data.professionalTitle}\nSummary: ${data.professionalSummary}`
           : data.professionalSummary;
+      console.log("🚀 ~ PersonalInfoFormView ~ data:", prompt, data, text);
 
       const improved = await improve(prompt, text);
       if (improved) {
@@ -58,7 +60,7 @@ export const PersonalInfoFormView = () => {
       data={data}
       isEnhancing={isEnhancing}
       isRewriting={isEnhancing}
-      isEnhanceDisabled={false}
+      isEnhanceDisabled={!data.professionalSummary}
       onChange={handleChange}
       onEnhance={onEnhance}
       onSmartRewrite={onEnhance}

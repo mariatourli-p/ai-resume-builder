@@ -4,6 +4,7 @@ import { useIsDefaultState } from "@hooks/useIsDefaultState";
 import type { SxProps } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useApiKey } from "../ApiKey/useApiKey";
+import { useExportContext } from "../context/ExportProvider/ExportContext";
 
 export type Tab = "builder" | "analysis";
 
@@ -26,7 +27,7 @@ export const HeaderBarView = () => {
   const dispatch = useAppDispatch();
   const isDefault = useIsDefaultState();
   const { clearApiKey } = useApiKey();
-
+  const { triggerExport } = useExportContext();
   const onRefresh = useCallback(async () => {
     // clears localStorage
     await persistor.purge();
@@ -34,11 +35,16 @@ export const HeaderBarView = () => {
     dispatch(resetAll()); // resets redux state
   }, [clearApiKey, dispatch]);
 
+  const onExport = useCallback(async () => {
+    triggerExport();
+  }, [triggerExport]);
+
   return (
     <HeaderBar
       activeTab={activeTab}
       onTabChange={setActiveTab}
       onRefresh={onRefresh}
+      onExport={onExport}
       isDefaultState={isDefault}
     />
   );

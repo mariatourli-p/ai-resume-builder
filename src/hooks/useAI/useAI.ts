@@ -2,20 +2,9 @@ import { toggleDialog } from "@/redux/resume/resume-reducer";
 import { useAppDispatch } from "@/redux/store";
 import { useApiKey } from "@/routes/ApiKey/useApiKey";
 import { improveText } from "@/services";
-import type { AI_PROMPTS } from "@/services/aiPrompts";
+import { AI_PROMPTS } from "@/services/aiPrompts";
 import { useCallback, useState } from "react";
 
-/**
- * Hook that exposes AI text improvement functionality.
- *
- * Reads the API key from context and manages loading state.
- * On auth failure, opens the key error dialog automatically.
- *
- * @returns
- * - `improve` — async function that takes a prompt key and input text,
- *   resolves the prompt from {@link AI_PROMPTS}, and returns the improved string or null.
- * - `isLoading` — true while a request is in flight.
- */
 export const useAI = () => {
   const { apiKey } = useApiKey();
   const [isLoading, setIsLoading] = useState(false);
@@ -23,30 +12,30 @@ export const useAI = () => {
 
   const improve = useCallback(
     async (
-      prompt: keyof typeof AI_PROMPTS | string,
+      promptKey: keyof typeof AI_PROMPTS | string,
       text: string,
     ): Promise<string | null> => {
       if (!apiKey || !text) return null;
+
+      const prompt =
+        AI_PROMPTS[promptKey as keyof typeof AI_PROMPTS] ?? promptKey;
+
       setIsLoading(true);
       try {
         const result = await improveText({ apiKey, prompt, text });
 
-        // Ask Claude to classify its own output
-        const classification = await improveText({
-          apiKey,
-          prompt: `You are a classifier. Determine if the following text is:
-A) A finished, rewritten resume bullet point ready to use
-B) A question, request for clarification, or asks the user to provide more information
+        const bullets = result
+          .split("\n")
+          .filter((line) => line.trim().startsWith("BULLET::"))
+          .map((line) => "• " + line.replace("BULLET::", "").trim())
+          .join("\n");
 
-Respond with ONLY the single character "A" or "B". Nothing else.`,
-          text: result,
-        });
-
-        if (classification.trim() !== "A") {
+        if (!bullets) {
           dispatch(toggleDialog("moreContext"));
           return null;
         }
-        return result;
+
+        return bullets;
       } catch {
         dispatch(toggleDialog("keyError"));
         return null;
