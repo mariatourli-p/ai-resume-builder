@@ -8,7 +8,10 @@ import { BRANDING_PALETTES } from "@/components/AppBars/SectionsBar/BrandingColo
 import { SettingsColorPalette } from "@/components/Settings/SettingsColorPalette";
 import { SettingsFooter } from "@/components/Settings/SettingsFooter";
 import { SettingsHeader } from "@/components/Settings/SettingsHeader";
+import { enTokens } from "@/locale/en/en-tokens";
 import { useApiKey } from "@/routes/ApiKey/useApiKey";
+
+const t = enTokens.settings;
 
 export const SettingsView = () => {
   const dispatch = useAppDispatch();
@@ -37,12 +40,12 @@ export const SettingsView = () => {
         />
       </Box>
       <SettingsFooter
-        title="Personal Anthropic API Key"
-        inputLabel="PERSONAL ANTHROPIC API KEY"
-        linkLabel="Get free key ↗"
-        linkHref="https://console.anthropic.com"
-        inputPlaceholder="Anthropic API Key (sk-ant-...)"
-        footerText="Provide your own Anthropic API Key to enable AI features. Your key is stored securely in localStorage."
+        title={t.apiKey}
+        inputLabel={t.apiKey}
+        linkLabel={`${enTokens.missingApiKeyDialog.getFreeKey} ↗`}
+        linkHref={enTokens.missingApiKeyDialog.getFreeKeyUrl}
+        inputPlaceholder={t.apiKeyPlaceholder}
+        footerText={enTokens.errors.missingKey}
         apiKey={input}
         onSave={(key) => {
           setApiKey(key);

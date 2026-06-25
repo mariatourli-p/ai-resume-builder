@@ -46,7 +46,7 @@ export const PersonalInfoFormView = () => {
 Return ONLY the improved text. No questions, no options, no markdown, no explanations. Just the rewritten content.;. Job title: ${data.professionalTitle}\nSummary: ${data.professionalSummary}`
           : data.professionalSummary;
 
-      const improved = await improve(prompt, text);
+      const improved = await improve(prompt, text, "summary");
       if (improved) {
         dispatch(setPersonalInfo({ ...data, professionalSummary: improved }));
       }

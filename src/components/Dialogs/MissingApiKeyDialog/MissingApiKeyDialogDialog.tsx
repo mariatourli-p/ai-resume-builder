@@ -4,23 +4,39 @@ import {
   OpenInNewRounded,
   SettingsRounded,
 } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Box,
   Button,
   Dialog,
   DialogContent,
   Divider,
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
   Stack,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 
 const t = enTokens.missingApiKeyDialog;
 
 type MissingApiKeyDialogProps = {
   onClose: () => void;
+  apiKey: string;
+  onSave: (key: string) => void;
+  inputPlaceholder: string;
 };
 
-export const MissingApiKeyDialog = ({ onClose }: MissingApiKeyDialogProps) => {
+export const MissingApiKeyDialog = ({
+  onClose,
+  apiKey,
+  onSave,
+  inputPlaceholder,
+}: MissingApiKeyDialogProps) => {
+  const [showValue, setShowValue] = useState(false);
+
   return (
     <Dialog
       open
@@ -108,14 +124,30 @@ export const MissingApiKeyDialog = ({ onClose }: MissingApiKeyDialogProps) => {
           >
             {t.getFreeKey}
           </Button>
-          <Button
+          <OutlinedInput
             fullWidth
-            variant="contained"
-            onClick={onClose}
-            sx={{ borderRadius: 2, textTransform: "none", py: 1.2 }}
-          >
-            {t.addItNow}
-          </Button>
+            size="small"
+            placeholder={inputPlaceholder}
+            type={showValue ? "text" : "password"}
+            value={apiKey}
+            onChange={(e) => onSave(e.target.value.trim())}
+            onBlur={(e) => onSave(e.target.value.trim())}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  size="small"
+                  onClick={() => setShowValue((p) => !p)}
+                >
+                  {showValue ? (
+                    <VisibilityOffIcon sx={{ fontSize: 16 }} />
+                  ) : (
+                    <VisibilityIcon sx={{ fontSize: 16 }} />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            }
+            sx={{ borderRadius: 2, fontSize: 13 }}
+          />
         </Stack>
       </DialogContent>
     </Dialog>

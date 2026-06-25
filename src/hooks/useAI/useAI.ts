@@ -3,7 +3,11 @@ import { useAppDispatch } from "@/redux/store";
 import { useApiKey } from "@/routes/ApiKey/useApiKey";
 import { improveText } from "@/services";
 import { AI_PROMPTS } from "@/services/aiPrompts";
+import { validateAchievementsResult } from "@/utils/validateAchievementsResult";
+import { validateAIResult } from "@/utils/validateAIResult";
 import { useCallback, useState } from "react";
+
+export type ValidatorType = "summary" | "achievements";
 
 export const useAI = () => {
   const { apiKey } = useApiKey();
@@ -14,6 +18,7 @@ export const useAI = () => {
     async (
       promptKey: keyof typeof AI_PROMPTS | string,
       text: string,
+      validatorType: ValidatorType,
     ): Promise<string | null> => {
       if (!apiKey || !text) return null;
 
@@ -24,18 +29,26 @@ export const useAI = () => {
       try {
         const result = await improveText({ apiKey, prompt, text });
 
-        const bullets = result
-          .split("\n")
-          .filter((line) => line.trim().startsWith("BULLET::"))
-          .map((line) => "• " + line.replace("BULLET::", "").trim())
-          .join("\n");
+        let validator: Promise<boolean>;
 
-        if (!bullets) {
+        switch (validatorType) {
+          case "achievements":
+            validator = validateAchievementsResult(apiKey, result);
+            break;
+          case "summary":
+          default:
+            validator = validateAIResult(apiKey, result);
+            break;
+        }
+
+        const isValid = await validator;
+
+        if (!isValid) {
           dispatch(toggleDialog("moreContext"));
           return null;
         }
 
-        return bullets;
+        return result;
       } catch {
         dispatch(toggleDialog("keyError"));
         return null;

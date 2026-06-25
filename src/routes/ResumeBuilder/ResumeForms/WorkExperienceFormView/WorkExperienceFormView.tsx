@@ -7,7 +7,6 @@ import {
 } from "@/redux/resume/resume-reducer";
 import { shallowEqual, useWorkExperienceSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
-import type { WORK_EXPERIENCE_PROMPTS } from "@/services/aiPrompts";
 import { useAI } from "@hooks/useAI";
 import { useRequireApiKey } from "@hooks/useRequireApiKey";
 import { useCallback } from "react";
@@ -56,21 +55,15 @@ export const WorkExperienceFormView = () => {
     [dispatch],
   );
 
-  const onQuantifyMetrics = useCallback(
-    async ({
-      id,
-      type,
-    }: {
-      id: string;
-      type: keyof typeof WORK_EXPERIENCE_PROMPTS;
-    }) => {
+  const onGenerateAchievements = useCallback(
+    async (id: string, roleTitle: string) => {
       if (!requireApiKey()) return;
 
-      const entry = entries.find((e) => e.id === id);
-
-      const achievementsUpdated = `Key achievements and milestones: ${entry?.achievements}`;
-
-      const improved = await improve(type, achievementsUpdated);
+      const improved = await improve(
+        "generateAchievements",
+        roleTitle,
+        "achievements",
+      );
       if (improved) {
         dispatch(
           updateWorkExperienceField({
@@ -81,23 +74,17 @@ export const WorkExperienceFormView = () => {
         );
       }
     },
-    [requireApiKey, entries, improve, dispatch],
+    [requireApiKey, improve, dispatch],
   );
-
-  const onStrongerVerbs = useCallback(() => {}, []);
 
   return (
     <WorkExperienceForm
       entries={entries}
-      // improvingIds={quantifyingIds}
       isAIDisabled={false}
       onAdd={handleAdd}
       onDelete={handleDelete}
       onChange={handleChange}
-      // quantifyingIds={quantifyingIds}
-      // verbIds={verbIds}
-      onQuantifyMetrics={onQuantifyMetrics}
-      onStrongerVerbs={onStrongerVerbs}
+      onGenerateAchievements={onGenerateAchievements}
     />
   );
 };

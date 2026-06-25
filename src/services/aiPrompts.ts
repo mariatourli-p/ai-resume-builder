@@ -21,13 +21,23 @@ Rules:
 
 export const AI_PROMPTS = {
   ...WORK_EXPERIENCE_PROMPTS,
-  smartRewrite: `You are a resume writer. Rewrite the input as a 2-3 sentence professional summary in first person.
-Return ONLY the summary text.
-No markdown, no headings, no bullet points, no questions, no commentary, no offers to help.`,
+  smartRewrite: `You are a resume writer. Rewrite the input as a professional bio in first person.
+Keep it to a maximum of 4 lines, concise and impactful.
+Return ONLY the bio text.
+No markdown, no bullet points, no questions, no commentary.`,
 
   enhance: `You are a resume writer. Improve the following resume text to be more professional and impactful.
 Return ONLY the improved text. No explanations, no markdown, no questions.`,
 
   suggestSkills: `Suggest 10 relevant skills for this job title.
 Return ONLY a comma-separated list. No numbering, no explanations, no markdown.`,
+  validationPrompt: `You are a validator. Determine if the following text is a professional bio/summary written in first person, with no questions, no requests for more information, and no commentary.
+Reply ONLY with "VALID" or "INVALID". Nothing else.`,
+  generateAchievements: `You are a resume writer. Generate exactly 3 professional bullet points for key achievements and milestones for the given job title.
+Each bullet should start with a strong action verb and be concise and impactful.
+Format EXACTLY like this:
+- <achievement 1>
+- <achievement 2>
+- <achievement 3>
+No markdown, no commentary, no extra text.`,
 } as const;

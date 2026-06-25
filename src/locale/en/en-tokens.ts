@@ -94,6 +94,7 @@ export const enTokens = {
     apiKeyPlaceholder: "sk-ant-...",
     save: "Save",
     delete: "Delete Key",
+    addApiKey: "Add API key",
     refresh: "Refresh",
     templates: "Templates",
     styles: "Styles",

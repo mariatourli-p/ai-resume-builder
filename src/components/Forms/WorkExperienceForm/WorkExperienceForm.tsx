@@ -8,7 +8,6 @@ import {
   IconExperience,
 } from "@/assets/Icons";
 import { useAccentColorSelector } from "@/redux/selectors";
-import type { WORK_EXPERIENCE_PROMPTS } from "@/services/aiPrompts";
 import { PALETTE_MAP } from "@/theme";
 import { themeConfig } from "@/theme/themeConfig";
 import {
@@ -47,18 +46,8 @@ export type WorkExperienceFormProps = {
     field: keyof Omit<WorkExperienceEntry, "id">,
     value: string,
   ) => void;
-  onQuantifyMetrics: (params: {
-    id: string;
-    type: keyof typeof WORK_EXPERIENCE_PROMPTS;
-  }) => void;
-  onStrongerVerbs: (params: {
-    id: string;
-    type: keyof typeof WORK_EXPERIENCE_PROMPTS;
-  }) => void;
-  /** Set of entry ids currently being improved by AI. */
-  improvingIds?: Set<string>;
-  quantifyingIds?: Set<string>;
-  verbIds?: Set<string>;
+
+  onGenerateAchievements?: (id: string, roleTitle: string) => Promise<void>;
 };
 
 /**
@@ -90,10 +79,7 @@ export const WorkExperienceForm = ({
   onAdd,
   onDelete,
   onChange,
-  onQuantifyMetrics,
-  onStrongerVerbs,
-  quantifyingIds,
-  verbIds,
+  onGenerateAchievements,
 }: WorkExperienceFormProps) => {
   const accentColor = useAccentColorSelector((s) => s);
 
@@ -138,8 +124,6 @@ export const WorkExperienceForm = ({
       {/* Entries */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {entries.map((entry) => {
-          const isQuantifying = quantifyingIds?.has(entry.id);
-          const isVerbing = verbIds?.has(entry.id);
           return (
             <Paper
               key={entry.id}
@@ -271,16 +255,9 @@ export const WorkExperienceForm = ({
                 <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
                   <Button
                     size="small"
-                    disabled={
-                      isAIDisabled ||
-                      isQuantifying ||
-                      !entry.achievements?.trim()
-                    }
+                    disabled={isAIDisabled || !entry.roleTitle?.trim()}
                     onClick={() =>
-                      onQuantifyMetrics({
-                        id: entry.id,
-                        type: "quantifyMetrics",
-                      })
+                      onGenerateAchievements?.(entry.id, entry.roleTitle)
                     }
                     startIcon={<IconAI size={13} />}
                     sx={{
@@ -293,31 +270,7 @@ export const WorkExperienceForm = ({
                       "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
                     }}
                   >
-                    {isQuantifying ? "Improving..." : "quantify metrics"}
-                  </Button>
-                  <Button
-                    size="small"
-                    disabled={
-                      isAIDisabled || isVerbing || !entry.achievements?.trim()
-                    }
-                    onClick={() =>
-                      onStrongerVerbs({
-                        id: entry.id,
-                        type: "strongerVerbs",
-                      })
-                    }
-                    startIcon={<IconAI size={13} />}
-                    sx={{
-                      borderRadius: themeConfig.borderRadius.full,
-                      border: `1px solid ${accentColor}`,
-                      color: accentColor,
-                      fontSize: "0.7rem",
-                      textTransform: "none",
-                      px: 1.5,
-                      "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
-                    }}
-                  >
-                    {isVerbing ? "Improving..." : "stronger verbs"}
+                    Generate Achievements
                   </Button>
                   <Box sx={{ ml: "auto" }}>
                     <IconButton

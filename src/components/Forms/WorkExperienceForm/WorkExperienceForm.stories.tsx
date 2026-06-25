@@ -37,7 +37,6 @@ const withState = (
   const [entries, setEntries] = useState<Entry[]>(
     context.args.entries ?? defaultEntries,
   );
-  const [improvingIds, setImprovingIds] = useState<Set<string>>(new Set());
 
   const handleAdd = () =>
     setEntries((prev) => [
@@ -55,32 +54,17 @@ const withState = (
   const handleDelete = (id: string) =>
     setEntries((prev) => prev.filter((e) => e.id !== id));
 
-  const onQuantifyMetrics = ({
-    id,
-    type,
-  }: {
-    id: string;
-    type: "quantifyMetrics" | "strongerVerbs";
-  }) => {
-    console.log(id, type);
-  };
-
-  const onStrongerVerbs = ({
-    id,
-  }: {
-    id: string;
-    type: "quantifyMetrics" | "strongerVerbs";
-  }) => {
-    setImprovingIds((prev) => new Set(prev).add(id));
-    setTimeout(
-      () =>
-        setImprovingIds((prev) => {
-          const s = new Set(prev);
-          s.delete(id);
-          return s;
-        }),
-      2000,
+  const handleChange = (
+    id: string,
+    field: keyof Omit<Entry, "id">,
+    value: string,
+  ) =>
+    setEntries((prev) =>
+      prev.map((e) => (e.id === id ? { ...e, [field]: value } : e)),
     );
+
+  const onGenerateAchievements = async (id: string, roleTitle: string) => {
+    console.log("generateAchievements", id, roleTitle);
   };
 
   return (
@@ -88,11 +72,10 @@ const withState = (
       <WorkExperienceForm
         {...context.args}
         entries={entries}
-        improvingIds={improvingIds}
         onAdd={handleAdd}
         onDelete={handleDelete}
-        onQuantifyMetrics={onQuantifyMetrics}
-        onStrongerVerbs={onStrongerVerbs}
+        onChange={handleChange}
+        onGenerateAchievements={onGenerateAchievements}
       />
     </Provider>
   );
@@ -119,7 +102,7 @@ const meta: Meta<typeof WorkExperienceForm> = {
     onAdd: { action: "add clicked" },
     onDelete: { action: "delete clicked" },
     onChange: { action: "field changed" },
-    onStrongerVerbs: { action: "improve verbs" },
+    onGenerateAchievements: { action: "generate achievements" },
   },
 };
 
@@ -138,10 +121,4 @@ export const SingleEntry: Story = {
 
 export const AIDisabled: Story = {
   args: { isAIDisabled: true },
-};
-
-export const ImprovingInProgress: Story = {
-  args: {
-    improvingIds: new Set(["1"]),
-  },
 };
