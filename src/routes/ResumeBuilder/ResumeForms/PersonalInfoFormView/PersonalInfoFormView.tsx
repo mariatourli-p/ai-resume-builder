@@ -1,6 +1,7 @@
 import { PersonalInfoForm } from "@/components/Forms/PersonalInfoForm";
 import {
   setPersonalInfo,
+  toggleDialog,
   updatePersonalInfoField,
   type PersonalInfoData,
 } from "@/redux/resume/resume-reducer";
@@ -40,11 +41,19 @@ export const PersonalInfoFormView = () => {
     async (prompt: keyof typeof AI_PROMPTS) => {
       if (!requireApiKey()) return;
 
-      const text =
-        prompt === "smartRewrite"
-          ? `You are a resume writing expert. Rewrite the following text to be concise, professional, and impactful. 
-Return ONLY the improved text. No questions, no options, no markdown, no explanations. Just the rewritten content.;. Job title: ${data.professionalTitle}\nSummary: ${data.professionalSummary}`
-          : data.professionalSummary;
+      const text = `You are a resume writing expert. Rewrite the following text to be concise, professional, and impactful. 
+Return ONLY the improved text. No questions, no options, no markdown, no explanations. Just the rewritten content.;. Job title: ${data.professionalTitle}`;
+
+      // If no professional title is given, request that first to create the summary
+      if (!data.professionalTitle) {
+        dispatch(
+          toggleDialog({
+            type: "moreContext",
+            message: "Please add professional summary",
+          }),
+        );
+        return;
+      }
 
       const improved = await improve(prompt, text, "summary");
       if (improved) {

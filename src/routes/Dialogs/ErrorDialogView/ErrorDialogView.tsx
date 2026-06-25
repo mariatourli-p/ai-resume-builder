@@ -3,13 +3,14 @@ import { MissingApiKeyDialog } from "@/components/Dialogs/MissingApiKeyDialog";
 import { MoreContextDialog } from "@/components/Dialogs/MoreContextDialog";
 import { enTokens } from "@/locale/en/en-tokens";
 import { toggleDialog } from "@/redux/resume/resume-reducer";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useApiKey } from "@/routes/ApiKey/useApiKey";
 import { useDialogType } from "@hooks/useDialogType";
 
 export const ErrorDialogView = () => {
   const t = enTokens.settings;
   const dialogType = useDialogType();
+  const dialogMessage = useAppSelector((s) => s.resume.dialogMessage);
   const dispatch = useAppDispatch();
   const { setApiKey, apiKey } = useApiKey();
 
@@ -35,7 +36,12 @@ export const ErrorDialogView = () => {
       {dialogType === "keyError" && (
         <ErrorDialog onClose={close} onRetry={handleRetry} />
       )}
-      {dialogType === "moreContext" && <MoreContextDialog onClose={close} />}
+      {dialogType === "moreContext" && (
+        <MoreContextDialog
+          onClose={close}
+          response={dialogMessage ?? undefined}
+        />
+      )}
     </>
   );
 };

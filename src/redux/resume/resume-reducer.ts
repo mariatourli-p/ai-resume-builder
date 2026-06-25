@@ -43,7 +43,13 @@ export type ResumeState = {
   accentColor: string;
   activeTemplate: string;
   dialogType: DialogType;
+  dialogMessage: string | null;
 };
+
+export type DialogPayload = {
+  type: DialogType;
+  message?: string;
+} | null;
 
 // --- Initial State ---
 const initialState: ResumeState = {
@@ -62,6 +68,7 @@ const initialState: ResumeState = {
   education: [],
   activeTemplate: "Classic Modern",
   dialogType: null,
+  dialogMessage: null,
 };
 
 // --- Slice ---
@@ -158,8 +165,9 @@ const resumeSlice = createSlice({
       state.activeTemplate = action.payload;
     },
 
-    toggleDialog: (state, action: PayloadAction<DialogType>) => {
-      state.dialogType = action.payload;
+    toggleDialog: (state, action: PayloadAction<DialogPayload>) => {
+      state.dialogType = action.payload?.type ?? null;
+      state.dialogMessage = action.payload?.message ?? null;
     },
   },
 });

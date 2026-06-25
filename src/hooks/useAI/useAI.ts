@@ -44,13 +44,21 @@ export const useAI = () => {
         const isValid = await validator;
 
         if (!isValid) {
-          dispatch(toggleDialog("moreContext"));
+          dispatch(toggleDialog({ type: "moreContext", message: result }));
           return null;
         }
 
         return result;
-      } catch {
-        dispatch(toggleDialog("keyError"));
+      } catch (error) {
+        dispatch(
+          toggleDialog({
+            type: "keyError",
+            message:
+              error instanceof Error
+                ? error.message
+                : "Something went wrong with your API key. Please check and try again.",
+          }),
+        );
         return null;
       } finally {
         setIsLoading(false);

@@ -9,7 +9,7 @@ export const useRequireApiKey = () => {
 
   const requireApiKey = useCallback((): boolean => {
     if (!apiKey) {
-      dispatch(toggleDialog("missingApiKey"));
+      dispatch(toggleDialog({ type: "missingApiKey" }));
       return false;
     }
     return true;

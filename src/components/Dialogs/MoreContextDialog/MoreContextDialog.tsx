@@ -15,9 +15,13 @@ const t = enTokens.moreContextDialog;
 
 type MoreContextDialogProps = {
   onClose: () => void;
+  response?: string;
 };
 
-export const MoreContextDialog = ({ onClose }: MoreContextDialogProps) => {
+export const MoreContextDialog = ({
+  onClose,
+  response,
+}: MoreContextDialogProps) => {
   return (
     <Dialog
       open
@@ -78,6 +82,46 @@ export const MoreContextDialog = ({ onClose }: MoreContextDialogProps) => {
         >
           {t.description}
         </Typography>
+
+        {response && (
+          <Box
+            sx={{
+              width: "100%",
+              maxHeight: 120,
+              overflowY: "auto",
+              backgroundColor: "grey.50",
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2,
+              p: 1.5,
+              textAlign: "left",
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: themeConfig.colors.ai.accent,
+                textTransform: "uppercase",
+                letterSpacing: 1,
+                fontWeight: 600,
+                display: "block",
+                mb: 0.5,
+              }}
+            >
+              AI Response
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                lineHeight: 1.8,
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              {response}
+            </Typography>
+          </Box>
+        )}
 
         <Box
           sx={{
