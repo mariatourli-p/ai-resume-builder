@@ -109,7 +109,7 @@ export const SideDrawer = ({
           </Box>
         </Box>
 
-        {/* Bottom — pinned */}
+        {/* Bottom - pinned */}
         <Box sx={{ p: 2 }}>
           <OptimizeResumeButton
             icon={<IconAI />}

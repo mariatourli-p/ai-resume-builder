@@ -1,0 +1,80 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install dependencies",
+      "type": "npm",
+      "script": "install",
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev server",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^x^" },
+        "background": {
+          "activeBegin": "VITE",
+          "activeEnd": "Local:"
+        }
+      }
+    },
+    {
+      "label": "Build",
+      "type": "npm",
+      "script": "build",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Lint",
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "Check (build + lint)",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Build", "Lint"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Preview production build",
+      "type": "npm",
+      "script": "preview",
+      "dependsOn": ["Build"],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^x^" },
+        "background": {
+          "activeBegin": "vite",
+          "activeEnd": "Local:"
+        }
+      }
+    },
+    {
+      "label": "Storybook",
+      "type": "npm",
+      "script": "storybook",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "storybook",
+        "pattern": { "regexp": "^x^" },
+        "background": {
+          "activeBegin": "storybook",
+          "activeEnd": "Storybook .* started"
+        }
+      }
+    },
+    {
+      "label": "Build Storybook",
+      "type": "npm",
+      "script": "build-storybook",
+      "problemMatcher": []
+    }
+  ]
+}

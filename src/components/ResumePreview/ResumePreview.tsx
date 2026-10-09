@@ -5,7 +5,7 @@ import type {
 } from "@/redux/resume/resume-reducer";
 import { themeConfig } from "@/theme";
 import { Box, Divider, Typography } from "@mui/material";
-import { forwardRef } from "react";
+import { forwardRef, memo } from "react";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -126,8 +126,9 @@ const EducationEntryItem = ({ entry }: { entry: EducationEntry }) => (
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export const ResumePreview = forwardRef<HTMLDivElement, ResumePreviewProps>(
-  (
+// Memoized: the preview only re-renders when its data actually changes
+export const ResumePreview = memo(
+  forwardRef<HTMLDivElement, ResumePreviewProps>((
     {
       personalInfo,
       workExperience,
@@ -273,5 +274,5 @@ export const ResumePreview = forwardRef<HTMLDivElement, ResumePreviewProps>(
         )}
       </Box>
     );
-  },
+  }),
 );

@@ -41,7 +41,7 @@ export type EducationFormProps = {
  * Renders a list of education entries, each with institution name, degree,
  * graduation date, and location. The user can add new entries or delete existing ones.
  *
- * This is a controlled component — the parent owns `entries` and must handle
+ * This is a controlled component - the parent owns `entries` and must handle
  * `onChange`, `onAdd`, and `onDelete` to keep state in sync.
  *
  * @example
@@ -122,7 +122,7 @@ export const EducationForm = ({
               </IconButton>
             </Box>
 
-            {/* Institution — full width */}
+            {/* Institution - full width */}
             <TextField
               label="INSTITUTION / SCHOOL NAME"
               fullWidth

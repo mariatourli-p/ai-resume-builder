@@ -7,7 +7,7 @@ export type ResumeButtonProps = { style?: SxProps };
 /**
  * A pre-labeled variant of `TextButton` for the Resume Sections entry point.
  *
- * Text is sourced internally from `enTokens.app.resume_sections` — no `text` prop needed.
+ * Text is sourced internally from `enTokens.app.resume_sections` - no `text` prop needed.
  * Accepts all `TextButtonProps` except `text`, so `sx` and `iconStyle` can still be overridden.
  *
  * @example

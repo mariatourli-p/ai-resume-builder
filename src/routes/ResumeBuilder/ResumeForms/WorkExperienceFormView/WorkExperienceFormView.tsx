@@ -6,32 +6,42 @@ import {
   type WorkExperienceEntry,
 } from "@/redux/resume/resume-reducer";
 import { shallowEqual, useWorkExperienceSelector } from "@/redux/selectors";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppStore } from "@/redux/store";
 import { useAI } from "@hooks/useAI";
-import { useRequireApiKey } from "@hooks/useRequireApiKey";
-import { useCallback } from "react";
+import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
+import { useTextTitles } from "@hooks/useTextTitles";
+import { useCallback, useState } from "react";
 
 /**
  * View controller for the Work Experience form section.
  *
- * Connects the {@link WorkExperienceForm} UI to Redux state and AI improvement logic.
- * Manages per-entry loading states for two distinct AI actions: metric quantification
- * and stronger verb rewrites.
+ * Connects the {@link WorkExperienceForm} UI to Redux state and the AI
+ * achievements generation.
  *
  * @remarks
  * - Entries are stored in Redux and updated via {@link updateWorkExperienceField}
- * - Each AI action tracks its loading state independently per entry id using `Set<string>`
- * - `quantifyingIds` tracks entries currently being quantified
- * - `verbIds` tracks entries currently undergoing verb improvement
- * - AI actions are no-ops if the entry's achievements field is empty
- * - {@link handleImprove} is a shared handler parameterized by prompt and state setter
+ * - `generatingIds` tracks the entries whose achievements the AI is writing
+ * - Callbacks read the latest entries from the store when they run, so they
+ *   stay stable and typing in one entry doesn't re-render the others
  */
 
 export const WorkExperienceFormView = () => {
   const dispatch = useAppDispatch();
+  const store = useAppStore();
   const entries = useWorkExperienceSelector((s) => s, shallowEqual);
   const { improve } = useAI();
-  const { requireApiKey } = useRequireApiKey();
+  const { requireAIProvider } = useRequireAIProvider();
+  const [generatingIds, setGeneratingIds] = useState<string[]>([]);
+  // Which role title each entry's achievements were written for
+  const { setTextTitle, isSameTitle } = useTextTitles(
+    Object.fromEntries(entries.map((entry) => [entry.id, entry.roleTitle])),
+  );
+
+  const findEntry = useCallback(
+    (id: string) =>
+      store.getState().resume.workExperience.find((entry) => entry.id === id),
+    [store],
+  );
 
   const handleAdd = useCallback(() => {
     dispatch(addWorkExperience());
@@ -51,30 +61,63 @@ export const WorkExperienceFormView = () => {
       value: string,
     ) => {
       dispatch(updateWorkExperienceField({ id, field, value }));
+      // The user wrote these achievements for the entry's current title
+      if (field === "achievements") {
+        setTextTitle(id, findEntry(id)?.roleTitle ?? "");
+      }
+      // Without a title the achievements no longer describe a role
+      if (field === "roleTitle" && !value.trim()) {
+        dispatch(
+          updateWorkExperienceField({ id, field: "achievements", value: "" }),
+        );
+      }
     },
-    [dispatch],
+    [dispatch, setTextTitle, findEntry],
   );
 
   const onGenerateAchievements = useCallback(
     async (id: string, roleTitle: string) => {
-      if (!requireApiKey()) return;
+      if (!requireAIProvider()) return;
 
+      const previous = findEntry(id)?.achievements ?? "";
+      const setAchievements = (value: string) =>
+        dispatch(updateWorkExperienceField({ id, field: "achievements", value }));
+
+      const title = roleTitle.trim();
+
+      // Start from an empty field: the AI writes new achievements from the title
+      setAchievements("");
+      setGeneratingIds((ids) => [...ids, id]);
+      // Show the bullets in the field while the AI writes them
       const improved = await improve(
         "generateAchievements",
-        roleTitle,
+        (profession) => `Job title: ${profession}`,
         "achievements",
+        {
+          // The AI first finds the profession the title points to
+          jobTitle: title,
+          onPartial: setAchievements,
+        },
+      ).finally(() =>
+        setGeneratingIds((ids) => ids.filter((current) => current !== id)),
       );
       if (improved) {
-        dispatch(
-          updateWorkExperienceField({
-            id,
-            field: "achievements",
-            value: improved,
-          }),
-        );
+        setTextTitle(id, title);
+        setAchievements(improved);
+        return;
       }
+      // Rejected or failed: bring the previous text back only if it was
+      // written for this same title - otherwise it describes another job
+      setAchievements(isSameTitle(id, title) ? previous : "");
     },
-    [requireApiKey, improve, dispatch],
+    [
+      requireAIProvider,
+      improve,
+      dispatch,
+      findEntry,
+      setTextTitle,
+      isSameTitle,
+    ],
   );
 
   return (
@@ -85,6 +128,7 @@ export const WorkExperienceFormView = () => {
       onDelete={handleDelete}
       onChange={handleChange}
       onGenerateAchievements={onGenerateAchievements}
+      generatingIds={generatingIds}
     />
   );
 };

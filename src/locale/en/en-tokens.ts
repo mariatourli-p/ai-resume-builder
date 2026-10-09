@@ -2,7 +2,6 @@ const SECTIONS = {
   sections: {
     personalInfo: {
       title: "Personal Info",
-      enhanceButton: "Enhance",
       fields: {
         fullName: {
           label: "Full Name",
@@ -84,17 +83,19 @@ export const enTokens = {
     improve: "✨ Improve with AI",
     suggest: "✨ Suggest skills with AI",
     loading: "Improving...",
+    suggesting: "Suggesting skills...",
+    generateAchievements: "Generate Achievements",
+    generating: "Generating...",
     rewriting: "Rewriting...",
     smartRewrite: "Smart Rewrite",
     undo: "Undo",
   },
   settings: {
     title: "Settings",
-    apiKey: "Anthropic API Key",
-    apiKeyPlaceholder: "sk-ant-...",
+    aiTitle: "AI Assistant",
+    aiFooter:
+      "Free for everyone. The AI runs inside Chrome on your computer, so your resume is never sent to an AI service.",
     save: "Save",
-    delete: "Delete Key",
-    addApiKey: "Add API key",
     refresh: "Refresh",
     templates: "Templates",
     styles: "Styles",
@@ -102,8 +103,21 @@ export const enTokens = {
     optimize_resume: "Optimize Resume",
     optimizing: "Optimizing...",
   },
+  aiAssistant: {
+    label: "Built-in browser AI",
+    description: "Free · no account or key · runs on your device",
+    checking: "Checking whether your browser supports it…",
+    unavailable:
+      "Not supported in this browser. The AI features need a recent desktop version of Google Chrome.",
+    downloadable:
+      "The AI model needs a one-time download (a few minutes). You can start it now or it starts on first use.",
+    downloadButton: "Download AI model",
+    downloading: "Downloading the AI model (one time)… {percent}%",
+    downloadingBackground:
+      "The AI model is downloading in the background. This can take a few minutes.",
+    available: "Ready - nothing leaves your device.",
+  },
   errors: {
-    missingKey: "Please add your API key in Settings",
     emptyField: "Field is empty",
     apiError: "Something went wrong. Please try again.",
     timeout: "Request timed out. Please try again.",
@@ -117,39 +131,36 @@ export const enTokens = {
     newResume: "This will clear everything. Are you sure?",
   },
   personal: {},
-  missingApiKeyDialog: {
-    title: "API Key Required",
-    subtitle: "AI Enhancement Feature Locked",
-    description:
-      "To protect your credentials and allow safe, unlimited open-source operation, this app utilizes your custom key. Simply click the",
-    settingsLink: "Settings gear icon",
-    descriptionSuffix:
-      "in the top-right header, paste your key, and you're good to go!",
-    getFreeKey: "Get free key",
-    addItNow: "I'll add it now",
-    getFreeKeyUrl: "https://console.anthropic.com/",
-  },
-  errorDialog: {
-    title: "API Key Verification Failed",
-    subtitle: "Authentication Error",
-    inputLabel: "Correct/Update API Key",
-    getFreeKey: "Get free key",
-    getFreeKeyUrl: "https://console.anthropic.com/",
-    responsLogLabel: "API Response Log:",
-    description:
-      "This verification failed because the key is incorrect, expired, or has blocked billing. Please verify your key.",
-    cancel: "Cancel",
-    saveAndRetry: "Save & Retry",
+  aiErrors: {
+    gotIt: "Got it",
+    unsupported: {
+      title: "AI not available in this browser",
+      subtitle: "Unsupported browser",
+      description:
+        "The AI features run inside Google Chrome on your computer, for free. Open this page in a recent desktop version of Chrome to use them.",
+    },
+    request_failed: {
+      title: "AI request failed",
+      subtitle: "Something went wrong",
+      description:
+        "The AI couldn't complete the request. Please try again in a moment.",
+    },
   },
   moreContextDialog: {
     title: "More context needed",
     subtitle: "AI context checklist",
     description:
-      "The AI needs a real achievement to work with. Try describing a task, result, or responsibility from your role — even a rough sentence is enough.",
+      "The AI needs a real achievement to work with. Try describing a task, result, or responsibility from your role - even a rough sentence is enough.",
     structureLabel: "Recommended structure",
     structureExample:
       '"[Action verb] the [task/project] which resulted in [outcome or improvement]."',
     hint: "Once you expand your description, tap the AI button again.",
     cta: "I'll add more details now",
+    invalidTitle:
+      "We couldn't link \"{title}\" to a profession. Enter your job title or a keyword about your work (a skill, tool or field) in English.",
+    missingTitle:
+      "Please add your professional title in Personal Info first, so the AI knows which skills fit your role.",
+    noSkills:
+      "The AI couldn't find new skills for this title. Try again, or add a few skills yourself first.",
   },
 };

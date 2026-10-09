@@ -1,8 +1,19 @@
 import { SkillsForm } from "@/components/Forms/SkillsForm";
-import { addSkill, removeSkill } from "@/redux/resume/resume-reducer";
-import { shallowEqual, useSkillsSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en/en-tokens";
+import {
+  addSkill,
+  removeSkill,
+  toggleDialog,
+} from "@/redux/resume/resume-reducer";
+import {
+  shallowEqual,
+  usePersonalInfoSelector,
+  useSkillsSelector,
+} from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
-import { useRequireApiKey } from "@hooks/useRequireApiKey";
+import { parseSkillList } from "@/utils/parseSkillList";
+import { useAI } from "@hooks/useAI";
+import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
 import type { KeyboardEvent } from "react";
 import { useCallback, useState } from "react";
 
@@ -16,15 +27,28 @@ import { useCallback, useState } from "react";
  * - Skills are stored in Redux and updated via {@link addSkill} and {@link removeSkill}
  * - Pressing Enter on the input adds the skill immediately
  * - Duplicate and empty skills are silently ignored
- * - {@link handleSuggest} is a placeholder for AI-powered skill suggestions based on job title
+ * - {@link handleSuggest} asks the AI for skills that fit the professional
+ *   title (Personal Info), after the AI finds the profession the title (or
+ *   keyword) points to
  */
 export const SkillsFormView = () => {
   const dispatch = useAppDispatch();
   const skills = useSkillsSelector((s) => s, shallowEqual);
-  const [suggestedSkills, setSuggestedSkills] = useState<string[]>([]);
+  const professionalTitle = usePersonalInfoSelector(
+    (s) => s.professionalTitle,
+  );
+  const [suggestions, setSuggestions] = useState<{
+    title: string;
+    skills: string[];
+  }>();
   const [input, setInput] = useState("");
-  const [isSuggesting, setIsSuggesting] = useState(false);
-  const { requireApiKey } = useRequireApiKey();
+  const { improve, isLoading } = useAI();
+  const { requireAIProvider } = useRequireAIProvider();
+
+  const title = professionalTitle.trim();
+  // Suggestions for an older title no longer apply
+  const suggestedSkills =
+    suggestions?.title === title ? suggestions.skills : [];
 
   const handleAdd = useCallback(
     (skill: string) => {
@@ -54,22 +78,51 @@ export const SkillsFormView = () => {
     [input, handleAdd],
   );
 
-  const handleSuggest = useCallback(async () => {
-    if (!requireApiKey()) return;
+  const showMessage = useCallback(
+    (message: string) =>
+      dispatch(toggleDialog({ type: "moreContext", message })),
+    [dispatch],
+  );
 
-    setIsSuggesting(true);
-    // TODO: call AI suggest API with jobTitle
-    setSuggestedSkills([]);
-    setIsSuggesting(false);
-  }, [requireApiKey]);
+  const handleSuggest = useCallback(async () => {
+    if (!requireAIProvider()) return;
+
+    // The title tells the AI which skills fit the role
+    if (!title) {
+      showMessage(enTokens.moreContextDialog.missingTitle);
+      return;
+    }
+
+    // Built from the profession the AI finds for the title or keyword
+    const buildInput = (profession: string) =>
+      skills.length
+        ? `Job title: ${profession}\n\nCurrent skills: ${skills.join(", ")}`
+        : `Job title: ${profession}`;
+
+    const result = await improve("suggestSkills", buildInput, "skills", {
+      // The AI first finds the profession the title points to
+      jobTitle: title,
+    });
+    // Rejected or failed: useAI already showed the reason
+    if (result === null) return;
+
+    const newSkills = parseSkillList(result, skills);
+    if (!newSkills.length) {
+      showMessage(enTokens.moreContextDialog.noSkills);
+      return;
+    }
+
+    setSuggestions({ title, skills: newSkills });
+  }, [requireAIProvider, title, skills, improve, showMessage]);
 
   return (
     <SkillsForm
       skills={skills}
       suggestedSkills={suggestedSkills}
+      jobTitle={suggestedSkills.length ? title : undefined}
       input={input}
       appliedSet={new Set(skills)}
-      isSuggesting={isSuggesting}
+      isSuggesting={isLoading}
       onInputChange={setInput}
       onKeyDown={handleKeyDown}
       onAdd={handleAdd}
