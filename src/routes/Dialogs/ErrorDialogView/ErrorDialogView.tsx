@@ -1,40 +1,35 @@
 import { ErrorDialog } from "@/components/Dialogs/ErrorDialog";
-import { MissingApiKeyDialog } from "@/components/Dialogs/MissingApiKeyDialog";
 import { MoreContextDialog } from "@/components/Dialogs/MoreContextDialog";
 import { enTokens } from "@/locale/en/en-tokens";
 import { toggleDialog } from "@/redux/resume/resume-reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { useApiKey } from "@/routes/ApiKey/useApiKey";
 import { useDialogType } from "@hooks/useDialogType";
 
+type AIErrorCode = keyof Omit<typeof enTokens.aiErrors, "gotIt">;
+
+const isAIErrorCode = (code: string | null): code is AIErrorCode =>
+  code !== null && code !== "gotIt" && code in enTokens.aiErrors;
+
 export const ErrorDialogView = () => {
-  const t = enTokens.settings;
   const dialogType = useDialogType();
   const dialogMessage = useAppSelector((s) => s.resume.dialogMessage);
   const dispatch = useAppDispatch();
-  const { setApiKey, apiKey } = useApiKey();
 
   const close = () => dispatch(toggleDialog(null));
 
-  const handleRetry = (newKey: string) => {
-    if (newKey.trim()) {
-      setApiKey(newKey.trim());
-    }
-    close();
-  };
+  const aiError = isAIErrorCode(dialogMessage)
+    ? enTokens.aiErrors[dialogMessage]
+    : enTokens.aiErrors.request_failed;
 
   return (
     <>
-      {dialogType === "missingApiKey" && (
-        <MissingApiKeyDialog
+      {dialogType === "aiError" && (
+        <ErrorDialog
           onClose={close}
-          apiKey={apiKey}
-          onSave={setApiKey}
-          inputPlaceholder={t.addApiKey}
+          title={aiError.title}
+          subtitle={aiError.subtitle}
+          description={aiError.description}
         />
-      )}
-      {dialogType === "keyError" && (
-        <ErrorDialog onClose={close} onRetry={handleRetry} />
       )}
       {dialogType === "moreContext" && (
         <MoreContextDialog

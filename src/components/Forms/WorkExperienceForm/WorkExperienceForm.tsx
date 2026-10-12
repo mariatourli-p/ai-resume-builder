@@ -7,17 +7,60 @@ import {
   IconEdit,
   IconExperience,
 } from "@/assets/Icons";
+import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { PALETTE_MAP } from "@/theme";
 import { themeConfig } from "@/theme/themeConfig";
 import {
   Box,
   Button,
+  CircularProgress,
   IconButton,
   Paper,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
+import { memo } from "react";
+
+const achievementsTokens = enTokens.sections.workExperience.fields.achievements;
+
+/** Tips shown when hovering the lamp: what to write and how to separate it */
+const AchievementsTips = () => (
+  <Box sx={{ p: 0.5 }}>
+    <Typography
+      variant="caption"
+      component="p"
+      sx={{ fontWeight: 600, mb: 0.5 }}
+    >
+      {achievementsTokens.tips.title}
+    </Typography>
+    <Box component="ul" sx={{ m: 0, pl: 2 }}>
+      {achievementsTokens.tips.items.map((tip) => (
+        <Typography key={tip} variant="caption" component="li">
+          {tip}
+        </Typography>
+      ))}
+    </Box>
+    <Typography variant="caption" component="p" sx={{ fontWeight: 600, mt: 1 }}>
+      {achievementsTokens.tips.exampleTitle}
+    </Typography>
+    <Box
+      sx={{
+        mt: 0.5,
+        p: 1,
+        borderRadius: 1,
+        bgcolor: "rgba(255, 255, 255, 0.12)",
+        fontFamily: "monospace",
+        fontSize: "0.7rem",
+        whiteSpace: "pre-line",
+      }}
+    >
+      {achievementsTokens.tips.example.join("\n")}
+    </Box>
+  </Box>
+);
 
 export type WorkExperienceEntry = {
   id: string;
@@ -34,7 +77,7 @@ export type WorkExperienceEntry = {
 export type WorkExperienceFormProps = {
   /** List of work experience entries. Each entry is identified by a unique `id`. */
   entries?: WorkExperienceEntry[];
-  /** When `true`, all AI buttons are disabled (e.g. when the API key is missing). */
+  /** When `true`, all AI buttons are disabled (e.g. when the browser can't run the AI). */
   isAIDisabled?: boolean;
   /** Fired when the user clicks "+ Add Experience". */
   onAdd?: () => void;
@@ -48,7 +91,208 @@ export type WorkExperienceFormProps = {
   ) => void;
 
   onGenerateAchievements?: (id: string, roleTitle: string) => Promise<void>;
+  /** Ids of entries whose achievements are being generated - shows a spinner on their button. */
+  generatingIds?: string[];
 };
+
+type WorkExperienceEntryCardProps = Pick<
+  WorkExperienceFormProps,
+  "isAIDisabled" | "onChange" | "onDelete" | "onGenerateAchievements"
+> & {
+  entry: WorkExperienceEntry;
+  accentColor: string;
+  isGenerating: boolean;
+};
+
+/**
+ * One work experience entry. Memoized so typing in one entry doesn't
+ * re-render the others - the parent must pass stable callbacks.
+ */
+const WorkExperienceEntryCard = memo(
+  ({
+    entry,
+    accentColor,
+    isAIDisabled,
+    isGenerating,
+    onChange,
+    onDelete,
+    onGenerateAchievements,
+  }: WorkExperienceEntryCardProps) => (
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2.5,
+        border: "1px solid",
+        borderColor: "divider",
+        borderRadius: 3,
+      }}
+    >
+      {/* Row 1 */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 2,
+          mb: 2,
+        }}
+      >
+        <TextField
+          label="ROLE TITLE"
+          fullWidth
+          value={entry.roleTitle}
+          onChange={(e) => onChange?.(entry.id, "roleTitle", e.target.value)}
+        />
+        <TextField
+          label="COMPANY / ORG"
+          fullWidth
+          value={entry.company}
+          onChange={(e) => onChange?.(entry.id, "company", e.target.value)}
+        />
+      </Box>
+
+      {/* Row 2 */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 2,
+          mb: 2,
+        }}
+      >
+        <TextField
+          label="DURATION"
+          fullWidth
+          placeholder="2020 – Present"
+          value={entry.duration}
+          onChange={(e) => onChange?.(entry.id, "duration", e.target.value)}
+        />
+        <TextField
+          label="LOCATION"
+          fullWidth
+          value={entry.location}
+          onChange={(e) => onChange?.(entry.id, "location", e.target.value)}
+        />
+      </Box>
+
+      {/* Achievements */}
+      <Box sx={{ position: "relative" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mb: 0.5,
+          }}
+        >
+          <Typography
+            variant="caption"
+            sx={{
+              color: themeConfig.colors.black,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}
+          >
+            Key Achievements & Milestones
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{ color: themeConfig.colors.black }}
+          >
+            Separate points with a new line
+          </Typography>
+        </Box>
+        <TextField
+          multiline
+          minRows={4}
+          fullWidth
+          value={entry.achievements}
+          onChange={(e) => onChange?.(entry.id, "achievements", e.target.value)}
+          placeholder={achievementsTokens.placeholder}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignSelf: "flex-start",
+                    mt: 1,
+                    gap: 0.5,
+                  }}
+                >
+                  <IconButton size="small">
+                    <IconChevronUp size={16} />
+                  </IconButton>
+                  <IconButton size="small">
+                    <IconChevronDown size={16} />
+                  </IconButton>
+                  <IconButton size="small">
+                    <IconEdit size={16} />
+                  </IconButton>
+                </Box>
+              ),
+            },
+          }}
+        />
+
+        {/* Hover (or focus) the lamp to see what to write */}
+        <Tooltip title={<AchievementsTips />} placement="bottom-start" arrow>
+          <Box
+            tabIndex={0}
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 0.5,
+              mt: 0.5,
+              cursor: "help",
+              color: "text.secondary",
+            }}
+          >
+            <LightbulbOutlinedIcon sx={{ fontSize: 14 }} />
+            <Typography variant="caption">{achievementsTokens.hint}</Typography>
+          </Box>
+        </Tooltip>
+
+        {/* AI chips */}
+        <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+          <Button
+            size="small"
+            disabled={isAIDisabled || !entry.roleTitle?.trim() || isGenerating}
+            onClick={() => onGenerateAchievements?.(entry.id, entry.roleTitle)}
+            startIcon={
+              isGenerating ? (
+                <CircularProgress size={12} color="inherit" />
+              ) : (
+                <IconAI size={13} />
+              )
+            }
+            sx={{
+              borderRadius: themeConfig.borderRadius.full,
+              border: `1px solid ${accentColor}`,
+              color: accentColor,
+              fontSize: "0.7rem",
+              textTransform: "none",
+              px: 1.5,
+              "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
+            }}
+          >
+            {isGenerating
+              ? enTokens.ai.generating
+              : enTokens.ai.generateAchievements}
+          </Button>
+          <Box sx={{ ml: "auto" }}>
+            <IconButton
+              size="small"
+              onClick={() => onDelete?.(entry.id)}
+              sx={{ color: "error.main" }}
+            >
+              <IconDelete size={16} />
+            </IconButton>
+          </Box>
+        </Box>
+      </Box>
+    </Paper>
+  ),
+);
 
 /**
  * Form section for collecting and editing a candidate's work experience.
@@ -57,19 +301,19 @@ export type WorkExperienceFormProps = {
  * location, and a key achievements textarea with inline AI improvement chips.
  * The user can add new entries or delete existing ones.
  *
- * This is a controlled component — the parent owns `entries` and must handle
+ * This is a controlled component - the parent owns `entries` and must handle
  * `onChange`, `onAdd`, and `onDelete` to keep state in sync.
  *
  * @example
  * ```tsx
  * <WorkExperienceForm
  *   entries={experiences}
- *   isAIDisabled={!apiKey}
+ *   isAIDisabled={!isReady}
  *   onAdd={handleAdd}
  *   onDelete={handleDelete}
  *   onChange={handleChange}
- *   onImprove={handleImprove}
- *   improvingIds={improvingIds}
+ *   onGenerateAchievements={handleGenerate}
+ *   generatingIds={generatingIds}
  * />
  * ```
  */
@@ -80,6 +324,7 @@ export const WorkExperienceForm = ({
   onDelete,
   onChange,
   onGenerateAchievements,
+  generatingIds = [],
 }: WorkExperienceFormProps) => {
   const accentColor = useAccentColorSelector((s) => s);
 
@@ -123,169 +368,18 @@ export const WorkExperienceForm = ({
 
       {/* Entries */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {entries.map((entry) => {
-          return (
-            <Paper
-              key={entry.id}
-              elevation={0}
-              sx={{
-                p: 2.5,
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: 3,
-              }}
-            >
-              {/* Row 1 */}
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 2,
-                  mb: 2,
-                }}
-              >
-                <TextField
-                  label="ROLE TITLE"
-                  fullWidth
-                  value={entry.roleTitle}
-                  onChange={(e) =>
-                    onChange?.(entry.id, "roleTitle", e.target.value)
-                  }
-                />
-                <TextField
-                  label="COMPANY / ORG"
-                  fullWidth
-                  value={entry.company}
-                  onChange={(e) =>
-                    onChange?.(entry.id, "company", e.target.value)
-                  }
-                />
-              </Box>
-
-              {/* Row 2 */}
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 2,
-                  mb: 2,
-                }}
-              >
-                <TextField
-                  label="DURATION"
-                  fullWidth
-                  placeholder="2020 – Present"
-                  value={entry.duration}
-                  onChange={(e) =>
-                    onChange?.(entry.id, "duration", e.target.value)
-                  }
-                />
-                <TextField
-                  label="LOCATION"
-                  fullWidth
-                  value={entry.location}
-                  onChange={(e) =>
-                    onChange?.(entry.id, "location", e.target.value)
-                  }
-                />
-              </Box>
-
-              {/* Achievements */}
-              <Box sx={{ position: "relative" }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    mb: 0.5,
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: themeConfig.colors.black,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Key Achievements & Milestones
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: themeConfig.colors.black }}
-                  >
-                    Separate points with a new line
-                  </Typography>
-                </Box>
-                <TextField
-                  multiline
-                  minRows={4}
-                  fullWidth
-                  value={entry.achievements}
-                  onChange={(e) =>
-                    onChange?.(entry.id, "achievements", e.target.value)
-                  }
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignSelf: "flex-start",
-                            mt: 1,
-                            gap: 0.5,
-                          }}
-                        >
-                          <IconButton size="small">
-                            <IconChevronUp size={16} />
-                          </IconButton>
-                          <IconButton size="small">
-                            <IconChevronDown size={16} />
-                          </IconButton>
-                          <IconButton size="small">
-                            <IconEdit size={16} />
-                          </IconButton>
-                        </Box>
-                      ),
-                    },
-                  }}
-                />
-
-                {/* AI chips */}
-                <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-                  <Button
-                    size="small"
-                    disabled={isAIDisabled || !entry.roleTitle?.trim()}
-                    onClick={() =>
-                      onGenerateAchievements?.(entry.id, entry.roleTitle)
-                    }
-                    startIcon={<IconAI size={13} />}
-                    sx={{
-                      borderRadius: themeConfig.borderRadius.full,
-                      border: `1px solid ${accentColor}`,
-                      color: accentColor,
-                      fontSize: "0.7rem",
-                      textTransform: "none",
-                      px: 1.5,
-                      "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
-                    }}
-                  >
-                    Generate Achievements
-                  </Button>
-                  <Box sx={{ ml: "auto" }}>
-                    <IconButton
-                      size="small"
-                      onClick={() => onDelete?.(entry.id)}
-                      sx={{ color: "error.main" }}
-                    >
-                      <IconDelete size={16} />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Box>
-            </Paper>
-          );
-        })}
+        {entries.map((entry) => (
+          <WorkExperienceEntryCard
+            key={entry.id}
+            entry={entry}
+            accentColor={accentColor}
+            isAIDisabled={isAIDisabled}
+            isGenerating={generatingIds.includes(entry.id)}
+            onChange={onChange}
+            onDelete={onDelete}
+            onGenerateAchievements={onGenerateAchievements}
+          />
+        ))}
       </Box>
     </Box>
   );

@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AppView } from "./AppView";
 import { ThemeProvider } from "@mui/material";
 import { createMuiTheme } from "./theme/muiThemeConfig";
-import { ApiKeyProvider } from "./routes/ApiKey/ApiKeyProvider";
+import { AISettingsProvider } from "./routes/AISettings/AISettingsProvider";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { useMemo } from "react";
 
@@ -13,9 +13,9 @@ export const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <ApiKeyProvider>
+        <AISettingsProvider>
           <AppView />
-        </ApiKeyProvider>
+        </AISettingsProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

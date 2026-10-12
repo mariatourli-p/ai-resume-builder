@@ -2,22 +2,21 @@ import { setAccentColor } from "@/redux/resume/resume-reducer";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
 import { Box } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { BRANDING_PALETTES } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
 import { SettingsColorPalette } from "@/components/Settings/SettingsColorPalette";
 import { SettingsFooter } from "@/components/Settings/SettingsFooter";
 import { SettingsHeader } from "@/components/Settings/SettingsHeader";
 import { enTokens } from "@/locale/en/en-tokens";
-import { useApiKey } from "@/routes/ApiKey/useApiKey";
+import { useAIStatusPanel } from "@/routes/AISettings/useAIStatusPanel";
 
 const t = enTokens.settings;
 
 export const SettingsView = () => {
   const dispatch = useAppDispatch();
   const activeColor = useAccentColorSelector((s) => s);
-  const { apiKey, setApiKey, clearApiKey } = useApiKey();
-  const [input, setInput] = useState(apiKey);
+  const aiStatus = useAIStatusPanel();
 
   const handleColorSelect = useCallback(
     (value: string) => {
@@ -40,21 +39,9 @@ export const SettingsView = () => {
         />
       </Box>
       <SettingsFooter
-        title={t.apiKey}
-        inputLabel={t.apiKey}
-        linkLabel={`${enTokens.missingApiKeyDialog.getFreeKey} ↗`}
-        linkHref={enTokens.missingApiKeyDialog.getFreeKeyUrl}
-        inputPlaceholder={t.apiKeyPlaceholder}
-        footerText={enTokens.errors.missingKey}
-        apiKey={input}
-        onSave={(key) => {
-          setApiKey(key);
-          setInput(key);
-        }}
-        onClear={() => {
-          clearApiKey();
-          setInput("");
-        }}
+        title={t.aiTitle}
+        footerText={t.aiFooter}
+        aiStatus={aiStatus}
       />
     </Box>
   );
