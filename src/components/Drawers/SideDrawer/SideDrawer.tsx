@@ -10,7 +10,7 @@ import { useAppSelector } from "@/redux/store";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import { Box, Divider, Drawer, Stack, type SxProps } from "@mui/material";
 
-const DRAWER_WIDTH = 280;
+export const DRAWER_WIDTH = 280;
 
 export type SideDrawerProps = {
   sectionItems: { text: string; icon: React.ReactNode }[];
@@ -109,7 +109,7 @@ export const SideDrawer = ({
           </Box>
         </Box>
 
-        {/* Bottom - pinned */}
+        {/* Bottom — pinned */}
         <Box sx={{ p: 2 }}>
           <OptimizeResumeButton
             icon={<IconAI />}

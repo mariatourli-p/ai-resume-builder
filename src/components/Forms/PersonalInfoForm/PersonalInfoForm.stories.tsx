@@ -46,7 +46,8 @@ const meta: Meta<typeof PersonalInfoForm> = {
   decorators: [withState],
   args: {
     data: defaultData,
-    isRewriteDisabled: false,
+    isEnhancing: false,
+    // isEnhanceDisabled: true,
     isRewriting: false,
   },
   argTypes: {
@@ -54,9 +55,17 @@ const meta: Meta<typeof PersonalInfoForm> = {
       control: "object",
       description: "All field values for the personal info section",
     },
+    isEnhancing: {
+      control: "boolean",
+      description: "Shows loading state on the Enhance button",
+    },
     isRewriting: {
       control: "boolean",
       description: "Shows loading state on the Smart Rewrite button",
+    },
+    onEnhance: {
+      action: "enhance clicked",
+      description: "Fired when the Enhance button is pressed",
     },
     onSmartRewrite: {
       action: "smart rewrite clicked",
@@ -87,6 +96,10 @@ export const Empty: Story = {
       professionalSummary: "",
     },
   },
+};
+
+export const EnhancingInProgress: Story = {
+  args: { isEnhancing: true },
 };
 
 export const RewritingInProgress: Story = {

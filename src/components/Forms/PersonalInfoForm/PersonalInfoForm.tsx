@@ -1,17 +1,11 @@
 import { IconPersonal } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
+import { AI_PROMPTS } from "@/services/aiPrompts";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 
 export type PersonalInfoData = {
   fullName: string;
@@ -29,12 +23,16 @@ export type PersonalInfoData = {
 export type PersonalInfoFormProps = {
   /** All field values for the personal info section. When omitted, all fields render empty. */
   data: PersonalInfoData;
+  /** When `true`, the Enhance button shows a loading label and is disabled. */
+  isEnhancing: boolean;
   /** When `true`, the Smart Rewrite button shows a loading label and is disabled. */
   isRewriting: boolean;
-  /** Disables the Smart Rewrite button (e.g. when there is no professional title). */
-  isRewriteDisabled: boolean;
+  /** Disables both the Enhance and Smart Rewrite buttons (e.g. when the API key is missing). */
+  isEnhanceDisabled: boolean;
+  /** Fired when the Enhance button is clicked. */
+  onEnhance: (prompt: keyof typeof AI_PROMPTS) => void;
   /** Fired when the Smart Rewrite button inside the summary field is clicked. */
-  onSmartRewrite: () => void;
+  onSmartRewrite: (prompt: keyof typeof AI_PROMPTS) => void;
   /** Fired on every field change. Receives the field key and the new value. */
   onChange: (field: keyof PersonalInfoData, value: string) => void;
 };
@@ -45,28 +43,32 @@ export type PersonalInfoFormProps = {
  * Renders a two-column grid of fields (name, title, email, phone, location, portfolio)
  * and a full-width professional summary textarea with an inline Smart Rewrite button.
  *
- * **Smart Rewrite** (inside the summary textarea) asks the AI to write the
- * summary from the professional title.
+ * AI actions are surfaced via two entry points:
+ * - **Enhance** — header button that improves all fields at once
+ * - **Smart Rewrite** — inline button inside the summary textarea
  *
- * This is a controlled component - the parent owns `data` and must handle `onChange`
+ * This is a controlled component — the parent owns `data` and must handle `onChange`
  * to keep field values in sync.
  *
  * @example
  * ```tsx
  * <PersonalInfoForm
  *   data={personalInfo}
- *   isRewriteDisabled={!data.professionalTitle}
+ *   isEnhanceDisabled={!apiKey}
  *   onChange={(field, value) => update(field, value)}
+ *   onEnhance={handleEnhance}
  *   onSmartRewrite={handleSmartRewrite}
  * />
  * ```
  */
 export const PersonalInfoForm = ({
   data,
+  isEnhancing = false,
   isRewriting = false,
+  onEnhance,
   onChange,
   onSmartRewrite,
-  isRewriteDisabled,
+  isEnhanceDisabled,
 }: PersonalInfoFormProps) => {
   const { personalInfo } = enTokens.sections;
   const accentColor = useAccentColorSelector((s) => s);
@@ -99,6 +101,22 @@ export const PersonalInfoForm = ({
             {enTokens.sections.personalInfo.title}
           </Typography>
         </Box>
+        <Button
+          variant="contained"
+          startIcon={<AutoAwesomeIcon />}
+          disabled={isEnhanceDisabled || isEnhancing}
+          onClick={() => onEnhance("enhance")}
+          sx={{
+            borderRadius: themeConfig.borderRadius.full,
+            bgcolor: accentColor,
+            textTransform: "uppercase",
+            fontSize: themeConfig.fontSize.xs,
+            letterSpacing: "0.08em",
+            "&:hover": { bgcolor: accentColor },
+          }}
+        >
+          {isEnhancing ? "Enhancing..." : "Enhance"}
+        </Button>
       </Box>
 
       {/* Row 1 */}
@@ -194,15 +212,9 @@ export const PersonalInfoForm = ({
           </Box>
           <Button
             size="small"
-            disabled={isRewriting || isRewriteDisabled}
-            onClick={onSmartRewrite}
-            startIcon={
-              isRewriting ? (
-                <CircularProgress size={12} color="inherit" />
-              ) : (
-                <AutoAwesomeIcon sx={{ fontSize: 14 }} />
-              )
-            }
+            disabled={isRewriting || isEnhanceDisabled}
+            onClick={() => onSmartRewrite("smartRewrite")}
+            startIcon={<AutoAwesomeIcon sx={{ fontSize: 14 }} />}
             sx={{
               borderRadius: "20px",
               border: `1px solid ${accentColor}`,
