@@ -41,7 +41,7 @@ export type EducationFormProps = {
  * Renders a list of education entries, each with institution name, degree,
  * graduation date, and location. The user can add new entries or delete existing ones.
  *
- * This is a controlled component - the parent owns `entries` and must handle
+ * This is a controlled component — the parent owns `entries` and must handle
  * `onChange`, `onAdd`, and `onDelete` to keep state in sync.
  *
  * @example
@@ -54,12 +54,6 @@ export type EducationFormProps = {
  * />
  * ```
  */
-/**
- * Chrome guesses these fields are name / phone / job title and autofills the
- * user's personal info into them - they describe a school, not the user.
- */
-const NO_AUTOFILL = { htmlInput: { autoComplete: "off" } };
-
 export const EducationForm = ({
   entries = [],
   onAdd,
@@ -128,11 +122,10 @@ export const EducationForm = ({
               </IconButton>
             </Box>
 
-            {/* Institution - full width */}
+            {/* Institution — full width */}
             <TextField
               label="INSTITUTION / SCHOOL NAME"
               fullWidth
-              slotProps={NO_AUTOFILL}
               value={entry.institution}
               onChange={(e) =>
                 onChange?.(entry.id, "institution", e.target.value)
@@ -140,28 +133,23 @@ export const EducationForm = ({
               sx={{ mb: 2 }}
             />
 
-            {/* Degree - full width, degree names are long */}
-            <TextField
-              label="DEGREE / FIELD & HONORS"
-              fullWidth
-              slotProps={NO_AUTOFILL}
-              value={entry.degree}
-              onChange={(e) => onChange?.(entry.id, "degree", e.target.value)}
-              sx={{ mb: 2 }}
-            />
-
-            {/* Graduation Date / Location */}
+            {/* Degree / Graduation Date / Location */}
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: "2fr 1fr 1fr",
                 gap: 2,
               }}
             >
               <TextField
+                label="DEGREE / FIELD & HONORS"
+                fullWidth
+                value={entry.degree}
+                onChange={(e) => onChange?.(entry.id, "degree", e.target.value)}
+              />
+              <TextField
                 label="GRADUATION DATE"
                 fullWidth
-                slotProps={NO_AUTOFILL}
                 placeholder="2011 – 2015"
                 value={entry.graduationDate}
                 onChange={(e) =>
@@ -171,7 +159,6 @@ export const EducationForm = ({
               <TextField
                 label="LOCATION"
                 fullWidth
-                slotProps={NO_AUTOFILL}
                 value={entry.location}
                 onChange={(e) =>
                   onChange?.(entry.id, "location", e.target.value)

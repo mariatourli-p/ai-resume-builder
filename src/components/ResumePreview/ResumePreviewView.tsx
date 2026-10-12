@@ -3,18 +3,15 @@ import { useAppSelector } from "@/redux/store";
 import { useExportContext } from "@/routes/context/ExportProvider/ExportContext";
 import { themeConfig } from "@/theme";
 import { Box } from "@mui/material";
-import { useDeferredValue, useEffect, useRef } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useEffect, useRef } from "react";
 import { ResumePreview } from "./ResumePreview";
 
 export const ResumePreviewView = () => {
-  const resume = useAppSelector((state) => state.resume);
-  console.log("🚀 ~ ResumePreviewView ~ resume:", resume);
-  /**
-   * The preview updates at low priority, so typing in the forms never waits
-   * for the whole resume to re-render
-   */
-  const { personalInfo, workExperience, education, skills } =
-    useDeferredValue(resume);
+  const { personalInfo, workExperience, education, skills } = useAppSelector(
+    (state) => state.resume,
+  );
   const accentColor = useAccentColorSelector((s) => s);
   const activeTemplate = useAppSelector((s) => s.resume.activeTemplate);
   const fontFamily =
@@ -28,12 +25,6 @@ export const ResumePreviewView = () => {
     registerExport(async () => {
       const element = previewRef.current;
       if (!element) return;
-
-      // Loaded only when the user exports, to keep the first page load small
-      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
 
       const canvas = await html2canvas(element, {
         scale: 2,

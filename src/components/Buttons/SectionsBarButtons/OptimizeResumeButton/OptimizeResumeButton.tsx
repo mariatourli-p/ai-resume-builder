@@ -15,7 +15,7 @@ export type OptimizeResumeButtonProps = Omit<IconButtonProps, "text"> & {
  * animates with a stepped rotation. Pressing the button again while loading
  * cancels the optimization.
  *
- * All styling uses `themeConfig` tokens - dark background with a green AI accent icon.
+ * All styling uses `themeConfig` tokens — dark background with a green AI accent icon.
  *
  * @param icon - The icon to display inside the button (animates while loading).
  * @param sx - Optional MUI `SxProps` to override default styles.

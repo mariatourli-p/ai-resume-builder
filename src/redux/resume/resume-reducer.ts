@@ -33,7 +33,7 @@ export type EducationEntry = {
   location: string;
 };
 
-export type DialogType = "aiError" | "moreContext" | null;
+export type DialogType = "missingApiKey" | "keyError" | "moreContext" | null;
 
 export type ResumeState = {
   personalInfo: PersonalInfoData;
@@ -82,6 +82,9 @@ const resumeSlice = createSlice({
       action: PayloadAction<{ field: keyof PersonalInfoData; value: string }>,
     ) {
       state.personalInfo[action.payload.field] = action.payload.value;
+    },
+    setPersonalInfo(state, action: PayloadAction<PersonalInfoData>) {
+      state.personalInfo = action.payload;
     },
 
     // Skills
@@ -149,6 +152,11 @@ const resumeSlice = createSlice({
       state.education = state.education.filter((e) => e.id !== action.payload);
     },
 
+    // Reset
+    resetResume() {
+      return initialState;
+    },
+
     setAccentColor(state, action: PayloadAction<string>) {
       state.accentColor = action.payload;
     },
@@ -166,6 +174,7 @@ const resumeSlice = createSlice({
 
 export const {
   updatePersonalInfoField,
+  setPersonalInfo,
   addSkill,
   removeSkill,
   addWorkExperience,
@@ -174,6 +183,7 @@ export const {
   addEducation,
   updateEducationField,
   removeEducation,
+  resetResume,
   setAccentColor,
   setActiveTemplate,
   toggleDialog,

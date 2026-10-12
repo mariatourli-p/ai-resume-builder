@@ -6,6 +6,7 @@ const meta: Meta<typeof ErrorDialog> = {
   component: ErrorDialog,
   args: {
     onClose: () => console.log("closed"),
+    onRetry: (key) => console.log("retry with key:", key),
   },
 };
 
@@ -13,29 +14,16 @@ export default meta;
 
 type Story = StoryObj<typeof ErrorDialog>;
 
-export const RequestFailed: Story = {
+export const Default: Story = {};
+
+export const WithErrorLog: Story = {
   args: {
-    title: "AI request failed",
-    subtitle: "Something went wrong",
-    description:
-      "The AI couldn't complete the request. Please try again in a moment.",
+    errorLog: `{"error":{"code":400,"message":"API key not valid. Please pass a valid API key.","status":"INVALID_ARGUMENT"}}`,
   },
 };
 
-export const BrowserUnsupported: Story = {
+export const WithLongErrorLog: Story = {
   args: {
-    title: "AI not available in this browser",
-    subtitle: "Unsupported browser",
-    description:
-      "The AI features run inside Google Chrome on your computer, for free. Open this page in a recent desktop version of Chrome to use them.",
-  },
-};
-
-export const DeviceUnsupported: Story = {
-  args: {
-    title: "AI not available on this computer",
-    subtitle: "Unsupported device",
-    description:
-      "Your Chrome supports the AI features, but this computer doesn't meet their requirements: a capable graphics card or enough memory, and free disk space for the model. Try another computer to use them.",
+    errorLog: `{"error":{"code":400,"message":"API key not valid. Please pass a valid API key.","status":"INVALID_ARGUMENT","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"API_KEY_INVALID","domain":"googleapis.com","metadata":{"service":"generativelanguage.googleapis.com"}}]}}`,
   },
 };

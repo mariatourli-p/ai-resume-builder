@@ -3,15 +3,7 @@ import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { PALETTE_MAP } from "@/theme";
 import { themeConfig } from "@/theme/themeConfig";
-import {
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Chip, Paper, TextField, Typography } from "@mui/material";
 import type { KeyboardEvent } from "react";
 
 const ai = enTokens.ai;
@@ -39,7 +31,7 @@ export type SkillsFormProps = {
   onRemove?: (skill: string) => void;
   /** Fired when the AI suggest button is clicked. */
   onSuggest?: () => void;
-  /** Set of skills already applied - used to highlight suggestion chips. */
+  /** Set of skills already applied — used to highlight suggestion chips. */
   appliedSet?: Set<string>;
 };
 
@@ -50,7 +42,7 @@ export type SkillsFormProps = {
  * a list of applied skill chips with remove buttons, and an AI-suggested skills
  * section where clicking a tag adds it instantly.
  *
- * This is a pure UI component - the parent owns all state and must handle
+ * This is a pure UI component — the parent owns all state and must handle
  * `onInputChange`, `onKeyDown`, `onAdd`, and `onRemove` to keep state in sync.
  *
  * @example
@@ -240,19 +232,13 @@ export const SkillsForm = ({
         </Box>
       )}
 
-      {/* Suggest with AI - shown when no suggestions yet */}
+      {/* Suggest with AI — shown when no suggestions yet */}
       {suggestedSkills.length === 0 && (
         <Button
           size="small"
           disabled={isAIDisabled || isSuggesting}
           onClick={onSuggest}
-          startIcon={
-            isSuggesting ? (
-              <CircularProgress size={12} color="inherit" />
-            ) : (
-              <IconAI size={13} />
-            )
-          }
+          startIcon={<IconAI size={13} />}
           sx={{
             borderRadius: themeConfig.borderRadius.full,
             border: `1px solid ${accentColor}`,
@@ -263,7 +249,7 @@ export const SkillsForm = ({
             "&:hover": { bgcolor: PALETTE_MAP[accentColor]?.light },
           }}
         >
-          {isSuggesting ? ai.suggesting : ai.suggest}
+          {isSuggesting ? ai.loading : ai.suggest}
         </Button>
       )}
     </Paper>
