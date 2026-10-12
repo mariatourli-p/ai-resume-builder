@@ -40,7 +40,7 @@ const createStepTimer = () => {
   const steps: Record<string, number> = {};
   const start = performance.now();
   return {
-    time: async <T,>(step: string, work: Promise<T>): Promise<T> => {
+    time: async <T>(step: string, work: Promise<T>): Promise<T> => {
       const stepStart = performance.now();
       try {
         return await work;

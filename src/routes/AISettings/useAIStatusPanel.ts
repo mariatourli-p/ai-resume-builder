@@ -32,7 +32,10 @@ export const useAIStatusPanel = (): AIStatusPanelProps => {
     return {
       ...base,
       note: status === "downloading" ? t.downloadingBackground : t[status],
-      noteSeverity: status === "unavailable" ? "warning" : "info",
+      noteSeverity:
+        status === "unavailable" || status === "unsupported_browser"
+          ? "warning"
+          : "info",
       action:
         status === "downloadable"
           ? { label: t.downloadButton, onClick: startBrowserAIDownload }

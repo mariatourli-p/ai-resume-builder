@@ -30,3 +30,12 @@ export const BrowserUnsupported: Story = {
       "The AI features run inside Google Chrome on your computer, for free. Open this page in a recent desktop version of Chrome to use them.",
   },
 };
+
+export const DeviceUnsupported: Story = {
+  args: {
+    title: "AI not available on this computer",
+    subtitle: "Unsupported device",
+    description:
+      "Your Chrome supports the AI features, but this computer doesn't meet their requirements: a capable graphics card or enough memory, and free disk space for the model. Try another computer to use them.",
+  },
+};

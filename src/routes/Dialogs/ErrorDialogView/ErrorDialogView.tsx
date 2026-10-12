@@ -8,7 +8,7 @@ import { useDialogType } from "@hooks/useDialogType";
 type AIErrorCode = keyof Omit<typeof enTokens.aiErrors, "gotIt">;
 
 const isAIErrorCode = (code: string | null): code is AIErrorCode =>
-  code === "unsupported" || code === "request_failed";
+  code !== null && code !== "gotIt" && code in enTokens.aiErrors;
 
 export const ErrorDialogView = () => {
   const dialogType = useDialogType();

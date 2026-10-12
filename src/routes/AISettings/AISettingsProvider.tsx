@@ -2,10 +2,10 @@ import {
   getBrowserAIAvailability,
   onBrowserAIDownloadProgress,
   prepareBrowserAI,
-  type BrowserAIAvailability,
+  type BrowserAIStatus,
 } from "@/services";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AISettingsContext } from "./AISettingsContext";
+import { AISettingsContext, type AISettingsContextType } from "./AISettingsContext";
 
 /** Provider choice and API keys saved by earlier versions of the app */
 const OBSOLETE_STORAGE_KEYS = [
@@ -20,7 +20,7 @@ export const AISettingsProvider = ({
   children: React.ReactNode;
 }) => {
   const [browserAvailability, setBrowserAvailability] =
-    useState<BrowserAIAvailability | null>(null);
+    useState<BrowserAIStatus | null>(null);
   const [browserDownloadProgress, setBrowserDownloadProgress] = useState<
     number | null
   >(null);
@@ -36,8 +36,10 @@ export const AISettingsProvider = ({
 
   useEffect(refreshBrowserAvailability, [refreshBrowserAvailability]);
 
-  // Progress comes from any session created while the model downloads -
-  // the explicit download below or the first AI request.
+  /**
+   * Progress comes from any session created while the model downloads -
+   * the explicit download below or the first AI request.
+   */
   useEffect(
     () =>
       onBrowserAIDownloadProgress((progress) => {
@@ -61,9 +63,19 @@ export const AISettingsProvider = ({
       });
   }, [refreshBrowserAvailability]);
 
-  // While the check is still running, let the request go through:
-  // the browser provider reports "unsupported" itself if needed.
-  const isReady = browserAvailability !== "unavailable";
+  /**
+   * Why the AI can't run: another browser, or a Chrome on a computer that
+   * doesn't meet the model's requirements. While the check is still running
+   * (`null`), let the request go through: the browser provider reports the
+   * reason itself if needed.
+   */
+  const unsupportedReason: AISettingsContextType["unsupportedReason"] =
+    browserAvailability === "unsupported_browser"
+      ? "unsupported"
+      : browserAvailability === "unavailable"
+        ? "unsupported_device"
+        : null;
+  const isReady = unsupportedReason === null;
 
   const value = useMemo(
     () => ({
@@ -71,12 +83,14 @@ export const AISettingsProvider = ({
       browserDownloadProgress,
       startBrowserAIDownload,
       isReady,
+      unsupportedReason,
     }),
     [
       browserAvailability,
       browserDownloadProgress,
       startBrowserAIDownload,
       isReady,
+      unsupportedReason,
     ],
   );
 

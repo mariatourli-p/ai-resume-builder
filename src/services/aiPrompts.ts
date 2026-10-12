@@ -1,26 +1,4 @@
-export const WORK_EXPERIENCE_PROMPTS = {
-  quantifyMetrics: `You are a resume writer. Rewrite the input as 2-3 resume bullet points.
-Rules:
-1. Use strong action verbs (Spearheaded, Drove, Built, Delivered, Optimized)
-2. If input is vague, make reasonable assumptions and use placeholders like [feature name], [X%], [N users]
-3. Each bullet MUST start with the exact marker: BULLET::
-4. Return ONLY the bullet lines, nothing else
-5. No headings, no markdown, no explanations, no questions
-
-Example output:
-BULLET::Spearheaded development of payment module, reducing transaction time by 40%
-BULLET::Built REST APIs serving 10K+ daily users, improving response time by 25%`,
-
-  strongerVerbs: `You are an expert resume writer.
-Rewrite the provided resume bullet point using stronger, more authoritative action verbs.
-Rules:
-1. Replace weak verbs (helped, worked on, assisted, responsible for) with powerful ones (Drove, Led, Architected, Delivered, Scaled)
-2. Keep the meaning and specifics intact - do not add or remove achievements
-3. Return ONLY the rewritten sentence. No explanations, no preamble, no quotes.`,
-} as const;
-
 export const AI_PROMPTS = {
-  ...WORK_EXPERIENCE_PROMPTS,
   smartRewrite: `You are a resume writer. Write a professional bio in first person for the given job title.
 Keep it to a maximum of 4 lines, concise and impactful.
 Return ONLY the bio text.
@@ -32,7 +10,10 @@ Keep each skill short (1-4 words).
 Return ONLY a comma-separated list. No numbering, no explanations, no markdown.`,
   validationPrompt: `You are a validator. Determine if the following text is a professional bio or resume summary, with no questions, no requests for more information, and no commentary.
 Reply ONLY with "VALID" or "INVALID". Nothing else.`,
-  generateAchievements: `You are a resume writer. Write exactly 3 professional bullet points for key achievements and milestones for the given job title.
+  generateAchievements: `You are a resume writer. Write professional bullet points for the key achievements and milestones of the given role.
+If the role title as written is given, use all of its keywords (skills, tools, technologies, specialties), not only the job title.
+If the user's notes are given, build the bullets from them: keep every fact, number, name, tool and keyword they mention, improve the wording, and don't drop any of their achievements.
+Write 3 bullets, or up to 5 if the notes describe more achievements.
 Each bullet should start with a strong action verb and be concise and impactful.
 Format EXACTLY like this:
 - <achievement 1>

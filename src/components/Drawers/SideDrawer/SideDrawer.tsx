@@ -10,7 +10,7 @@ import { useAppSelector } from "@/redux/store";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import { Box, Divider, Drawer, Stack, type SxProps } from "@mui/material";
 
-export const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 280;
 
 export type SideDrawerProps = {
   sectionItems: { text: string; icon: React.ReactNode }[];

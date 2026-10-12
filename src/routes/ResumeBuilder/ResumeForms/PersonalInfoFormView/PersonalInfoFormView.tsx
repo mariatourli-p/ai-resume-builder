@@ -7,7 +7,6 @@ import { shallowEqual, usePersonalInfoSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
 import { useAI } from "@hooks/useAI";
 import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
-import { useTextTitles } from "@hooks/useTextTitles";
 import { useCallback } from "react";
 
 /**
@@ -20,50 +19,88 @@ import { useCallback } from "react";
  * - Smart Rewrite writes a new summary from the professional title with
  *   {@link useAI}, after the AI finds the profession the title (or keyword)
  *   points to
- * - Clearing the title clears the summary, since it described that title
+ * - Editing or deleting the title keeps the summary; only Smart Rewrite
+ *   replaces it, and a failed rewrite brings the previous summary back
  * - If this browser can't run the AI, {@link useRequireAIProvider} explains why
  */
-const SUMMARY_KEY = "professionalSummary";
-
 export const PersonalInfoFormView = () => {
   const dispatch = useAppDispatch();
+  /**
+   * All Personal Info fields, because the form shows all of them.
+   * `shallowEqual` re-renders this view only when one of these fields
+   * changes - typing in other sections (Work Experience, Skills) doesn't.
+   */
   const data = usePersonalInfoSelector((s) => s, shallowEqual);
+  /**
+   * `improve` runs the AI request; `isLoading` shows the spinner on the
+   * Smart Rewrite button while the AI writes
+   */
   const { improve, isLoading } = useAI();
+  /**
+   * Checked before every AI request: shows why the AI can't run in this
+   * browser (e.g. not Chrome) instead of failing silently
+   */
   const { requireAIProvider } = useRequireAIProvider();
-  // Which title the summary was written for
-  const { setTextTitle, isSameTitle } = useTextTitles({
-    [SUMMARY_KEY]: data.professionalTitle,
-  });
 
-  const setSummary = useCallback(
+  /**
+   * Writes the summary to Redux (and so to the field and the preview).
+   *
+   * When: Smart Rewrite empties the field before the AI starts, fills it
+   * while the AI writes, and sets the final or previous text at the end.
+   *
+   * Why: one shared helper instead of repeating the same dispatch in every
+   * place; `useCallback` keeps it the same function between renders.
+   */
+  const updateSummary = useCallback(
     (value: string) =>
-      dispatch(updatePersonalInfoField({ field: "professionalSummary", value })),
+      dispatch(
+        updatePersonalInfoField({ field: "professionalSummary", value }),
+      ),
     [dispatch],
   );
 
+  /**
+   * Saves what the user types in any Personal Info field.
+   *
+   * When: on every key press in the form (passed as `onChange`).
+   *
+   * Why: the form fields show what is in Redux, so the new value must be
+   * saved there to appear. Editing or deleting the title never touches the
+   * summary - the user may be retyping the title. The summary only changes
+   * when the user clicks Smart Rewrite.
+   */
   const handleChange = useCallback(
     (field: keyof PersonalInfoData, value: string) => {
       dispatch(updatePersonalInfoField({ field, value }));
-      // The user wrote this summary for the current title
-      if (field === "professionalSummary") {
-        setTextTitle(SUMMARY_KEY, data.professionalTitle);
-      }
-      // Without a title the summary no longer describes anyone's job
-      if (field === "professionalTitle" && !value.trim()) setSummary("");
     },
-    [dispatch, setTextTitle, setSummary, data.professionalTitle],
+    [dispatch],
   );
 
+  /**
+   * Asks the AI to write a new summary from the professional title.
+   *
+   * When: the user clicks Smart Rewrite (passed as `onSmartRewrite`). The
+   * button is disabled while the title is empty.
+   *
+   * Steps:
+   * 1. Stops if the AI can't run in this browser
+   * 2. Keeps the current summary, then empties the field
+   * 3. `improve` finds the profession the title points to (e.g. "React" ->
+   *    "React Developer"), writes the summary - showing it in the field as
+   *    it is written - and checks the result
+   * 4. On success, keeps the new summary. On failure, brings the previous
+   *    summary back exactly as it was - the AI never deletes the user's text
+   *    without writing a new one
+   */
   const onSmartRewrite = useCallback(async () => {
     if (!requireAIProvider()) return;
 
     const title = data.professionalTitle.trim();
-    const summary = data.professionalSummary.trim();
+    const previous = data.professionalSummary;
     // The button is disabled without a title - the summary is written from it
     if (!title) return;
 
     // Start from an empty field: the AI writes a new summary from the title
-    setSummary("");
     const improved = await improve(
       "smartRewrite",
       (profession) => `Job title: ${profession}`,
@@ -72,30 +109,21 @@ export const PersonalInfoFormView = () => {
         // The AI first finds the profession the title points to
         jobTitle: title,
         // Show the text in the field while the AI writes it
-        onPartial: setSummary,
+        onPartial: updateSummary,
       },
     );
-    if (improved) {
-      setTextTitle(SUMMARY_KEY, title);
-      setSummary(improved);
-      return;
-    }
-    // Rejected or failed: bring the previous summary back only if it was
-    // written for this same title - otherwise it describes another job
-    setSummary(isSameTitle(SUMMARY_KEY, title) ? summary : "");
-  }, [
-    requireAIProvider,
-    data,
-    improve,
-    setSummary,
-    setTextTitle,
-    isSameTitle,
-  ]);
+    // Rejected or failed: bring back the summary from before the click
+    updateSummary(improved || previous);
+  }, [requireAIProvider, data, improve, updateSummary]);
 
   return (
     <PersonalInfoForm
       data={data}
       isRewriting={isLoading}
+      /**
+       * The summary is written from the title, so there is nothing to
+       * rewrite without one
+       */
       isRewriteDisabled={!data.professionalTitle.trim()}
       onChange={handleChange}
       onSmartRewrite={onSmartRewrite}

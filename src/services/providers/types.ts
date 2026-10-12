@@ -21,8 +21,15 @@ export type AIProvider = {
   generate: (params: GenerateParams) => Promise<string>;
 };
 
+/**
+ * - `unsupported`: this browser has no built-in AI (not Chrome, or too old)
+ * - `unsupported_device`: Chrome has it, but this computer can't run the
+ *   model (graphics card, memory or disk space)
+ * - `request_failed`: anything else went wrong
+ */
 export type AIProviderErrorCode =
   | "unsupported"
+  | "unsupported_device"
   | "request_failed";
 
 /**

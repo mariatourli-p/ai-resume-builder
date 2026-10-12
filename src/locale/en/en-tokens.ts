@@ -31,12 +31,26 @@ const SECTIONS = {
           placeholder: "TechFlow Corp",
         },
         achievements: {
-          placeholder: "Key achievements...",
+          placeholder:
+            "e.g.\nBuilt the payments API used by 50K customers\nCut cloud costs by 30%\nMentored 2 junior developers",
+          hint: "Rough notes are enough - the AI polishes them",
+          tips: {
+            title: "How to write your achievements",
+            items: [
+              "One achievement per line - press Enter to start the next one.",
+              "Say what you did and the result, with numbers if you have them.",
+              "Name the tools, projects or teams involved.",
+              "Rough notes are fine - the AI fixes the wording.",
+              "Leave it empty to get ideas from your role title.",
+            ],
+            exampleTitle: "Example",
+            example: [
+              "built payments api used by 50k customers",
+              "cut cloud costs 30% by moving to AWS Lambda",
+              "mentored 2 junior developers",
+            ],
+          },
         },
-      },
-      aiButtons: {
-        quantifyMetrics: "⊕ quantify metrics",
-        strongerVerbs: "↑ stronger verbs",
       },
     },
 
@@ -107,8 +121,10 @@ export const enTokens = {
     label: "Built-in browser AI",
     description: "Free · no account or key · runs on your device",
     checking: "Checking whether your browser supports it…",
-    unavailable:
+    unsupported_browser:
       "Not supported in this browser. The AI features need a recent desktop version of Google Chrome.",
+    unavailable:
+      "Your Chrome supports the AI, but this computer doesn't meet its requirements (graphics card, memory or free disk space).",
     downloadable:
       "The AI model needs a one-time download (a few minutes). You can start it now or it starts on first use.",
     downloadButton: "Download AI model",
@@ -138,6 +154,12 @@ export const enTokens = {
       subtitle: "Unsupported browser",
       description:
         "The AI features run inside Google Chrome on your computer, for free. Open this page in a recent desktop version of Chrome to use them.",
+    },
+    unsupported_device: {
+      title: "AI not available on this computer",
+      subtitle: "Unsupported device",
+      description:
+        "Your Chrome supports the AI features, but this computer doesn't meet their requirements: a capable graphics card or enough memory, and free disk space for the model. Try another computer to use them.",
     },
     request_failed: {
       title: "AI request failed",

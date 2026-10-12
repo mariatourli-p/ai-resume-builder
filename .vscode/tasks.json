@@ -2,79 +2,70 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Install dependencies",
-      "type": "npm",
-      "script": "install",
-      "problemMatcher": []
+      "label": "Install",
+      "type": "shell",
+      "command": "npm install",
+      "options": {
+        "statusbar": { "label": "$(package) Install", "color": "#61AFEF" }
+      }
     },
     {
-      "label": "Dev server",
-      "type": "npm",
-      "script": "dev",
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": { "regexp": "^x^" },
-        "background": {
-          "activeBegin": "VITE",
-          "activeEnd": "Local:"
-        }
+      "label": "Dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "statusbar": { "label": "$(play) Dev", "color": "#98C379" } }
+    },
+    {
+      "label": "Storybook",
+      "type": "shell",
+      "command": "npm run storybook",
+      "options": {
+        "statusbar": { "label": "$(book) Storybook", "color": "#FF4785" }
       }
     },
     {
       "label": "Build",
-      "type": "npm",
-      "script": "build",
+      "type": "shell",
+      "command": "npm run build",
       "group": { "kind": "build", "isDefault": true },
-      "problemMatcher": ["$tsc"]
+      "problemMatcher": ["$tsc"],
+      "options": {
+        "statusbar": { "label": "$(tools) Build", "color": "#E5C07B" }
+      }
+    },
+    {
+      "label": "Build Storybook",
+      "type": "shell",
+      "command": "npm run build-storybook",
+      "options": {
+        "statusbar": { "label": "$(book) Build Storybook", "color": "#FF9F1C" }
+      }
     },
     {
       "label": "Lint",
-      "type": "npm",
-      "script": "lint",
-      "problemMatcher": ["$eslint-stylish"]
+      "type": "shell",
+      "command": "npm run lint",
+      "problemMatcher": ["$eslint-stylish"],
+      "options": {
+        "statusbar": { "label": "$(search) Lint", "color": "#C678DD" }
+      }
     },
     {
       "label": "Check (build + lint)",
       "dependsOrder": "sequence",
       "dependsOn": ["Build", "Lint"],
-      "group": "test",
-      "problemMatcher": []
-    },
-    {
-      "label": "Preview production build",
-      "type": "npm",
-      "script": "preview",
-      "dependsOn": ["Build"],
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": { "regexp": "^x^" },
-        "background": {
-          "activeBegin": "vite",
-          "activeEnd": "Local:"
-        }
+      "problemMatcher": [],
+      "options": {
+        "statusbar": { "label": "$(check) Check", "color": "#56B6C2" }
       }
     },
     {
-      "label": "Storybook",
-      "type": "npm",
-      "script": "storybook",
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "storybook",
-        "pattern": { "regexp": "^x^" },
-        "background": {
-          "activeBegin": "storybook",
-          "activeEnd": "Storybook .* started"
-        }
+      "label": "Preview",
+      "type": "shell",
+      "command": "npm run preview",
+      "options": {
+        "statusbar": { "label": "$(eye) Preview", "color": "#E06C75" }
       }
-    },
-    {
-      "label": "Build Storybook",
-      "type": "npm",
-      "script": "build-storybook",
-      "problemMatcher": []
     }
   ]
 }

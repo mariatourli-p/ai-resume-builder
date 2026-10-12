@@ -11,6 +11,13 @@ export type BrowserAIAvailability =
   | "downloading"
   | "available";
 
+/**
+ * What the app knows about the built-in AI: Chrome's own answer, or
+ * `"unsupported_browser"` when the browser has no built-in AI at all.
+ * Chrome's `"unavailable"` then means this computer can't run the model.
+ */
+export type BrowserAIStatus = BrowserAIAvailability | "unsupported_browser";
+
 type LanguageModelExpected = { type: "text"; languages: string[] };
 
 type LanguageModelMonitor = {
@@ -55,21 +62,26 @@ const getLanguageModel = (): LanguageModelApi | undefined =>
  * Reports whether the built-in model can be used in this browser.
  * `"downloadable"` / `"downloading"` are usable - the first prompt waits
  * for the one-time model download.
+ *
+ * - No `LanguageModel` (another browser, or an old Chrome), or a check that
+ *   throws: `"unsupported_browser"`
+ * - Chrome's `"unavailable"`: the browser has the AI, but this computer
+ *   doesn't meet its requirements
  */
-export const getBrowserAIAvailability =
-  async (): Promise<BrowserAIAvailability> => {
-    const languageModel = getLanguageModel();
-    if (!languageModel) return "unavailable";
+export const getBrowserAIAvailability = async (): Promise<BrowserAIStatus> => {
+  const languageModel = getLanguageModel();
+  console.log("🚀 ~  ~ languageModel:", languageModel);
+  if (!languageModel) return "unsupported_browser";
 
-    try {
-      return await languageModel.availability({
-        expectedInputs: TEXT_EN,
-        expectedOutputs: TEXT_EN,
-      });
-    } catch {
-      return "unavailable";
-    }
-  };
+  try {
+    return await languageModel.availability({
+      expectedInputs: TEXT_EN,
+      expectedOutputs: TEXT_EN,
+    });
+  } catch {
+    return "unsupported_browser";
+  }
+};
 
 type DownloadProgressListener = (progress: number) => void;
 
@@ -96,7 +108,7 @@ const monitor = (m: LanguageModelMonitor) => {
 
 /**
  * Starts the one-time model download ahead of the first AI request.
- * Must run from a user action (e.g. selecting the provider), because Chrome
+ * Runs from the Settings "Download AI model" button, because Chrome
  * only allows the download after a user gesture.
  */
 export const prepareBrowserAI = async (): Promise<void> => {
@@ -126,10 +138,11 @@ const createBaseSession = async (
     expectedInputs: TEXT_EN,
     expectedOutputs: TEXT_EN,
   });
+  // The browser has the AI, but this computer can't run the model
   if (status === "unavailable") {
     throw new AIProviderError(
-      "unsupported",
-      "Built-in AI is not available in this browser.",
+      "unsupported_device",
+      "This computer doesn't meet the built-in AI requirements.",
     );
   }
 
@@ -172,13 +185,7 @@ const readStream = async (
 
 /** On-device model via Chrome's Prompt API. Free and needs no API key. */
 export const browserProvider: AIProvider = {
-  generate: async ({
-    prompt,
-    text,
-    onChunk,
-    choices,
-    responseSchema,
-  }) => {
+  generate: async ({ prompt, text, onChunk, choices, responseSchema }) => {
     const languageModel = getLanguageModel();
 
     if (!languageModel) {

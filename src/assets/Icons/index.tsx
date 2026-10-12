@@ -16,7 +16,6 @@ import {
   AlertCircle,
   LayoutTemplate,
   RefreshCw,
-  History,
   ChevronUp,
   ChevronDown,
   Pencil,
@@ -96,10 +95,6 @@ export const IconLocation = ({ size = ICON_SIZE, ...props }: IconProps) => (
 
 export const IconTemplate = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <LayoutTemplate size={size} {...props} />
-);
-
-export const IconHistory = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <History size={size} {...props} />
 );
 
 export const IconRefresh = ({ size = ICON_SIZE, ...props }: IconProps) => (

@@ -18,9 +18,49 @@ import {
   IconButton,
   Paper,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import { memo } from "react";
+
+const achievementsTokens = enTokens.sections.workExperience.fields.achievements;
+
+/** Tips shown when hovering the lamp: what to write and how to separate it */
+const AchievementsTips = () => (
+  <Box sx={{ p: 0.5 }}>
+    <Typography
+      variant="caption"
+      component="p"
+      sx={{ fontWeight: 600, mb: 0.5 }}
+    >
+      {achievementsTokens.tips.title}
+    </Typography>
+    <Box component="ul" sx={{ m: 0, pl: 2 }}>
+      {achievementsTokens.tips.items.map((tip) => (
+        <Typography key={tip} variant="caption" component="li">
+          {tip}
+        </Typography>
+      ))}
+    </Box>
+    <Typography variant="caption" component="p" sx={{ fontWeight: 600, mt: 1 }}>
+      {achievementsTokens.tips.exampleTitle}
+    </Typography>
+    <Box
+      sx={{
+        mt: 0.5,
+        p: 1,
+        borderRadius: 1,
+        bgcolor: "rgba(255, 255, 255, 0.12)",
+        fontFamily: "monospace",
+        fontSize: "0.7rem",
+        whiteSpace: "pre-line",
+      }}
+    >
+      {achievementsTokens.tips.example.join("\n")}
+    </Box>
+  </Box>
+);
 
 export type WorkExperienceEntry = {
   id: string;
@@ -100,17 +140,13 @@ const WorkExperienceEntryCard = memo(
           label="ROLE TITLE"
           fullWidth
           value={entry.roleTitle}
-          onChange={(e) =>
-            onChange?.(entry.id, "roleTitle", e.target.value)
-          }
+          onChange={(e) => onChange?.(entry.id, "roleTitle", e.target.value)}
         />
         <TextField
           label="COMPANY / ORG"
           fullWidth
           value={entry.company}
-          onChange={(e) =>
-            onChange?.(entry.id, "company", e.target.value)
-          }
+          onChange={(e) => onChange?.(entry.id, "company", e.target.value)}
         />
       </Box>
 
@@ -128,17 +164,13 @@ const WorkExperienceEntryCard = memo(
           fullWidth
           placeholder="2020 – Present"
           value={entry.duration}
-          onChange={(e) =>
-            onChange?.(entry.id, "duration", e.target.value)
-          }
+          onChange={(e) => onChange?.(entry.id, "duration", e.target.value)}
         />
         <TextField
           label="LOCATION"
           fullWidth
           value={entry.location}
-          onChange={(e) =>
-            onChange?.(entry.id, "location", e.target.value)
-          }
+          onChange={(e) => onChange?.(entry.id, "location", e.target.value)}
         />
       </Box>
 
@@ -173,9 +205,8 @@ const WorkExperienceEntryCard = memo(
           minRows={4}
           fullWidth
           value={entry.achievements}
-          onChange={(e) =>
-            onChange?.(entry.id, "achievements", e.target.value)
-          }
+          onChange={(e) => onChange?.(entry.id, "achievements", e.target.value)}
+          placeholder={achievementsTokens.placeholder}
           slotProps={{
             input: {
               endAdornment: (
@@ -203,18 +234,30 @@ const WorkExperienceEntryCard = memo(
           }}
         />
 
+        {/* Hover (or focus) the lamp to see what to write */}
+        <Tooltip title={<AchievementsTips />} placement="bottom-start" arrow>
+          <Box
+            tabIndex={0}
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 0.5,
+              mt: 0.5,
+              cursor: "help",
+              color: "text.secondary",
+            }}
+          >
+            <LightbulbOutlinedIcon sx={{ fontSize: 14 }} />
+            <Typography variant="caption">{achievementsTokens.hint}</Typography>
+          </Box>
+        </Tooltip>
+
         {/* AI chips */}
         <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
           <Button
             size="small"
-            disabled={
-              isAIDisabled ||
-              !entry.roleTitle?.trim() ||
-              isGenerating
-            }
-            onClick={() =>
-              onGenerateAchievements?.(entry.id, entry.roleTitle)
-            }
+            disabled={isAIDisabled || !entry.roleTitle?.trim() || isGenerating}
+            onClick={() => onGenerateAchievements?.(entry.id, entry.roleTitle)}
             startIcon={
               isGenerating ? (
                 <CircularProgress size={12} color="inherit" />

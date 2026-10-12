@@ -4,20 +4,21 @@ import { useAISettings } from "@/routes/AISettings/useAISettings";
 import { useCallback } from "react";
 
 /**
- * Guards AI actions: returns `false` and explains why when this browser
- * can't run the built-in AI model.
+ * Guards AI actions: returns `false` and explains why when the built-in AI
+ * model can't run - in another browser, or on a computer that doesn't meet
+ * Chrome's requirements.
  */
 export const useRequireAIProvider = () => {
   const dispatch = useAppDispatch();
-  const { isReady } = useAISettings();
+  const { unsupportedReason } = useAISettings();
 
   const requireAIProvider = useCallback((): boolean => {
-    if (!isReady) {
-      dispatch(toggleDialog({ type: "aiError", message: "unsupported" }));
+    if (unsupportedReason) {
+      dispatch(toggleDialog({ type: "aiError", message: unsupportedReason }));
       return false;
     }
     return true;
-  }, [isReady, dispatch]);
+  }, [unsupportedReason, dispatch]);
 
   return { requireAIProvider };
 };

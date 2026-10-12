@@ -54,6 +54,12 @@ export type EducationFormProps = {
  * />
  * ```
  */
+/**
+ * Chrome guesses these fields are name / phone / job title and autofills the
+ * user's personal info into them - they describe a school, not the user.
+ */
+const NO_AUTOFILL = { htmlInput: { autoComplete: "off" } };
+
 export const EducationForm = ({
   entries = [],
   onAdd,
@@ -126,6 +132,7 @@ export const EducationForm = ({
             <TextField
               label="INSTITUTION / SCHOOL NAME"
               fullWidth
+              slotProps={NO_AUTOFILL}
               value={entry.institution}
               onChange={(e) =>
                 onChange?.(entry.id, "institution", e.target.value)
@@ -133,23 +140,28 @@ export const EducationForm = ({
               sx={{ mb: 2 }}
             />
 
-            {/* Degree / Graduation Date / Location */}
+            {/* Degree - full width, degree names are long */}
+            <TextField
+              label="DEGREE / FIELD & HONORS"
+              fullWidth
+              slotProps={NO_AUTOFILL}
+              value={entry.degree}
+              onChange={(e) => onChange?.(entry.id, "degree", e.target.value)}
+              sx={{ mb: 2 }}
+            />
+
+            {/* Graduation Date / Location */}
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: "2fr 1fr 1fr",
+                gridTemplateColumns: "1fr 1fr",
                 gap: 2,
               }}
             >
               <TextField
-                label="DEGREE / FIELD & HONORS"
-                fullWidth
-                value={entry.degree}
-                onChange={(e) => onChange?.(entry.id, "degree", e.target.value)}
-              />
-              <TextField
                 label="GRADUATION DATE"
                 fullWidth
+                slotProps={NO_AUTOFILL}
                 placeholder="2011 – 2015"
                 value={entry.graduationDate}
                 onChange={(e) =>
@@ -159,6 +171,7 @@ export const EducationForm = ({
               <TextField
                 label="LOCATION"
                 fullWidth
+                slotProps={NO_AUTOFILL}
                 value={entry.location}
                 onChange={(e) =>
                   onChange?.(entry.id, "location", e.target.value)

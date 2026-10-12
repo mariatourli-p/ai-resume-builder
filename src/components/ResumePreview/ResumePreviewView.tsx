@@ -8,8 +8,11 @@ import { ResumePreview } from "./ResumePreview";
 
 export const ResumePreviewView = () => {
   const resume = useAppSelector((state) => state.resume);
-  // The preview updates at low priority, so typing in the forms never waits
-  // for the whole resume to re-render
+  console.log("🚀 ~ ResumePreviewView ~ resume:", resume);
+  /**
+   * The preview updates at low priority, so typing in the forms never waits
+   * for the whole resume to re-render
+   */
   const { personalInfo, workExperience, education, skills } =
     useDeferredValue(resume);
   const accentColor = useAccentColorSelector((s) => s);
