@@ -4,6 +4,30 @@ import {
   VERDICT_CHOICES,
 } from "@/services";
 
+/** A bullet line: `- `, `* `, `• ` or `1. ` */
+const BULLET_LINE = /^([-*•–]|\d+[.)])\s+\S/;
+
+/**
+ * Quick local check before asking the AI: every line must be a bullet, and
+ * none may ask the user something or speak to them. Catches replies like
+ * "Please provide the notes..." that the AI validator sometimes lets through.
+ */
+const isBulletList = (text: string): boolean => {
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return (
+    lines.length > 0 &&
+    lines.every(
+      (line) =>
+        BULLET_LINE.test(line) &&
+        !line.includes("?") &&
+        !/\byour?\b/i.test(line),
+    )
+  );
+};
+
 /**
  * Validates that the AI response is a list of professional achievement bullet points.
  * Makes a second AI call to verify the result contains actual achievements
@@ -23,7 +47,10 @@ import {
 export const validateAchievementsResult = async (
   result: string,
 ): Promise<boolean> => {
+  if (!isBulletList(result)) return false;
+
   const validationPrompt = `You are a validator. Determine if the following text is a list of professional achievement bullet points that start with action verbs and describe real work accomplishments.
+It is INVALID if it asks for information, talks to the reader, or describes what it will do instead of listing achievements.
 Reply ONLY with "VALID" or "INVALID". Nothing else.`;
 
   const validation = await improveText({
