@@ -22,6 +22,18 @@ export type ResumePreviewProps = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
+ * Text sizes in px. The page is 210mm (793px) wide, so these print at the
+ * same size in the PDF: 13px is about 10pt, the usual resume body size.
+ */
+const FONT_SIZE = {
+  name: 30,
+  heading: 12,
+  entryTitle: 13.5,
+  body: 13,
+  meta: 11.5,
+} as const;
+
+/**
  * Leading bullet a line may start with (`- `, `* `, `• `, `– `), but not a
  * minus sign before a number (`-5% churn`)
  */
@@ -49,7 +61,7 @@ const SectionHeading = ({
   <Box sx={{ mb: 1 }}>
     <Typography
       sx={{
-        fontSize: 9,
+        fontSize: FONT_SIZE.heading,
         fontWeight: 700,
         letterSpacing: "0.12em",
         textTransform: "uppercase",
@@ -72,10 +84,10 @@ const WorkEntryItem = ({ entry }: { entry: WorkExperienceEntry }) => (
         alignItems: "baseline",
       }}
     >
-      <Typography sx={{ fontSize: 9, fontWeight: 700 }}>
+      <Typography sx={{ fontSize: FONT_SIZE.entryTitle, fontWeight: 700 }}>
         {entry.roleTitle}
       </Typography>
-      <Typography sx={{ fontSize: 8, color: "text.secondary" }}>
+      <Typography sx={{ fontSize: FONT_SIZE.meta, color: "text.secondary" }}>
         {entry.duration}
       </Typography>
     </Box>
@@ -87,11 +99,15 @@ const WorkEntryItem = ({ entry }: { entry: WorkExperienceEntry }) => (
       }}
     >
       <Typography
-        sx={{ fontSize: 8, fontStyle: "italic", color: "text.secondary" }}
+        sx={{
+          fontSize: FONT_SIZE.meta,
+          fontStyle: "italic",
+          color: "text.secondary",
+        }}
       >
         {entry.company}
       </Typography>
-      <Typography sx={{ fontSize: 8, color: "text.secondary" }}>
+      <Typography sx={{ fontSize: FONT_SIZE.meta, color: "text.secondary" }}>
         {entry.location}
       </Typography>
     </Box>
@@ -101,7 +117,7 @@ const WorkEntryItem = ({ entry }: { entry: WorkExperienceEntry }) => (
           <Box
             component="li"
             key={i}
-            sx={{ fontSize: 8, lineHeight: 1.6, color: "#374151" }}
+            sx={{ fontSize: FONT_SIZE.body, lineHeight: 1.6, color: "#374151" }}
           >
             {line}
           </Box>
@@ -120,20 +136,24 @@ const EducationEntryItem = ({ entry }: { entry: EducationEntry }) => (
         alignItems: "baseline",
       }}
     >
-      <Typography sx={{ fontSize: 9, fontWeight: 700 }}>
+      <Typography sx={{ fontSize: FONT_SIZE.entryTitle, fontWeight: 700 }}>
         {entry.institution}
       </Typography>
-      <Typography sx={{ fontSize: 8, color: "text.secondary" }}>
+      <Typography sx={{ fontSize: FONT_SIZE.meta, color: "text.secondary" }}>
         {entry.graduationDate}
       </Typography>
     </Box>
     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
       <Typography
-        sx={{ fontSize: 8, fontStyle: "italic", color: "text.secondary" }}
+        sx={{
+          fontSize: FONT_SIZE.meta,
+          fontStyle: "italic",
+          color: "text.secondary",
+        }}
       >
         {entry.degree}
       </Typography>
-      <Typography sx={{ fontSize: 8, color: "text.secondary" }}>
+      <Typography sx={{ fontSize: FONT_SIZE.meta, color: "text.secondary" }}>
         {entry.location}
       </Typography>
     </Box>
@@ -214,7 +234,7 @@ export const ResumePreview = memo(
             <Box sx={{ textAlign: photo ? "left" : "center", minWidth: 0 }}>
               <Typography
                 sx={{
-                  fontSize: 22,
+                  fontSize: FONT_SIZE.name,
                   fontWeight: 800,
                   letterSpacing: "-0.01em",
                   color: themeConfig.colors.sidebar.cta,
@@ -228,7 +248,7 @@ export const ResumePreview = memo(
               {contactParts.length > 0 && (
                 <Typography
                   sx={{
-                    fontSize: 8,
+                    fontSize: FONT_SIZE.meta,
                     color: "text.secondary",
                     mt: 0.5,
                     letterSpacing: "0.02em",
@@ -242,7 +262,7 @@ export const ResumePreview = memo(
               {professionalTitle && (
                 <Typography
                   sx={{
-                    fontSize: 9,
+                    fontSize: FONT_SIZE.heading,
                     fontWeight: 700,
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
@@ -266,7 +286,7 @@ export const ResumePreview = memo(
               />
               <Typography
                 sx={{
-                  fontSize: 8.5,
+                  fontSize: FONT_SIZE.body,
                   lineHeight: 1.7,
                   color: "#374151",
                   fontFamily: "inherit",
@@ -306,7 +326,7 @@ export const ResumePreview = memo(
               />
               <Typography
                 sx={{
-                  fontSize: 8.5,
+                  fontSize: FONT_SIZE.body,
                   lineHeight: 1.7,
                   color: "#374151",
                   fontFamily: "inherit",
