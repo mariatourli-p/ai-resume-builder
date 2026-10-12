@@ -6,6 +6,9 @@ import { Box } from "@mui/material";
 import { useDeferredValue, useEffect, useRef } from "react";
 import { ResumePreview } from "./ResumePreview";
 
+/** Content below the page bottom that still doesn't start a new PDF page */
+const PAGE_OVERFLOW_TOLERANCE_MM = 1;
+
 export const ResumePreviewView = () => {
   const resume = useAppSelector((state) => state.resume);
   console.log("🚀 ~ ResumePreviewView ~ resume:", resume);
@@ -39,6 +42,15 @@ export const ResumePreviewView = () => {
         scale: 2,
         useCORS: true,
         backgroundColor: "#ffffff",
+        /**
+         * On screen the page shrinks to fit the preview panel but keeps its
+         * A4 height, so the capture would be taller than A4 and spill onto a
+         * second page. The copy html2canvas renders gets the real A4 width.
+         */
+        onclone: (_document, clone) => {
+          clone.style.width = "210mm";
+          clone.style.flexShrink = "0";
+        },
       });
 
       const imgData = canvas.toDataURL("image/png");
@@ -52,15 +64,24 @@ export const ResumePreviewView = () => {
       pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
       heightLeft -= pageHeight;
 
-      while (heightLeft > 0) {
+      /**
+       * A one-page resume is exactly A4 tall, but rounding to canvas pixels
+       * makes the image a fraction of a millimeter taller. Without this
+       * margin, that fraction adds an empty second page.
+       */
+      while (heightLeft > PAGE_OVERFLOW_TOLERANCE_MM) {
         position = heightLeft - imgHeight;
         pdf.addPage();
         pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
         heightLeft -= pageHeight;
       }
 
-      const name = personalInfo.fullName || "resume";
-      pdf.save(`${name.toLowerCase().replace(/\s+/g, "-")}-resume.pdf`);
+      // "John Doe" -> john-doe-resume.pdf, no name -> resume.pdf
+      const name = personalInfo.fullName
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+      pdf.save(name ? `${name}-resume.pdf` : "resume.pdf");
     });
   }, [registerExport, personalInfo.fullName]);
 

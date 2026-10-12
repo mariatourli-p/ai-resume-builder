@@ -3,6 +3,14 @@ const SECTIONS = {
     personalInfo: {
       title: "Personal Info",
       fields: {
+        photo: {
+          label: "Photo",
+          upload: "Upload photo",
+          change: "Change photo",
+          remove: "Remove",
+          hint: "Optional - a clear, square headshot works best",
+          alt: "Profile photo",
+        },
         fullName: {
           label: "Full Name",
           placeholder: "John Doe",

@@ -3,6 +3,7 @@ import type {
   PersonalInfoData,
   WorkExperienceEntry,
 } from "@/redux/resume/resume-reducer";
+import { enTokens } from "@/locale/en/en-tokens";
 import { themeConfig } from "@/theme";
 import { Box, Divider, Typography } from "@mui/material";
 import { forwardRef, memo } from "react";
@@ -163,6 +164,7 @@ export const ResumePreview = memo(
         location,
         portfolio,
         professionalSummary,
+        photo,
       } = personalInfo;
 
       const contactParts = [location, emailAddress, phone, portfolio].filter(
@@ -184,49 +186,75 @@ export const ResumePreview = memo(
           }}
         >
           {/* ── Header ── */}
-          <Box sx={{ textAlign: "center", mb: 2 }}>
-            <Typography
-              sx={{
-                fontSize: 22,
-                fontWeight: 800,
-                letterSpacing: "-0.01em",
-                color: themeConfig.colors.sidebar.cta,
-                lineHeight: 1.1,
-                fontFamily: "inherit",
-              }}
-            >
-              {fullName || "Your Name"}
-            </Typography>
-
-            {contactParts.length > 0 && (
+          {/* With a photo: photo on the left, text next to it. Without: centered */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: photo ? "flex-start" : "center",
+              gap: "6mm",
+              mb: 2,
+            }}
+          >
+            {/* Already cropped to a square, so a plain round image fits the PDF export */}
+            {photo && (
+              <Box
+                component="img"
+                src={photo}
+                alt={enTokens.sections.personalInfo.fields.photo.alt}
+                sx={{
+                  display: "block",
+                  flexShrink: 0,
+                  width: "24mm",
+                  height: "24mm",
+                  borderRadius: "50%",
+                }}
+              />
+            )}
+            <Box sx={{ textAlign: photo ? "left" : "center", minWidth: 0 }}>
               <Typography
                 sx={{
-                  fontSize: 8,
-                  color: "text.secondary",
-                  mt: 0.5,
-                  letterSpacing: "0.02em",
+                  fontSize: 22,
+                  fontWeight: 800,
+                  letterSpacing: "-0.01em",
+                  color: themeConfig.colors.sidebar.cta,
+                  lineHeight: 1.1,
                   fontFamily: "inherit",
                 }}
               >
-                {contactParts.join("  ·  ")}
+                {fullName || "Your Name"}
               </Typography>
-            )}
 
-            {professionalTitle && (
-              <Typography
-                sx={{
-                  fontSize: 9,
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: accentColor,
-                  mt: 0.75,
-                  fontFamily: "inherit",
-                }}
-              >
-                {professionalTitle}
-              </Typography>
-            )}
+              {contactParts.length > 0 && (
+                <Typography
+                  sx={{
+                    fontSize: 8,
+                    color: "text.secondary",
+                    mt: 0.5,
+                    letterSpacing: "0.02em",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  {contactParts.join("  ·  ")}
+                </Typography>
+              )}
+
+              {professionalTitle && (
+                <Typography
+                  sx={{
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: accentColor,
+                    mt: 0.75,
+                    fontFamily: "inherit",
+                  }}
+                >
+                  {professionalTitle}
+                </Typography>
+              )}
+            </Box>
           </Box>
 
           {/* ── Professional Summary ── */}

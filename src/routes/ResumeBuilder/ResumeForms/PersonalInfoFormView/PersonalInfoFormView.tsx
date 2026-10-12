@@ -7,6 +7,7 @@ import { shallowEqual, usePersonalInfoSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
 import { useAI } from "@hooks/useAI";
 import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
+import { resizePhoto } from "@/utils/resizePhoto";
 import { useCallback } from "react";
 
 /**
@@ -77,6 +78,38 @@ export const PersonalInfoFormView = () => {
   );
 
   /**
+   * Saves the photo the user picked.
+   *
+   * When: the user chooses an image with Upload / Change photo (passed as
+   * `onPhotoSelect`).
+   *
+   * Why: phone photos are several MB, but the whole resume must fit in
+   * localStorage, so the image is cropped to a small square JPEG first. A
+   * file the browser can't read as an image keeps the current photo.
+   */
+  const handlePhotoSelect = useCallback(
+    async (file: File) => {
+      try {
+        const photo = await resizePhoto(file);
+        dispatch(updatePersonalInfoField({ field: "photo", value: photo }));
+      } catch {
+        // Not a readable image - keep the current photo
+      }
+    },
+    [dispatch],
+  );
+
+  /**
+   * Removes the photo from the resume.
+   *
+   * When: the user clicks Remove next to the photo (passed as `onPhotoRemove`).
+   */
+  const handlePhotoRemove = useCallback(
+    () => dispatch(updatePersonalInfoField({ field: "photo", value: "" })),
+    [dispatch],
+  );
+
+  /**
    * Asks the AI to write a new summary from the professional title.
    *
    * When: the user clicks Smart Rewrite (passed as `onSmartRewrite`). The
@@ -127,6 +160,8 @@ export const PersonalInfoFormView = () => {
       isRewriteDisabled={!data.professionalTitle.trim()}
       onChange={handleChange}
       onSmartRewrite={onSmartRewrite}
+      onPhotoSelect={handlePhotoSelect}
+      onPhotoRemove={handlePhotoRemove}
     />
   );
 };

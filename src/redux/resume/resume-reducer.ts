@@ -14,6 +14,8 @@ export type PersonalInfoData = {
   location: string;
   portfolio: string;
   professionalSummary: string;
+  /** Square JPEG as a data URL (small enough for localStorage), or `""` */
+  photo: string;
 };
 
 export type WorkExperienceEntry = {
@@ -61,6 +63,7 @@ const initialState: ResumeState = {
     location: "",
     portfolio: "",
     professionalSummary: "",
+    photo: "",
   },
   accentColor: DEFAULT_ACCENT_COLOR,
   skills: [],

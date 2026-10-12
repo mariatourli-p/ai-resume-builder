@@ -40,13 +40,21 @@ const migrations = {
       accentColor: state.resume.accentColor ?? DEFAULT_ACCENT_COLOR,
     },
   }),
+  // Resumes saved before photos existed
+  2: (state: MigrationState): MigrationState => ({
+    ...state,
+    resume: {
+      ...state.resume,
+      personalInfo: { photo: "", ...state.resume.personalInfo },
+    },
+  }),
 };
 
 const persistedReducer = persistReducer(
   {
     key: "resume_builder",
     storage,
-    version: 1,
+    version: 2,
     migrate: createMigrate(
       migrations as unknown as Parameters<typeof createMigrate>[0],
       {

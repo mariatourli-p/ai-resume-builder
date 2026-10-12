@@ -24,6 +24,7 @@ export const Empty: Story = {
       location: "",
       portfolio: "",
       professionalSummary: "",
+      photo: "",
     },
     workExperience: [],
     education: [],
@@ -44,6 +45,7 @@ export const Filled: Story = {
       portfolio: "portfolio.johndoe.design",
       professionalSummary:
         "Senior Product Designer with over eight years of experience architecting UX strategy and scaling design systems for high-growth SaaS platforms.",
+      photo: "",
     },
     workExperience: [
       {

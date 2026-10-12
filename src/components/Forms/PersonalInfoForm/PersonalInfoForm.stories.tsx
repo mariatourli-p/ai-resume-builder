@@ -18,6 +18,7 @@ const defaultData: NonNullable<PersonalInfoFormProps["data"]> = {
   portfolio: "portfolio.johndoe.design",
   professionalSummary:
     "Senior Product Designer with over 8 years of experience spearheading UX strategy and leading cross-functional teams to build high-impact SaaS platforms.",
+  photo: "",
 };
 
 const withState = (
@@ -34,6 +35,10 @@ const withState = (
         onChange={(field, value) =>
           setData((prev) => ({ ...prev, [field]: value }))
         }
+        onPhotoSelect={(file) =>
+          setData((prev) => ({ ...prev, photo: URL.createObjectURL(file) }))
+        }
+        onPhotoRemove={() => setData((prev) => ({ ...prev, photo: "" }))}
       />
     </Provider>
   );
@@ -67,6 +72,14 @@ const meta: Meta<typeof PersonalInfoForm> = {
       action: "field changed",
       description: "Fired on any field change with the field key and new value",
     },
+    onPhotoSelect: {
+      action: "photo selected",
+      description: "Fired when the user picks an image file for the photo",
+    },
+    onPhotoRemove: {
+      action: "photo removed",
+      description: "Fired when the user removes the photo",
+    },
   },
 };
 
@@ -85,6 +98,7 @@ export const Empty: Story = {
       location: "",
       portfolio: "",
       professionalSummary: "",
+      photo: "",
     },
   },
 };

@@ -5,6 +5,7 @@ import { PALETTE_MAP, themeConfig } from "@/theme";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import {
+  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -21,6 +22,8 @@ export type PersonalInfoData = {
   location: string;
   portfolio: string;
   professionalSummary: string;
+  /** Photo as an image URL (e.g. a data URL), or `""` for none */
+  photo: string;
 };
 
 /**
@@ -37,12 +40,16 @@ export type PersonalInfoFormProps = {
   onSmartRewrite: () => void;
   /** Fired on every field change. Receives the field key and the new value. */
   onChange: (field: keyof PersonalInfoData, value: string) => void;
+  /** Fired when the user picks an image file for the photo. */
+  onPhotoSelect: (file: File) => void;
+  /** Fired when the user removes the photo. */
+  onPhotoRemove: () => void;
 };
 
 /**
  * Form section for collecting and editing a candidate's personal information.
  *
- * Renders a two-column grid of fields (name, title, email, phone, location, portfolio)
+ * Renders an optional photo picker, a two-column grid of fields (name, title, email, phone, location, portfolio)
  * and a full-width professional summary textarea with an inline Smart Rewrite button.
  *
  * **Smart Rewrite** (inside the summary textarea) asks the AI to write the
@@ -66,6 +73,8 @@ export const PersonalInfoForm = ({
   isRewriting = false,
   onChange,
   onSmartRewrite,
+  onPhotoSelect,
+  onPhotoRemove,
   isRewriteDisabled,
 }: PersonalInfoFormProps) => {
   const { personalInfo } = enTokens.sections;
@@ -97,6 +106,56 @@ export const PersonalInfoForm = ({
             sx={{ fontWeight: 600, userSelect: "none" }}
           >
             {enTokens.sections.personalInfo.title}
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Photo */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
+        <Avatar
+          src={data?.photo || undefined}
+          alt={personalInfo.fields.photo.alt}
+          sx={{ width: 64, height: 64 }}
+        />
+        <Box>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Button
+              component="label"
+              size="small"
+              variant="outlined"
+              sx={{
+                textTransform: "none",
+                color: accentColor,
+                borderColor: accentColor,
+              }}
+            >
+              {data?.photo
+                ? personalInfo.fields.photo.change
+                : personalInfo.fields.photo.upload}
+              <input
+                hidden
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) onPhotoSelect(file);
+                  // Lets the user pick the same file again after removing it
+                  e.target.value = "";
+                }}
+              />
+            </Button>
+            {data?.photo && (
+              <Button
+                size="small"
+                onClick={onPhotoRemove}
+                sx={{ textTransform: "none", color: "text.secondary" }}
+              >
+                {personalInfo.fields.photo.remove}
+              </Button>
+            )}
+          </Box>
+          <Typography variant="caption" color="text.secondary">
+            {personalInfo.fields.photo.hint}
           </Typography>
         </Box>
       </Box>
