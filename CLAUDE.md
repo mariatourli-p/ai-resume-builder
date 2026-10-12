@@ -31,7 +31,7 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
   - `prepareBrowserAI()` - an empty `create()` from the Settings download button, to start the one-time download (Chrome needs a user click).
   - `onBrowserAIDownloadProgress()` - the `monitor`'s `downloadprogress` events, for the progress bar and toast.
   - `browserProvider.generate()` - every text request.
-- **Call sites:** the only views that generate text are `PersonalInfoFormView.onSmartRewrite`, `WorkExperienceFormView.onGenerateAchievements` and `SkillsFormView.handleSuggest`. Each starts with `if (!requireAIProvider()) return;`, which opens the `aiError` dialog from `AISettingsProvider`'s `unsupportedReason`.
+- **Call sites:** the only views that generate text are `PersonalInfoFormView.onSmartRewrite`, `WorkExperienceFormView.onGenerateAchievements` (Work Experience and Volunteering) and `SkillsFormView.handleSuggest`. Each starts with `if (!requireAIProvider()) return;`, which opens the `aiError` dialog from `AISettingsProvider`'s `unsupportedReason`.
 - **Request flow:** View → `useAI().improve()` (`src/hooks/useAI`) → `improveText` (`src/services/aiService.ts`) → `browserProvider.generate` → `LanguageModel`.
 - **`improve(promptKey, input, validatorType, { jobTitle, onPartial })`** makes up to 3 model calls:
   1. `resolveJobTitle` asks the AI which profession the title or keyword points to (e.g. "React" → "React Developer"). If it finds none, it shows the invalid-title dialog. Results are cached per lowercased title until reload.
@@ -45,6 +45,7 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
 - **Parse leniently.** `isValidVerdict` handles quoted or extra text, and `resolveJobTitle` falls back to the user's title when the JSON can't be read.
 - **Rewrite rules** (Smart Rewrite, Generate Achievements):
   - Clear the field, then write from the title. Generate Achievements also sends the role title as written (all its keywords) and the text the user wrote in the field for that title; the AI's own earlier bullets are not sent back.
+  - Volunteering uses `generateVolunteeringAchievements` and skips `resolveJobTitle`: its titles are often a cause or an area ("Advocacy & Awareness"), not a profession. It sends the role as written, the organization and the user's notes.
   - On failure, always restore the text from before the click: the AI never deletes the user's text without writing a new one.
   - Editing or deleting a title keeps its text (the user may be retyping it); only the AI button replaces it.
 - **Sessions:** `browserProvider` creates one base session per system prompt (`availability()` check, then `create({ initialPrompts })`), caches it, and runs each request on a `clone()` that is destroyed afterwards. A failed base session is removed from the cache so the next click retries. Keep prompts constant (no per-request text in the system prompt) so the cache works.
@@ -57,7 +58,7 @@ Measured with Playwright: about 5-7 ms of JavaScript per key press, and a main b
 
 - `ResumePreview` is memoized and fed through `useDeferredValue` in `ResumePreviewView`, so it never blocks typing.
 - `WorkExperienceEntryCard` is memoized. Callbacks passed to it must be stable: read the latest state with `useAppStore().getState()` rather than closing over `entries`.
-- Heavy libraries that are only needed on demand are loaded with dynamic `import()`. `html2canvas` and `jspdf` load only on PDF export.
+- Heavy libraries that are only needed on demand are loaded with dynamic `import()`. `html2canvas` and `jspdf` load only on PDF export. The MUI date picker (`Forms/MonthField`) loads with `lazy()` after the page.
 - Import single lodash functions (`lodash/isEqual`), never the whole package.
 
 ## Code style

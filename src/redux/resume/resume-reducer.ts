@@ -22,7 +22,10 @@ export type WorkExperienceEntry = {
   id: string;
   roleTitle: string;
   company: string;
-  duration: string;
+  /** Start month as `YYYY-MM`, or `""` */
+  startDate: string;
+  /** End month as `YYYY-MM`, `PRESENT` while still in the role, or `""` */
+  endDate: string;
   location: string;
   achievements: string;
 };
@@ -35,13 +38,26 @@ export type EducationEntry = {
   location: string;
 };
 
+/** Sections that use the experience card: role, organization, dates, achievements */
+export type ExperienceSection = "workExperience" | "volunteering";
+
+export type CourseEntry = {
+  id: string;
+  title: string;
+  organizer: string;
+  /** Month as `YYYY-MM`, or `""` */
+  date: string;
+};
+
 export type DialogType = "aiError" | "moreContext" | null;
 
 export type ResumeState = {
   personalInfo: PersonalInfoData;
   skills: string[];
   workExperience: WorkExperienceEntry[];
+  volunteering: WorkExperienceEntry[];
   education: EducationEntry[];
+  courses: CourseEntry[];
   accentColor: string;
   activeTemplate: string;
   dialogType: DialogType;
@@ -68,7 +84,9 @@ const initialState: ResumeState = {
   accentColor: DEFAULT_ACCENT_COLOR,
   skills: [],
   workExperience: [],
+  volunteering: [],
   education: [],
+  courses: [],
   activeTemplate: "Classic Modern",
   dialogType: null,
   dialogMessage: null,
@@ -97,34 +115,37 @@ const resumeSlice = createSlice({
       state.skills = state.skills.filter((s) => s !== action.payload);
     },
 
-    // Work Experience
-    addWorkExperience(state) {
-      state.workExperience.push({
+    // Work Experience and Volunteering
+    addExperience(state, action: PayloadAction<ExperienceSection>) {
+      state[action.payload].push({
         id: crypto.randomUUID(),
         roleTitle: "",
         company: "",
-        duration: "",
+        startDate: "",
+        endDate: "",
         location: "",
         achievements: "",
       });
     },
-    updateWorkExperienceField(
+    updateExperienceField(
       state,
       action: PayloadAction<{
+        section: ExperienceSection;
         id: string;
         field: keyof Omit<WorkExperienceEntry, "id">;
         value: string;
       }>,
     ) {
-      const entry = state.workExperience.find(
-        (e) => e.id === action.payload.id,
-      );
-      if (entry) entry[action.payload.field] = action.payload.value;
+      const { section, id, field, value } = action.payload;
+      const entry = state[section].find((e) => e.id === id);
+      if (entry) entry[field] = value;
     },
-    removeWorkExperience(state, action: PayloadAction<string>) {
-      state.workExperience = state.workExperience.filter(
-        (e) => e.id !== action.payload,
-      );
+    removeExperience(
+      state,
+      action: PayloadAction<{ section: ExperienceSection; id: string }>,
+    ) {
+      const { section, id } = action.payload;
+      state[section] = state[section].filter((e) => e.id !== id);
     },
 
     // Education
@@ -152,6 +173,30 @@ const resumeSlice = createSlice({
       state.education = state.education.filter((e) => e.id !== action.payload);
     },
 
+    // Courses & Seminars
+    addCourse(state) {
+      state.courses.push({
+        id: crypto.randomUUID(),
+        title: "",
+        organizer: "",
+        date: "",
+      });
+    },
+    updateCourseField(
+      state,
+      action: PayloadAction<{
+        id: string;
+        field: keyof Omit<CourseEntry, "id">;
+        value: string;
+      }>,
+    ) {
+      const entry = state.courses.find((e) => e.id === action.payload.id);
+      if (entry) entry[action.payload.field] = action.payload.value;
+    },
+    removeCourse(state, action: PayloadAction<string>) {
+      state.courses = state.courses.filter((e) => e.id !== action.payload);
+    },
+
     setAccentColor(state, action: PayloadAction<string>) {
       state.accentColor = action.payload;
     },
@@ -171,12 +216,15 @@ export const {
   updatePersonalInfoField,
   addSkill,
   removeSkill,
-  addWorkExperience,
-  updateWorkExperienceField,
-  removeWorkExperience,
+  addExperience,
+  updateExperienceField,
+  removeExperience,
   addEducation,
   updateEducationField,
   removeEducation,
+  addCourse,
+  updateCourseField,
+  removeCourse,
   setAccentColor,
   setActiveTemplate,
   toggleDialog,

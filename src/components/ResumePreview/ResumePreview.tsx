@@ -1,9 +1,11 @@
 import type {
+  CourseEntry,
   EducationEntry,
   PersonalInfoData,
   WorkExperienceEntry,
 } from "@/redux/resume/resume-reducer";
 import { enTokens } from "@/locale/en/en-tokens";
+import { formatDateRange } from "@/utils/formatDateRange";
 import { themeConfig } from "@/theme";
 import { Box, Divider, Typography } from "@mui/material";
 import { forwardRef, memo } from "react";
@@ -13,7 +15,9 @@ import { forwardRef, memo } from "react";
 export type ResumePreviewProps = {
   personalInfo: PersonalInfoData;
   workExperience: WorkExperienceEntry[];
+  volunteering: WorkExperienceEntry[];
   education: EducationEntry[];
+  courses: CourseEntry[];
   skills: string[];
   accentColor: string;
   fontFamily: string;
@@ -88,7 +92,7 @@ const WorkEntryItem = ({ entry }: { entry: WorkExperienceEntry }) => (
         {entry.roleTitle}
       </Typography>
       <Typography sx={{ fontSize: FONT_SIZE.meta, color: "text.secondary" }}>
-        {entry.duration}
+        {formatDateRange(entry.startDate, entry.endDate)}
       </Typography>
     </Box>
     <Box
@@ -160,6 +164,34 @@ const EducationEntryItem = ({ entry }: { entry: EducationEntry }) => (
   </Box>
 );
 
+const CourseEntryItem = ({ entry }: { entry: CourseEntry }) => (
+  <Box sx={{ mb: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline",
+      }}
+    >
+      <Typography sx={{ fontSize: FONT_SIZE.entryTitle, fontWeight: 700 }}>
+        {entry.title}
+      </Typography>
+      <Typography sx={{ fontSize: FONT_SIZE.meta, color: "text.secondary" }}>
+        {formatDateRange(entry.date, "")}
+      </Typography>
+    </Box>
+    <Typography
+      sx={{
+        fontSize: FONT_SIZE.meta,
+        fontStyle: "italic",
+        color: "text.secondary",
+      }}
+    >
+      {entry.organizer}
+    </Typography>
+  </Box>
+);
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 // Memoized: the preview only re-renders when its data actually changes
@@ -169,7 +201,9 @@ export const ResumePreview = memo(
       {
         personalInfo,
         workExperience,
+        volunteering,
         education,
+        courses,
         skills,
         accentColor,
         fontFamily,
@@ -319,7 +353,7 @@ export const ResumePreview = memo(
 
           {/* ── Skills ── */}
           {skills.length > 0 && (
-            <Box>
+            <Box sx={{ mb: 2 }}>
               <SectionHeading
                 title="Skills & Core Competencies"
                 accentColor={accentColor}
@@ -334,6 +368,32 @@ export const ResumePreview = memo(
               >
                 {skills.join("  ·  ")}
               </Typography>
+            </Box>
+          )}
+
+          {/* ── Courses & Seminars ── */}
+          {courses.length > 0 && (
+            <Box sx={{ mb: 2 }}>
+              <SectionHeading
+                title={enTokens.sections.courses.title}
+                accentColor={accentColor}
+              />
+              {courses.map((entry) => (
+                <CourseEntryItem key={entry.id} entry={entry} />
+              ))}
+            </Box>
+          )}
+
+          {/* ── Volunteering ── */}
+          {volunteering.length > 0 && (
+            <Box sx={{ mb: 2 }}>
+              <SectionHeading
+                title={enTokens.sections.volunteering.title}
+                accentColor={accentColor}
+              />
+              {volunteering.map((entry) => (
+                <WorkEntryItem key={entry.id} entry={entry} />
+              ))}
             </Box>
           )}
         </Box>

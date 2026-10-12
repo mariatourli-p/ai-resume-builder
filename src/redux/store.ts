@@ -28,6 +28,8 @@ type MigrationState = {
     skills: string[];
     workExperience: unknown[];
     education: unknown[];
+    volunteering?: unknown[];
+    courses?: unknown[];
     accentColor?: string;
   };
 };
@@ -48,13 +50,39 @@ const migrations = {
       personalInfo: { photo: "", ...state.resume.personalInfo },
     },
   }),
+  /**
+   * Work dates became start / end months. The old free-text duration
+   * ("3yrs", "2020 - Present") can't be turned into months, so it is dropped.
+   */
+  3: (state: MigrationState): MigrationState => ({
+    ...state,
+    resume: {
+      ...state.resume,
+      workExperience: (
+        state.resume.workExperience as Record<string, unknown>[]
+      ).map((entry) => {
+        const migrated: Record<string, unknown> = {
+          startDate: "",
+          endDate: "",
+          ...entry,
+        };
+        delete migrated.duration;
+        return migrated;
+      }),
+    },
+  }),
+  // Volunteering and Courses & Seminars sections were added
+  4: (state: MigrationState): MigrationState => ({
+    ...state,
+    resume: { volunteering: [], courses: [], ...state.resume },
+  }),
 };
 
 const persistedReducer = persistReducer(
   {
     key: "resume_builder",
     storage,
-    version: 2,
+    version: 4,
     migrate: createMigrate(
       migrations as unknown as Parameters<typeof createMigrate>[0],
       {

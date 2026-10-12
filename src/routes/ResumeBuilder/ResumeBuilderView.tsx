@@ -2,6 +2,7 @@ import { enTokens } from "@/locale/en/en-tokens";
 import { useScrollStore } from "@/stores/useScrollStore";
 import { Box, type SxProps } from "@mui/material";
 import { useEffect, useRef } from "react";
+import { CoursesFormView } from "./ResumeForms/CoursesFormView";
 import { EducationFormView } from "./ResumeForms/EducationFormView";
 import { PersonalInfoFormView } from "./ResumeForms/PersonalInfoFormView";
 import { SkillsFormView } from "./ResumeForms/SkillsFormView";
@@ -13,7 +14,14 @@ export type ResumeBuilderViewProps = {
 
 export const ResumeBuilderView = ({ sx }: ResumeBuilderViewProps) => {
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const { personalInfo, workExperience, education, skills } = enTokens.sections;
+  const {
+    personalInfo,
+    workExperience,
+    volunteering,
+    education,
+    courses,
+    skills,
+  } = enTokens.sections;
 
   const scrollTarget = useScrollStore((s) => s.scrollTarget);
   const clearScrollTarget = useScrollStore((s) => s.clearScrollTarget);
@@ -56,6 +64,20 @@ export const ResumeBuilderView = ({ sx }: ResumeBuilderViewProps) => {
         }}
       >
         <SkillsFormView />
+      </div>
+      <div
+        ref={(el) => {
+          sectionRefs.current[courses.title] = el;
+        }}
+      >
+        <CoursesFormView />
+      </div>
+      <div
+        ref={(el) => {
+          sectionRefs.current[volunteering.title] = el;
+        }}
+      >
+        <WorkExperienceFormView section="volunteering" />
       </div>
     </Box>
   );

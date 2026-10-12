@@ -1,35 +1,65 @@
-import { WorkExperienceForm } from "@/components/Forms/WorkExperienceForm";
+import { IconVolunteering } from "@/assets/Icons";
 import {
-  addWorkExperience,
-  removeWorkExperience,
-  updateWorkExperienceField,
+  WorkExperienceForm,
+  type ExperienceLabels,
+} from "@/components/Forms/WorkExperienceForm";
+import { enTokens } from "@/locale/en/en-tokens";
+import {
+  addExperience,
+  removeExperience,
+  updateExperienceField,
+  type ExperienceSection,
   type WorkExperienceEntry,
 } from "@/redux/resume/resume-reducer";
-import { shallowEqual, useWorkExperienceSelector } from "@/redux/selectors";
+import { shallowEqual, useExperienceSelector } from "@/redux/selectors";
 import { useAppDispatch, useAppStore } from "@/redux/store";
 import { useAI } from "@hooks/useAI";
 import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
 import { useCallback, useRef, useState } from "react";
 
+const { volunteering } = enTokens.sections;
+
 /**
- * View controller for the Work Experience form section.
+ * Volunteering texts for the shared form. A module constant, so the memoized
+ * cards get the same object on every render.
+ */
+const VOLUNTEERING_LABELS: ExperienceLabels = {
+  title: volunteering.title,
+  addButton: volunteering.addButton,
+  organization: volunteering.fields.organization.label,
+  current: volunteering.fields.current,
+  icon: IconVolunteering,
+};
+
+export type WorkExperienceFormViewProps = {
+  /**
+   * Which list the form edits. Volunteering has the same fields as a job,
+   * so it reuses this view - and its AI achievements - with its own texts.
+   */
+  section?: ExperienceSection;
+};
+
+/**
+ * View controller for the Work Experience and Volunteering form sections.
  *
  * Connects the {@link WorkExperienceForm} UI to Redux state and the AI
  * achievements generation.
  *
  * @remarks
- * - Entries are stored in Redux and updated via {@link updateWorkExperienceField}
+ * - Entries are stored in Redux and updated via {@link updateExperienceField}
  * - `generatingIds` tracks the entries whose achievements the AI is writing
  * - Callbacks read the latest entries from the store when they run, so they
  *   stay stable and typing in one entry doesn't re-render the others
  * - Editing or deleting a role title keeps the achievements; only Generate
  *   Achievements replaces them, and a failed run brings the previous text back
  */
-export const WorkExperienceFormView = () => {
+export const WorkExperienceFormView = ({
+  section = "workExperience",
+}: WorkExperienceFormViewProps) => {
   const dispatch = useAppDispatch();
   const store = useAppStore();
   // All cards, to show them; callbacks read entries from `store` instead
-  const entries = useWorkExperienceSelector((s) => s, shallowEqual);
+  const entries = useExperienceSelector(section, (s) => s, shallowEqual);
   const { improve } = useAI();
   // Checked before every AI request: explains why the AI can't run here
   const { requireAIProvider } = useRequireAIProvider();
@@ -53,21 +83,21 @@ export const WorkExperienceFormView = () => {
    */
   const findEntry = useCallback(
     (id: string) =>
-      store.getState().resume.workExperience.find((entry) => entry.id === id),
-    [store],
+      store.getState().resume[section].find((entry) => entry.id === id),
+    [store, section],
   );
 
-  // Adds an empty card. When: the user clicks Add Experience
+  // Adds an empty card. When: the user clicks Add Experience / Add Volunteering
   const handleAdd = useCallback(() => {
-    dispatch(addWorkExperience());
-  }, [dispatch]);
+    dispatch(addExperience(section));
+  }, [dispatch, section]);
 
   // Removes a card. When: the user clicks the card's delete icon
   const handleDelete = useCallback(
     (id: string) => {
-      dispatch(removeWorkExperience(id));
+      dispatch(removeExperience({ section, id }));
     },
-    [dispatch],
+    [dispatch, section],
   );
 
   /**
@@ -88,10 +118,10 @@ export const WorkExperienceFormView = () => {
       field: keyof Omit<WorkExperienceEntry, "id">,
       value: string,
     ) => {
-      dispatch(updateWorkExperienceField({ id, field, value }));
+      dispatch(updateExperienceField({ section, id, field, value }));
       if (field === "achievements") aiWrittenIds.current.delete(id);
     },
-    [dispatch],
+    [dispatch, section],
   );
 
   /**
@@ -105,21 +135,22 @@ export const WorkExperienceFormView = () => {
    * 2. Keeps the current text; if the user wrote it, it becomes the notes
    *    the AI builds the bullets from
    * 3. Empties the field and shows the spinner
-   * 4. `improve` finds the profession the role title points to, writes the
-   *    bullets - showing them in the field as they are written - and checks
-   *    the result
+   * 4. `improve` finds the profession the role title points to (work only),
+   *    writes the bullets - showing them in the field as they are written -
+   *    and checks the result. Volunteering uses its own prompt, built from
+   *    the role as written and the organization
    * 5. On success, keeps the new bullets. On failure, brings the previous
    *    text back exactly as it was
    */
   const onGenerateAchievements = useCallback(
     async (id: string, roleTitle: string) => {
-      console.log("🚀 ~  ~ id: , roleTitle: string:", id, roleTitle);
       if (!requireAIProvider()) return;
 
-      const previous = findEntry(id)?.achievements ?? "";
+      const entry = findEntry(id);
+      const previous = entry?.achievements ?? "";
       const updateAchievements = (value: string) =>
         dispatch(
-          updateWorkExperienceField({ id, field: "achievements", value }),
+          updateExperienceField({ section, id, field: "achievements", value }),
         );
 
       const title = roleTitle.trim();
@@ -128,17 +159,30 @@ export const WorkExperienceFormView = () => {
        * earlier bullets are not, so each run writes new ones.
        */
       const notes = aiWrittenIds.current.has(id) ? "" : previous.trim();
+      const isVolunteering = section === "volunteering";
+      const organization = entry?.company.trim() ?? "";
+      const isSameAsTitle = (profession: string) =>
+        profession.toLowerCase() === title.toLowerCase();
       /**
-       * The profession alone loses the other keywords of the title
-       * (e.g. the tools in "Python developer, Django, AWS"), so send both
+       * Work: the profession alone loses the other keywords of the title
+       * (e.g. the tools in "Python developer, Django, AWS"), so send both.
+       *
+       * Volunteering: the role as written and the organization tell the
+       * cause, so they are sent as they are.
        */
       const buildInput = (profession: string) =>
-        [
-          `Job title: ${profession}`,
-          profession.toLowerCase() !== title.toLowerCase() &&
-            `Role title as written: ${title}`,
-          notes && `User's notes:\n${notes}`,
-        ]
+        (isVolunteering
+          ? [
+              `Volunteer role: ${title}`,
+              organization && `Organization: ${organization}`,
+              notes && `User's notes:\n${notes}`,
+            ]
+          : [
+              `Job title: ${profession}`,
+              !isSameAsTitle(profession) && `Role title as written: ${title}`,
+              notes && `User's notes:\n${notes}`,
+            ]
+        )
           .filter(Boolean)
           .join("\n\n");
 
@@ -147,12 +191,19 @@ export const WorkExperienceFormView = () => {
       setGeneratingIds((ids) => [...ids, id]);
       // Show the bullets in the field while the AI writes them
       const improved = await improve(
-        "generateAchievements",
+        isVolunteering
+          ? "generateVolunteeringAchievements"
+          : "generateAchievements",
         buildInput,
         "achievements",
         {
-          // The AI first finds the profession the title points to
-          jobTitle: title,
+          /**
+           * Work: the AI first finds the profession the title points to.
+           * Volunteering skips that step: its titles are often a cause or
+           * an area ("Advocacy & Awareness"), not a profession, and would be
+           * rejected.
+           */
+          jobTitle: isVolunteering ? undefined : title,
           onPartial: updateAchievements,
         },
       ).finally(() =>
@@ -166,7 +217,7 @@ export const WorkExperienceFormView = () => {
       // Rejected or failed: bring back the text from before the click
       updateAchievements(previous);
     },
-    [requireAIProvider, improve, dispatch, findEntry],
+    [requireAIProvider, improve, dispatch, findEntry, section],
   );
 
   return (
@@ -178,6 +229,7 @@ export const WorkExperienceFormView = () => {
       onChange={handleChange}
       onGenerateAchievements={onGenerateAchievements}
       generatingIds={generatingIds}
+      labels={section === "volunteering" ? VOLUNTEERING_LABELS : undefined}
     />
   );
 };

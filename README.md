@@ -20,6 +20,9 @@ An AI-powered resume builder that helps anyone create a polished, professional r
 | AI summary (Smart Rewrite)            | ✅ Done        |
 | AI achievements for work experience   | ✅ Done        |
 | AI skills suggestions                 | ✅ Done        |
+| Profile photo                         | ✅ Done        |
+| Work dates (month picker, "Present")  | ✅ Done        |
+| Courses & Seminars, Volunteering      | ✅ Done        |
 | Settings (accent color, AI status)    | ✅ Done        |
 | AI for the Education section          | 📋 Planned     |
 | "Optimize Resume" (all sections)      | 📋 Planned     |
@@ -29,7 +32,7 @@ An AI-powered resume builder that helps anyone create a polished, professional r
 
 ## Overview
 
-Users fill in their details section by section (Personal Info, Work Experience, Education, Skills) and see the resume update live next to the form. The AI writes the professional summary, key achievements and skill suggestions from the user's job title, and the finished resume downloads as a PDF.
+Users fill in their details section by section (Personal Info, Work Experience, Education, Skills, Courses & Seminars, Volunteering) and see the resume update live next to the form. The AI writes the professional summary, key achievements and skill suggestions from the user's job title, and the finished resume downloads as a PDF.
 
 ## Tech Stack
 
@@ -43,6 +46,7 @@ Users fill in their details section by section (Personal Info, Work Experience, 
 | State          | Redux Toolkit + redux-persist (localStorage), Zustand     |
 | Icons          | Lucide React, MUI Icons                                   |
 | AI             | Chrome built-in AI ([Prompt API][prompt-api]), on-device  |
+| Dates          | MUI X Date Pickers + Day.js (loaded after the page)       |
 | PDF export     | html2canvas + jsPDF (loaded only when exporting)          |
 | Component docs | Storybook 10                                              |
 | Testing        | Vitest + Playwright (Storybook stories)                   |
@@ -61,7 +65,7 @@ The AI features are free for every user: no account and no API key. They use Chr
 | Section         | Button                   | What it does                                                   |
 | --------------- | ------------------------ | -------------------------------------------------------------- |
 | Personal Info   | Smart Rewrite            | Writes the professional summary from the professional title    |
-| Work Experience | Generate Achievements    | Writes 3-5 achievement bullets from the role title and the user's own notes in the field |
+| Work Experience, Volunteering | Generate Achievements | Writes 3-5 achievement bullets from the role title and the user's own notes in the field |
 | Skills          | Suggest skills with AI   | Suggests up to 10 new skills for the professional title        |
 
 Behavior shared by all AI actions:

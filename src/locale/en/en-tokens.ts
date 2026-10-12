@@ -38,6 +38,12 @@ const SECTIONS = {
         company: {
           placeholder: "TechFlow Corp",
         },
+        dates: {
+          start: "START DATE",
+          end: "END DATE",
+          current: "I currently work here",
+          present: "Present",
+        },
         achievements: {
           placeholder:
             "e.g.\nBuilt the payments API used by 50K customers\nCut cloud costs by 30%\nMentored 2 junior developers",
@@ -62,6 +68,15 @@ const SECTIONS = {
       },
     },
 
+    volunteering: {
+      title: "Volunteering",
+      addButton: "Add Volunteering",
+      fields: {
+        organization: { label: "ORGANIZATION" },
+        current: "I currently volunteer here",
+      },
+    },
+
     education: {
       title: "Education",
       addButton: "Add Degree",
@@ -72,6 +87,15 @@ const SECTIONS = {
         degreeField: {
           placeholder: "Degree / Field",
         },
+      },
+    },
+    courses: {
+      title: "Courses & Seminars",
+      addButton: "Add Course",
+      fields: {
+        title: { label: "COURSE / SEMINAR TITLE" },
+        organizer: { label: "ORGANIZER / PROVIDER" },
+        date: { label: "DATE" },
       },
     },
     skills: {
@@ -187,7 +211,7 @@ export const enTokens = {
     hint: "Once you expand your description, tap the AI button again.",
     cta: "I'll add more details now",
     invalidTitle:
-      "We couldn't link \"{title}\" to a profession. Enter your job title or a keyword about your work (a skill, tool or field) in English.",
+      'We couldn\'t link "{title}" to a profession. Enter your job title or a keyword about your work (a skill, tool or field) in English.',
     missingTitle:
       "Please add your professional title in Personal Info first, so the AI knows which skills fit your role.",
     noSkills:

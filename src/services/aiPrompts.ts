@@ -22,6 +22,20 @@ Format EXACTLY like this:
 - <achievement 2>
 - <achievement 3>
 No markdown, no commentary, no extra text.`,
+  generateVolunteeringAchievements: `You are a resume writer. Write bullet points for an unpaid volunteering role on a resume.
+The volunteer role may be a title, a cause or an area of work. Use it and the organization, if given, to understand the cause and the work done.
+This is volunteering, not a paid job. Focus on the impact on people and the community: people reached or helped, events and campaigns organized, funds raised, time given, and the skills used.
+Never mention salaries, sales, revenue, profit or business clients.
+If the user's notes are given, build the bullets from them: keep every fact, number, name, tool and keyword they mention, improve the wording, and don't drop any of their achievements.
+If only the volunteer role is given, that is enough: write typical achievements for that role.
+Write 3 bullets, or up to 5 if the notes describe more achievements.
+Each bullet should start with a strong action verb and be concise and impactful.
+Never ask for more information and never talk to the user. Always write the bullets.
+Format EXACTLY like this:
+- <achievement 1>
+- <achievement 2>
+- <achievement 3>
+No markdown, no commentary, no extra text.`,
 } as const;
 
 /**

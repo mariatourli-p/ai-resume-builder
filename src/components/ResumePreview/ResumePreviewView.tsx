@@ -16,8 +16,14 @@ export const ResumePreviewView = () => {
    * The preview updates at low priority, so typing in the forms never waits
    * for the whole resume to re-render
    */
-  const { personalInfo, workExperience, education, skills } =
-    useDeferredValue(resume);
+  const {
+    personalInfo,
+    workExperience,
+    volunteering,
+    education,
+    courses,
+    skills,
+  } = useDeferredValue(resume);
   const accentColor = useAccentColorSelector((s) => s);
   const activeTemplate = useAppSelector((s) => s.resume.activeTemplate);
   const fontFamily =
@@ -93,6 +99,11 @@ export const ResumePreviewView = () => {
         overflowX: "hidden",
         display: "flex",
         justifyContent: "center",
+        /**
+         * Without this, flex stretches the page to the panel height and its
+         * A4 minimum, so a longer resume spills out of the white page
+         */
+        alignItems: "flex-start",
         p: 4,
         backgroundColor: "#f1f5f9",
         scrollbarWidth: "none",
@@ -103,7 +114,9 @@ export const ResumePreviewView = () => {
         ref={previewRef}
         personalInfo={personalInfo}
         workExperience={workExperience}
+        volunteering={volunteering}
         education={education}
+        courses={courses}
         skills={skills}
         accentColor={accentColor}
         fontFamily={fontFamily.join(", ")}

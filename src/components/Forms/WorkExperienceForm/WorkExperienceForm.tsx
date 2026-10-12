@@ -1,10 +1,7 @@
 import {
   IconAdd,
   IconAI,
-  IconChevronDown,
-  IconChevronUp,
   IconDelete,
-  IconEdit,
   IconExperience,
 } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
@@ -14,7 +11,9 @@ import { themeConfig } from "@/theme/themeConfig";
 import {
   Box,
   Button,
+  Checkbox,
   CircularProgress,
+  FormControlLabel,
   IconButton,
   Paper,
   TextField,
@@ -22,9 +21,11 @@ import {
   Typography,
 } from "@mui/material";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
-import { memo } from "react";
+import { PRESENT } from "@/utils/formatDateRange";
+import { lazy, memo, Suspense, type ComponentType } from "react";
 
 const achievementsTokens = enTokens.sections.workExperience.fields.achievements;
+const datesTokens = enTokens.sections.workExperience.fields.dates;
 
 /** Tips shown when hovering the lamp: what to write and how to separate it */
 const AchievementsTips = () => (
@@ -66,9 +67,34 @@ export type WorkExperienceEntry = {
   id: string;
   roleTitle: string;
   company: string;
-  duration: string;
+  /** Start month as `YYYY-MM`, or `""` */
+  startDate: string;
+  /** End month as `YYYY-MM`, `PRESENT` while still in the role, or `""` */
+  endDate: string;
   location: string;
   achievements: string;
+};
+
+/**
+ * Texts and icon of the section. Volunteering reuses this form with its own
+ * labels, because a volunteering role has the same fields as a job.
+ */
+export type ExperienceLabels = {
+  title: string;
+  addButton: string;
+  /** Label of the company / organization field */
+  organization: string;
+  /** Label of the "still doing this" checkbox */
+  current: string;
+  icon: ComponentType<{ color?: string }>;
+};
+
+const WORK_EXPERIENCE_LABELS: ExperienceLabels = {
+  title: enTokens.sections.workExperience.title,
+  addButton: enTokens.sections.workExperience.addButton,
+  organization: "COMPANY / ORG",
+  current: datesTokens.current,
+  icon: IconExperience,
 };
 
 /**
@@ -93,7 +119,19 @@ export type WorkExperienceFormProps = {
   onGenerateAchievements?: (id: string, roleTitle: string) => Promise<void>;
   /** Ids of entries whose achievements are being generated - shows a spinner on their button. */
   generatingIds?: string[];
+  /** Section texts and icon. Defaults to Work Experience. Must be a stable object. */
+  labels?: ExperienceLabels;
 };
+
+/**
+ * The date picker library is large, so it loads in its own file after the
+ * page. Until then, a plain disabled field holds its place.
+ */
+const MonthField = lazy(() => import("../MonthField/MonthField"));
+
+const MonthFieldPlaceholder = ({ label }: { label: string }) => (
+  <TextField label={label} fullWidth disabled />
+);
 
 type WorkExperienceEntryCardProps = Pick<
   WorkExperienceFormProps,
@@ -102,6 +140,7 @@ type WorkExperienceEntryCardProps = Pick<
   entry: WorkExperienceEntry;
   accentColor: string;
   isGenerating: boolean;
+  labels: ExperienceLabels;
 };
 
 /**
@@ -114,190 +153,219 @@ const WorkExperienceEntryCard = memo(
     accentColor,
     isAIDisabled,
     isGenerating,
+    labels,
     onChange,
     onDelete,
     onGenerateAchievements,
-  }: WorkExperienceEntryCardProps) => (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 2.5,
-        border: "1px solid",
-        borderColor: "divider",
-        borderRadius: 3,
-      }}
-    >
-      {/* Row 1 */}
-      <Box
+  }: WorkExperienceEntryCardProps) => {
+    const isCurrent = entry.endDate === PRESENT;
+    return (
+      <Paper
+        elevation={0}
         sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 2,
-          mb: 2,
+          p: 2.5,
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: 3,
         }}
       >
-        <TextField
-          label="ROLE TITLE"
-          fullWidth
-          value={entry.roleTitle}
-          onChange={(e) => onChange?.(entry.id, "roleTitle", e.target.value)}
-        />
-        <TextField
-          label="COMPANY / ORG"
-          fullWidth
-          value={entry.company}
-          onChange={(e) => onChange?.(entry.id, "company", e.target.value)}
-        />
-      </Box>
-
-      {/* Row 2 */}
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 2,
-          mb: 2,
-        }}
-      >
-        <TextField
-          label="DURATION"
-          fullWidth
-          placeholder="2020 – Present"
-          value={entry.duration}
-          onChange={(e) => onChange?.(entry.id, "duration", e.target.value)}
-        />
-        <TextField
-          label="LOCATION"
-          fullWidth
-          value={entry.location}
-          onChange={(e) => onChange?.(entry.id, "location", e.target.value)}
-        />
-      </Box>
-
-      {/* Achievements */}
-      <Box sx={{ position: "relative" }}>
+        {/* Row 1 */}
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            mb: 0.5,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 2,
+            mb: 2,
           }}
         >
-          <Typography
-            variant="caption"
-            sx={{
-              color: themeConfig.colors.black,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}
-          >
-            Key Achievements & Milestones
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{ color: themeConfig.colors.black }}
-          >
-            Separate points with a new line
-          </Typography>
+          <TextField
+            label="ROLE TITLE"
+            fullWidth
+            value={entry.roleTitle}
+            onChange={(e) => onChange?.(entry.id, "roleTitle", e.target.value)}
+          />
+          <TextField
+            label={labels.organization}
+            fullWidth
+            value={entry.company}
+            onChange={(e) => onChange?.(entry.id, "company", e.target.value)}
+          />
         </Box>
-        <TextField
-          multiline
-          minRows={4}
-          fullWidth
-          value={entry.achievements}
-          onChange={(e) => onChange?.(entry.id, "achievements", e.target.value)}
-          placeholder={achievementsTokens.placeholder}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignSelf: "flex-start",
-                    mt: 1,
-                    gap: 0.5,
-                  }}
-                >
-                  <IconButton size="small">
-                    <IconChevronUp size={16} />
-                  </IconButton>
-                  <IconButton size="small">
-                    <IconChevronDown size={16} />
-                  </IconButton>
-                  <IconButton size="small">
-                    <IconEdit size={16} />
-                  </IconButton>
-                </Box>
-              ),
-            },
+
+        {/* Row 2 */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 2,
+            mb: 2,
           }}
-        />
-
-        {/* Hover (or focus) the lamp to see what to write */}
-        <Tooltip title={<AchievementsTips />} placement="bottom-start" arrow>
-          <Box
-            tabIndex={0}
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 0.5,
-              mt: 0.5,
-              cursor: "help",
-              color: "text.secondary",
-            }}
+        >
+          <Suspense
+            fallback={<MonthFieldPlaceholder label={datesTokens.start} />}
           >
-            <LightbulbOutlinedIcon sx={{ fontSize: 14 }} />
-            <Typography variant="caption">{achievementsTokens.hint}</Typography>
-          </Box>
-        </Tooltip>
+            <MonthField
+              label={datesTokens.start}
+              value={entry.startDate}
+              onChange={(value) => onChange?.(entry.id, "startDate", value)}
+            />
+          </Suspense>
+          <Suspense
+            fallback={<MonthFieldPlaceholder label={datesTokens.end} />}
+          >
+            <MonthField
+              label={datesTokens.end}
+              disabled={isCurrent}
+              value={isCurrent ? "" : entry.endDate}
+              // The role can't end before it started
+              minMonth={entry.startDate}
+              onChange={(value) => onChange?.(entry.id, "endDate", value)}
+            />
+          </Suspense>
+        </Box>
 
-        {/* AI chips */}
-        <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-          <Button
-            size="small"
-            disabled={isAIDisabled || !entry.roleTitle?.trim() || isGenerating}
-            onClick={() => onGenerateAchievements?.(entry.id, entry.roleTitle)}
-            startIcon={
-              isGenerating ? (
-                <CircularProgress size={12} color="inherit" />
-              ) : (
-                <IconAI size={13} />
-              )
+        {/* Row 3 */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            alignItems: "center",
+            gap: 2,
+            mb: 2,
+          }}
+        >
+          <TextField
+            label="LOCATION"
+            fullWidth
+            value={entry.location}
+            onChange={(e) => onChange?.(entry.id, "location", e.target.value)}
+          />
+          <FormControlLabel
+            label={labels.current}
+            control={
+              <Checkbox
+                checked={isCurrent}
+                onChange={(e) =>
+                  onChange?.(
+                    entry.id,
+                    "endDate",
+                    e.target.checked ? PRESENT : "",
+                  )
+                }
+                sx={{ "&.Mui-checked": { color: accentColor } }}
+              />
             }
+          />
+        </Box>
+
+        {/* Achievements */}
+        <Box sx={{ position: "relative" }}>
+          <Box
             sx={{
-              borderRadius: themeConfig.borderRadius.full,
-              border: `1px solid ${accentColor}`,
-              color: accentColor,
-              fontSize: "0.7rem",
-              textTransform: "none",
-              px: 1.5,
-              "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
+              display: "flex",
+              justifyContent: "space-between",
+              mb: 0.5,
             }}
           >
-            {isGenerating
-              ? enTokens.ai.generating
-              : enTokens.ai.generateAchievements}
-          </Button>
-          <Box sx={{ ml: "auto" }}>
-            <IconButton
-              size="small"
-              onClick={() => onDelete?.(entry.id)}
-              sx={{ color: "error.main" }}
+            <Typography
+              variant="caption"
+              sx={{
+                color: themeConfig.colors.black,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+              }}
             >
-              <IconDelete size={16} />
-            </IconButton>
+              Key Achievements & Milestones
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{ color: themeConfig.colors.black }}
+            >
+              Separate points with a new line
+            </Typography>
+          </Box>
+          <TextField
+            multiline
+            minRows={4}
+            fullWidth
+            value={entry.achievements}
+            onChange={(e) =>
+              onChange?.(entry.id, "achievements", e.target.value)
+            }
+            placeholder={achievementsTokens.placeholder}
+          />
+
+          {/* Hover (or focus) the lamp to see what to write */}
+          <Tooltip title={<AchievementsTips />} placement="bottom-start" arrow>
+            <Box
+              tabIndex={0}
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.5,
+                mt: 0.5,
+                cursor: "help",
+                color: "text.secondary",
+              }}
+            >
+              <LightbulbOutlinedIcon sx={{ fontSize: 14 }} />
+              <Typography variant="caption">
+                {achievementsTokens.hint}
+              </Typography>
+            </Box>
+          </Tooltip>
+
+          {/* AI chips */}
+          <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+            <Button
+              size="small"
+              disabled={
+                isAIDisabled || !entry.roleTitle?.trim() || isGenerating
+              }
+              onClick={() =>
+                onGenerateAchievements?.(entry.id, entry.roleTitle)
+              }
+              startIcon={
+                isGenerating ? (
+                  <CircularProgress size={12} color="inherit" />
+                ) : (
+                  <IconAI size={13} />
+                )
+              }
+              sx={{
+                borderRadius: themeConfig.borderRadius.full,
+                border: `1px solid ${accentColor}`,
+                color: accentColor,
+                fontSize: "0.7rem",
+                textTransform: "none",
+                px: 1.5,
+                "&:hover": { bgcolor: PALETTE_MAP[accentColor].light },
+              }}
+            >
+              {isGenerating
+                ? enTokens.ai.generating
+                : enTokens.ai.generateAchievements}
+            </Button>
+            <Box sx={{ ml: "auto" }}>
+              <IconButton
+                size="small"
+                onClick={() => onDelete?.(entry.id)}
+                sx={{ color: "error.main" }}
+              >
+                <IconDelete size={16} />
+              </IconButton>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Paper>
-  ),
+      </Paper>
+    );
+  },
 );
 
 /**
  * Form section for collecting and editing a candidate's work experience.
  *
- * Renders a list of experience entries, each with role title, company, duration,
+ * Renders a list of experience entries, each with role title, company, start and end dates,
  * location, and a key achievements textarea with inline AI improvement chips.
  * The user can add new entries or delete existing ones.
  *
@@ -325,8 +393,10 @@ export const WorkExperienceForm = ({
   onChange,
   onGenerateAchievements,
   generatingIds = [],
+  labels = WORK_EXPERIENCE_LABELS,
 }: WorkExperienceFormProps) => {
   const accentColor = useAccentColorSelector((s) => s);
+  const SectionIcon = labels.icon;
 
   return (
     <Box>
@@ -340,12 +410,12 @@ export const WorkExperienceForm = ({
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconExperience color={accentColor} />
+          <SectionIcon color={accentColor} />
           <Typography
             component="span"
             sx={{ fontWeight: 600, userSelect: "none" }}
           >
-            Work Experience
+            {labels.title}
           </Typography>
         </Box>
         <Button
@@ -362,7 +432,7 @@ export const WorkExperienceForm = ({
             },
           }}
         >
-          Add Experience
+          {labels.addButton}
         </Button>
       </Box>
 
@@ -375,6 +445,7 @@ export const WorkExperienceForm = ({
             accentColor={accentColor}
             isAIDisabled={isAIDisabled}
             isGenerating={generatingIds.includes(entry.id)}
+            labels={labels}
             onChange={onChange}
             onDelete={onDelete}
             onGenerateAchievements={onGenerateAchievements}

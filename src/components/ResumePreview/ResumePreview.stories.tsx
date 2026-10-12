@@ -1,3 +1,4 @@
+import { PRESENT } from "@/utils/formatDateRange";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ResumePreview } from "./ResumePreview";
 
@@ -27,7 +28,9 @@ export const Empty: Story = {
       photo: "",
     },
     workExperience: [],
+    volunteering: [],
     education: [],
+    courses: [],
     skills: [],
   },
 };
@@ -52,7 +55,8 @@ export const Filled: Story = {
         id: "1",
         roleTitle: "Principal Designer",
         company: "TechFlow Corp",
-        duration: "2020 – Present",
+        startDate: "2020-03",
+        endDate: PRESENT,
         location: "San Francisco, CA",
         achievements:
           "Engineered the strategic redesign of the core user dashboard\nIncreased retention rates by 40%",
@@ -61,10 +65,30 @@ export const Filled: Story = {
         id: "2",
         roleTitle: "Senior UI/UX Designer",
         company: "CreativeSols",
-        duration: "2016 – 2020",
+        startDate: "2016-09",
+        endDate: "2020-02",
         location: "New York, NY",
         achievements:
           "Synergized cross-functional engineering teams to architect 15+ mobile applications\nArchitected interactive prototypes with 50+ usability study participants",
+      },
+    ],
+    volunteering: [
+      {
+        id: "v1",
+        roleTitle: "Volunteer Design Mentor",
+        company: "Code for Good",
+        startDate: "2019-01",
+        endDate: PRESENT,
+        location: "Remote",
+        achievements: "Mentored 12 junior designers through portfolio reviews",
+      },
+    ],
+    courses: [
+      {
+        id: "c1",
+        title: "Advanced Design Systems",
+        organizer: "Interaction Design Foundation",
+        date: "2023-04",
       },
     ],
     education: [

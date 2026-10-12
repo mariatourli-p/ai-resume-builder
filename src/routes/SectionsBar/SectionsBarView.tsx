@@ -1,8 +1,10 @@
 import {
+  IconCourses,
   IconEducation,
   IconExperience,
   IconPersonal,
   IconSkills,
+  IconVolunteering,
 } from "@/assets/Icons";
 import { SideDrawer } from "@/components/Drawers/SideDrawer/SideDrawer";
 import { enTokens } from "@/locale/en/en-tokens";
@@ -26,13 +28,16 @@ export type SectionsBarViewProps = {
  * <SectionsBarView />
  */
 export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
-  const { personalInfo, workExperience, education } = enTokens.sections;
+  const { personalInfo, workExperience, volunteering, education, courses } =
+    enTokens.sections;
 
   const sectionItems = [
     { text: personalInfo.title, icon: <IconPersonal /> },
     { text: workExperience.title, icon: <IconExperience /> },
     { text: education.title, icon: <IconEducation /> },
     { text: "Skills", icon: <IconSkills /> },
+    { text: courses.title, icon: <IconCourses /> },
+    { text: volunteering.title, icon: <IconVolunteering /> },
   ];
 
   const [activeSection, setActiveSection] = useState<string>(

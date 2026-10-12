@@ -1,8 +1,4 @@
-import {
-  improveText,
-  isValidVerdict,
-  VERDICT_CHOICES,
-} from "@/services";
+import { improveText, isValidVerdict, VERDICT_CHOICES } from "@/services";
 
 /** A bullet line: `- `, `* `, `• ` or `1. ` */
 const BULLET_LINE = /^([-*•–]|\d+[.)])\s+\S/;
@@ -29,7 +25,8 @@ const isBulletList = (text: string): boolean => {
 };
 
 /**
- * Validates that the AI response is a list of professional achievement bullet points.
+ * Validates that the AI response is a list of achievement bullet points,
+ * from a job or a volunteering role.
  * Makes a second AI call to verify the result contains actual achievements
  * and not requests for more information or commentary.
  *
@@ -49,7 +46,7 @@ export const validateAchievementsResult = async (
 ): Promise<boolean> => {
   if (!isBulletList(result)) return false;
 
-  const validationPrompt = `You are a validator. Determine if the following text is a list of professional achievement bullet points that start with action verbs and describe real work accomplishments.
+  const validationPrompt = `You are a validator. Determine if the following text is a list of achievement bullet points that start with action verbs and describe real accomplishments from a job or a volunteering role.
 It is INVALID if it asks for information, talks to the reader, or describes what it will do instead of listing achievements.
 Reply ONLY with "VALID" or "INVALID". Nothing else.`;
 

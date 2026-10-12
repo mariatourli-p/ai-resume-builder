@@ -1,4 +1,5 @@
 import { store } from "@/redux/store";
+import { PRESENT } from "@/utils/formatDateRange";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Provider } from "react-redux";
@@ -14,7 +15,8 @@ const defaultEntries: Entry[] = [
     id: "1",
     roleTitle: "Principal Designer",
     company: "TechFlow Corp",
-    duration: "2020 – Present",
+    startDate: "2020-03",
+    endDate: PRESENT,
     location: "San Francisco, CA",
     achievements:
       "Engineered the strategic redesign of the core user dashboard, catalyzing a 40% surge in retention rates.\nGalvanized a cross-functional, distributed team of 12 designers across 3 timezones, cultivating a high-performance culture of seamless collaboration.",
@@ -23,7 +25,8 @@ const defaultEntries: Entry[] = [
     id: "2",
     roleTitle: "Senior UI/UX Designer",
     company: "CreativeSols",
-    duration: "2016 – 2020",
+    startDate: "2016-09",
+    endDate: "2020-02",
     location: "New York, NY",
     achievements:
       "Synergized cross-functional engineering teams to architect and deploy 15+ high-fidelity mobile applications.\nArchitected interactive prototypes and pioneered usability studies with 50+ participants to extract strategic, data-driven insights.",
@@ -45,7 +48,8 @@ const withState = (
         id: crypto.randomUUID(),
         roleTitle: "",
         company: "",
-        duration: "",
+        startDate: "",
+        endDate: "",
         location: "",
         achievements: "",
       },
