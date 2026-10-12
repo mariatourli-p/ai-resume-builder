@@ -1,6 +1,7 @@
 import { APP_BAR_HEIGHT } from "@/components/AppBars/HeaderBar";
 import { ResumePreviewView } from "@/components/ResumePreview/ResumePreviewView";
 import { Box } from "@mui/material";
+import { BrowserAIDownloadView } from "../AISettings/BrowserAIDownloadView";
 import { ErrorDialogView } from "../Dialogs/ErrorDialogView";
 import { HeaderBarView } from "../HeaderBar";
 import { ResumeBuilder } from "../ResumeBuilder";
@@ -34,6 +35,7 @@ export const HomePageView = () => {
           </Box>
           <ResumePreviewView />
           <ErrorDialogView />
+          <BrowserAIDownloadView />
         </Box>
       </Box>
     </ExportProvider>

@@ -1,47 +1,28 @@
-import { AI_CONFIG } from "./constants";
+import { browserProvider, type GenerateParams } from "./providers";
 
 /**
- * Sends a text improvement request to the Anthropic API.
+ * Sends a text improvement request to the built-in browser AI, which runs
+ * on the user's device for free.
  *
- * @param apiKey - The user's Anthropic API key, passed via `x-api-key` header.
  * @param prompt - The resolved system instruction string (e.g. the full prompt text
- *   from {@link AI_PROMPTS}). Sent as the `system` field to constrain Claude's behavior.
+ *   from {@link AI_PROMPTS}).
  * @param text - The raw user content to improve (e.g. achievements, summary).
- *   Sent as the sole `user` message.
- * @returns The improved text string from Claude's first content block.
- * @throws If the API response is not ok.
+ * @returns The improved text string.
+ * @throws {AIProviderError} If the built-in AI is unavailable or the request fails.
  */
-export const improveText = async ({
-  apiKey,
-  prompt,
-  text,
-}: {
-  apiKey: string;
-  /** Resolved prompt text — not a key, the actual instruction string */
-  prompt: string;
-  text: string;
-}): Promise<string> => {
-  const body = {
-    model: AI_CONFIG.model,
-    max_tokens: AI_CONFIG.maxTokens,
-    system: prompt,
-    messages: [{ role: "user", content: text }],
-  };
+export const improveText = (params: GenerateParams): Promise<string> =>
+  browserProvider.generate(params);
 
-  const response = await fetch(AI_CONFIG.baseUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": AI_CONFIG.apiVersion,
-      "anthropic-dangerous-direct-browser-access": "true",
-    },
-    body: JSON.stringify(body),
-  });
+/** The two answers validators allow, used to constrain the model's output */
+export const VERDICT_CHOICES = ["VALID", "INVALID"];
 
-  if (!response.ok) throw new Error("API request failed");
-
-  const data = await response.json();
-
-  return data.content[0].text;
+/**
+ * Lenient check for the validators' verdict. Models may JSON-quote it,
+ * change casing, add punctuation or repeat the input
+ * (e.g. `"plumber -> VALID"`, `The input is valid.`).
+ */
+export const isValidVerdict = (verdict: string): boolean => {
+  const normalized = verdict.toUpperCase();
+  if (/\bINVALID\b|\bNOT\s+VALID\b/.test(normalized)) return false;
+  return /\bVALID\b/.test(normalized);
 };

@@ -17,7 +17,7 @@ export type HeaderBarProps = HeaderLeftSideProps & HeaderRightSideProps;
  * action icon buttons (refresh, history, settings), a settings popover placeholder,
  * and the Save Draft / Export PDF action buttons.
  *
- * All state is managed externally and passed in as props — this component is purely presentational.
+ * All state is managed externally and passed in as props - this component is purely presentational.
  *
  * @param activeTab - The currently selected tab ("builder" or "analysis").
  * @param onTabChange - Callback fired when the user switches tabs.

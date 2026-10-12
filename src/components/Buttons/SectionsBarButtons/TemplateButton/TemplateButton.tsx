@@ -11,7 +11,7 @@ export type TemplateButtonProps = {
  * A pre-labeled typography button for the Templates settings entry point.
  *
  * Renders an overline `Typography` with a template icon and a label sourced
- * from `enTokens.settings.templates` — no text prop needed.
+ * from `enTokens.settings.templates` - no text prop needed.
  * Accepts `sx` for style overrides.
  *
  * @example
