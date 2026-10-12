@@ -13,8 +13,10 @@ Reply ONLY with "VALID" or "INVALID". Nothing else.`,
   generateAchievements: `You are a resume writer. Write professional bullet points for the key achievements and milestones of the given role.
 If the role title as written is given, use all of its keywords (skills, tools, technologies, specialties), not only the job title.
 If the user's notes are given, build the bullets from them: keep every fact, number, name, tool and keyword they mention, improve the wording, and don't drop any of their achievements.
+If only the job title is given, that is enough: write typical achievements for that role.
 Write 3 bullets, or up to 5 if the notes describe more achievements.
 Each bullet should start with a strong action verb and be concise and impactful.
+Never ask for more information and never talk to the user. Always write the bullets.
 Format EXACTLY like this:
 - <achievement 1>
 - <achievement 2>
