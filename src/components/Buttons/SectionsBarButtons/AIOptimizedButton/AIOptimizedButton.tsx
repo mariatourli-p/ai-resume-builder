@@ -10,7 +10,7 @@ export type AIOptimizedButtonProps = IconButtonProps;
  * A styled variant of `IconButton` that visually indicates AI-optimized content.
  *
  * Renders a green pill-shaped button using the project's `#10b981` AI accent color.
- * Accepts all `IconButtonProps` — any `sx` overrides passed in are merged on top of the default styles.
+ * Accepts all `IconButtonProps` - any `sx` overrides passed in are merged on top of the default styles.
  *
  * @example
  * <AIOptimizedButton icon={<SparklesIcon />} />

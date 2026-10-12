@@ -15,12 +15,13 @@ type Story = StoryObj<typeof SettingsFooter>;
 
 export const Default: Story = {
   args: {
-    title: "⚙️ Settings",
-    inputLabel: "PERSONAL ANTHROPIC API KEY",
-    linkLabel: "Get free key ↗",
-    linkHref: "https://console.anthropic.com",
-    inputPlaceholder: "Anthropic API Key (sk-ant-...)",
+    title: "AI Assistant",
     footerText:
-      "Provide your own Anthropic API Key to enable AI features. Your key is stored securely in localStorage.",
+      "Free for everyone. The AI runs inside Chrome on your computer, so your resume is never sent to an AI service.",
+    aiStatus: {
+      label: "Built-in browser AI",
+      description: "Free · no account or key · runs on your device",
+      note: "Ready - nothing leaves your device.",
+    },
   },
 };
