@@ -1,4 +1,4 @@
-import { improveText, isValidVerdict, VERDICT_CHOICES } from "@/services";
+import { askAI, isValidVerdict, VERDICT_CHOICES } from "@/services";
 
 /** A bullet line: `- `, `* `, `• ` or `1. ` */
 const BULLET_LINE = /^([-*•–]|\d+[.)])\s+\S/;
@@ -50,7 +50,7 @@ export const validateAchievementsResult = async (
 It is INVALID if it asks for information, talks to the reader, or describes what it will do instead of listing achievements.
 Reply ONLY with "VALID" or "INVALID". Nothing else.`;
 
-  const validation = await improveText({
+  const validation = await askAI({
     prompt: validationPrompt,
     text: result,
     choices: VERDICT_CHOICES,

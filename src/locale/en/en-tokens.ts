@@ -116,7 +116,6 @@ export const enTokens = {
     builder: "Builder",
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
-    ai_optimized: "AI Optimized Engine",
     projects: "Projects",
   },
   nav: {
@@ -164,6 +163,18 @@ export const enTokens = {
     downloadingBackground:
       "The AI model is downloading in the background. This can take a few minutes.",
     available: "Ready - nothing leaves your device.",
+    downloadFailed:
+      "The AI model download didn't finish. Check that you have at least 22 GB of free disk space and a stable internet connection, then try again.",
+    retryDownload: "Try the download again",
+    badge: {
+      checking: "Checking AI…",
+      available: "AI ready",
+      downloadable: "AI needs download",
+      downloading: "AI downloading",
+      downloadingPercent: "AI downloading {percent}%",
+      downloadFailed: "AI download failed",
+      unsupported: "AI not supported",
+    },
   },
   errors: {
     emptyField: "Field is empty",
@@ -193,6 +204,12 @@ export const enTokens = {
       description:
         "Your Chrome supports the AI features, but this computer doesn't meet their requirements: a capable graphics card or enough memory, and free disk space for the model. Try another computer to use them.",
     },
+    download_failed: {
+      title: "The AI model couldn't download",
+      subtitle: "Download failed",
+      description:
+        "Chrome downloads the AI model once before the first use, and the download didn't finish. Check that your computer has at least 22 GB of free disk space and a stable internet connection, then try again. You can see the model's status in Chrome at chrome://on-device-internals.",
+    },
     request_failed: {
       title: "AI request failed",
       subtitle: "Something went wrong",
@@ -212,6 +229,8 @@ export const enTokens = {
     cta: "I'll add more details now",
     invalidTitle:
       'We couldn\'t link "{title}" to a profession. Enter your job title or a keyword about your work (a skill, tool or field) in English.',
+    invalidVolunteerWork:
+      'We couldn\'t tell what this volunteer work was about. Add the cause, field or organization in English (e.g. "Food bank volunteer" or "Animal shelter"), or describe what you did.',
     missingTitle:
       "Please add your professional title in Personal Info first, so the AI knows which skills fit your role.",
     noSkills:

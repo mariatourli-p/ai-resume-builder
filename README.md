@@ -4,6 +4,28 @@ An AI-powered resume builder that helps anyone create a polished, professional r
 
 > 🚧 This project is in active development. Features marked ✅ are implemented; the rest are planned.
 
+## Requirements
+
+The resume editor, preview and PDF export work in any modern browser. **The AI features need Chrome's built-in AI**, which runs only on some computers:
+
+| Requirement      | Details                                                                                  |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| Browser          | A recent desktop version of Google Chrome. Safari, Firefox and phones are not supported. |
+| Operating system | Windows 10/11, macOS 13+, Linux, or ChromeOS on a Chromebook Plus                        |
+| Disk space       | At least 22 GB free, for the AI model Chrome downloads once                              |
+| Hardware         | A graphics card with more than 4 GB of memory, or 16 GB of RAM and 4 CPU cores           |
+| Network          | An unmetered connection for the first model download. After that the AI works offline.   |
+| Language         | The AI writes in English only                                                            |
+
+These requirements come from [Chrome's documentation][chrome-ai-requirements], and Google may change them. When the AI can't run, the app explains why and the rest of it keeps working.
+
+### Good to know
+
+- **The AI is provided by Google, not by this app.** It is Gemini Nano, built into Chrome. Google decides which browsers, versions and devices support it, and may change or remove it.
+- **Check what the AI writes.** Its text can be wrong or invented. Users should review every suggestion before using it in a resume.
+- **Google's rules apply.** Using the built-in AI is subject to Google's [Generative AI Prohibited Use Policy][google-ai-policy].
+- **Privacy.** Resume data stays in the browser (localStorage). The AI runs on the user's computer, so the resume is not sent to an AI service.
+
 ---
 
 ## Current Status
@@ -55,7 +77,7 @@ Users fill in their details section by section (Personal Info, Work Experience, 
 
 The AI features are free for every user: no account and no API key. They use Chrome's built-in AI ([Prompt API][prompt-api]), which runs the model on the user's own computer, so resume data is never sent to an AI service.
 
-- **Requirements:** a recent desktop version of Google Chrome on hardware that supports the built-in model.
+- **Requirements:** a recent desktop version of Google Chrome on hardware that supports the built-in model (see [Requirements](#requirements)).
 - **First use:** the model downloads once (a few minutes). Users can start the download from **Settings** (gear icon), or it starts on the first AI action. A progress bar shows the download.
 - **English only:** the AI features work in English.
 - **Job title or keyword:** users can type a full job title ("Senior Accountant") or a keyword about their work - a skill, tool, technology or field ("React", "bookkeeping"). The AI first finds the profession it points to, then writes about that profession. Input that can't be linked to any kind of work (random letters, names, greetings) shows a message asking for a real job title.
@@ -136,7 +158,7 @@ Every call goes through the same path:
 ```
 View (src/routes/ResumeBuilder/ResumeForms/*View)
   → useAI().improve (src/hooks/useAI)            find profession → write text → check result
-  → improveText (src/services/aiService.ts)
+  → askAI (src/services/aiService.ts)
   → browserProvider.generate (src/services/providers/browserProvider.ts)
   → Chrome's LanguageModel (Gemini Nano, on this computer)
 ```
@@ -157,8 +179,11 @@ All instructions sent to the AI are in `src/services/aiPrompts.ts`, except the a
 | ------------------------------------------------------ | -------------------- | ------------------------------------- |
 | The browser has no `LanguageModel`                     | `unsupported`        | AI not available in this browser      |
 | Chrome says `unavailable` (the computer can't run it)  | `unsupported_device` | AI not available on this computer     |
+| Creating the first session fails before the model is on the computer (disk space, connection) | `download_failed` | The AI model couldn't download |
 | Any other failure                                      | `request_failed`     | AI request failed                     |
-| The title is not a profession, or the check says `INVALID` | -                | More context needed                   |
+| The title is not a profession, the volunteer role doesn't say what the work was, or the check says `INVALID` | - | More context needed |
+
+The header also shows the AI's status at all times (**AI ready**, **AI needs download**, **AI downloading**, **AI not supported**, **AI download failed**), with the reason on hover, so users know before they click an AI button.
 
 ### Debugging
 
@@ -204,7 +229,7 @@ src/
 ### Prerequisites
 
 - Node.js 18+
-- A recent desktop version of Google Chrome to use the AI features (see [AI Assistant](#ai-assistant))
+- A recent desktop version of Google Chrome to use the AI features (see [Requirements](#requirements))
 
 ### Installation
 
@@ -260,3 +285,5 @@ What keeps it fast:
 GPL v3 - see [LICENCE](./LICENCE) for details.
 
 [prompt-api]: https://developer.chrome.com/docs/ai/prompt-api
+[chrome-ai-requirements]: https://developer.chrome.com/docs/ai/get-started
+[google-ai-policy]: https://policies.google.com/terms/generative-ai/use-policy

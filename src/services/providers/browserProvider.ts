@@ -6,10 +6,7 @@ import { AIProviderError, type AIProvider } from "./types";
  * @see https://developer.chrome.com/docs/ai/prompt-api
  */
 export type BrowserAIAvailability =
-  | "unavailable"
-  | "downloadable"
-  | "downloading"
-  | "available";
+  "unavailable" | "downloadable" | "downloading" | "available";
 
 /**
  * What the app knows about the built-in AI: Chrome's own answer, or
@@ -146,12 +143,30 @@ const createBaseSession = async (
     );
   }
 
-  return languageModel.create({
-    initialPrompts: [{ role: "system", content: prompt }],
-    expectedInputs: TEXT_EN,
-    expectedOutputs: TEXT_EN,
-    monitor,
-  });
+  try {
+    return await languageModel.create({
+      initialPrompts: [{ role: "system", content: prompt }],
+      expectedInputs: TEXT_EN,
+      expectedOutputs: TEXT_EN,
+      monitor,
+    });
+  } catch (error) {
+    /**
+     * Until the model is on the computer, creating a session also downloads
+     * it, so a failure here is the download: usually not enough disk space
+     * or a lost connection. Retrying right away won't help, so the user
+     * gets its own message.
+     */
+    if (status !== "available") {
+      throw new AIProviderError(
+        "download_failed",
+        error instanceof Error
+          ? error.message
+          : "The AI model download failed.",
+      );
+    }
+    throw error;
+  }
 };
 
 const getBaseSession = (

@@ -6,6 +6,8 @@ export type AISettingsContextType = {
   browserAvailability: BrowserAIStatus | null;
   /** Built-in model download progress (`0`–`1`), `null` when not downloading */
   browserDownloadProgress: number | null;
+  /** The last download started from Settings failed (disk space, connection) */
+  browserDownloadFailed: boolean;
   /** Starts the one-time built-in model download. Call from a user action. */
   startBrowserAIDownload: () => void;
   /** Whether this browser can run the built-in AI */

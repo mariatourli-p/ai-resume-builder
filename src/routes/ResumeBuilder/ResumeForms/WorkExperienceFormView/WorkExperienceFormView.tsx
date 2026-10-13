@@ -135,7 +135,9 @@ export const WorkExperienceFormView = ({
    * 2. Keeps the current text; if the user wrote it, it becomes the notes
    *    the AI builds the bullets from
    * 3. Empties the field and shows the spinner
-   * 4. `improve` finds the profession the role title points to (work only),
+   * 4. `improve` finds the profession the role title points to (work), or
+   *    checks that the role and organization say what the volunteer work
+   *    was about,
    *    writes the bullets - showing them in the field as they are written -
    *    and checks the result. Volunteering uses its own prompt, built from
    *    the role as written and the organization
@@ -201,9 +203,20 @@ export const WorkExperienceFormView = ({
            * Work: the AI first finds the profession the title points to.
            * Volunteering skips that step: its titles are often a cause or
            * an area ("Advocacy & Awareness"), not a profession, and would be
-           * rejected.
+           * rejected. Instead, the AI checks that the role or the
+           * organization say what the work was about. The notes are left
+           * out: after a reload, old AI bullets count as notes and would
+           * let any title pass.
            */
           jobTitle: isVolunteering ? undefined : title,
+          volunteerWork: isVolunteering
+            ? [
+                `Volunteer role: ${title}`,
+                organization && `Organization: ${organization}`,
+              ]
+                .filter(Boolean)
+                .join(", ")
+            : undefined,
           onPartial: updateAchievements,
         },
       ).finally(() =>

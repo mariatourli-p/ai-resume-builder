@@ -2,7 +2,6 @@ import { IconAI } from "@/assets/Icons";
 import { APP_BAR_HEIGHT } from "@/components/AppBars/HeaderBar";
 import { SidePanelMenu } from "@/components/AppBars/SectionsBar";
 import { BrandingColorsView } from "@/components/AppBars/SectionsBar/BrandingColors/BrandingColorsView";
-import { AIOptimizedButton } from "@/components/Buttons/SectionsBarButtons/AIOptimizedButton";
 import { OptimizeResumeButton } from "@/components/Buttons/SectionsBarButtons/OptimizeResumeButton/OptimizeResumeButton";
 import { ResumeButton } from "@/components/Buttons/SectionsBarButtons/ResumeButton";
 import { TemplateButton } from "@/components/Buttons/SectionsBarButtons/TemplateButton";
@@ -61,7 +60,6 @@ export const SideDrawer = ({
             <ResumeButton
               style={{ color: themeConfig.colors.sidebar.textMuted }}
             />
-            <AIOptimizedButton icon={<IconAI size={14} />} />
           </Box>
 
           {/* Resume Sections */}

@@ -1,4 +1,4 @@
-import { improveText } from "@/services";
+import { askAI } from "@/services";
 import {
   JOB_TITLE_PROMPT,
   JOB_TITLE_RESPONSE_SCHEMA,
@@ -53,7 +53,7 @@ export const resolveJobTitle = async (
   const cacheKey = trimmed.toLowerCase();
   if (resolved.has(cacheKey)) return resolved.get(cacheKey) ?? null;
 
-  const reply = await improveText({
+  const reply = await askAI({
     prompt: JOB_TITLE_PROMPT,
     text: trimmed,
     responseSchema: JOB_TITLE_RESPONSE_SCHEMA,

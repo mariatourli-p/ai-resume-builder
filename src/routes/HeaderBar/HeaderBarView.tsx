@@ -3,6 +3,7 @@ import { persistor, resetAll, useAppDispatch } from "@/redux/store";
 import { useIsDefaultState } from "@hooks/useIsDefaultState";
 import type { SxProps } from "@mui/material";
 import { useCallback, useState } from "react";
+import { useAIStatusBadge } from "../AISettings/useAIStatusBadge";
 import { useExportContext } from "../context/ExportProvider/ExportContext";
 
 export type Tab = "builder" | "analysis";
@@ -26,6 +27,7 @@ export const HeaderBarView = () => {
   const dispatch = useAppDispatch();
   const isDefault = useIsDefaultState();
   const { triggerExport } = useExportContext();
+  const aiStatus = useAIStatusBadge();
   const onRefresh = useCallback(async () => {
     // clears localStorage
     await persistor.purge();
@@ -43,6 +45,7 @@ export const HeaderBarView = () => {
       onRefresh={onRefresh}
       onExport={onExport}
       isDefaultState={isDefault}
+      aiStatus={aiStatus}
     />
   );
 };

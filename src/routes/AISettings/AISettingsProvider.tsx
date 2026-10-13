@@ -5,7 +5,10 @@ import {
   type BrowserAIStatus,
 } from "@/services";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AISettingsContext, type AISettingsContextType } from "./AISettingsContext";
+import {
+  AISettingsContext,
+  type AISettingsContextType,
+} from "./AISettingsContext";
 
 /** Provider choice and API keys saved by earlier versions of the app */
 const OBSOLETE_STORAGE_KEYS = [
@@ -24,6 +27,7 @@ export const AISettingsProvider = ({
   const [browserDownloadProgress, setBrowserDownloadProgress] = useState<
     number | null
   >(null);
+  const [browserDownloadFailed, setBrowserDownloadFailed] = useState(false);
 
   // The app no longer uses API keys - don't leave them in the browser
   useEffect(() => {
@@ -53,10 +57,16 @@ export const AISettingsProvider = ({
     [refreshBrowserAvailability],
   );
 
+  /**
+   * Starts the model download. When: the user clicks the download button in
+   * Settings. A failure is kept, so Settings and the header can tell the user
+   * to check the disk space and connection instead of failing silently.
+   */
   const startBrowserAIDownload = useCallback(() => {
     setBrowserDownloadProgress(0);
+    setBrowserDownloadFailed(false);
     prepareBrowserAI()
-      .catch(() => undefined)
+      .catch(() => setBrowserDownloadFailed(true))
       .finally(() => {
         setBrowserDownloadProgress(null);
         refreshBrowserAvailability();
@@ -81,6 +91,7 @@ export const AISettingsProvider = ({
     () => ({
       browserAvailability,
       browserDownloadProgress,
+      browserDownloadFailed,
       startBrowserAIDownload,
       isReady,
       unsupportedReason,
@@ -88,6 +99,7 @@ export const AISettingsProvider = ({
     [
       browserAvailability,
       browserDownloadProgress,
+      browserDownloadFailed,
       startBrowserAIDownload,
       isReady,
       unsupportedReason,

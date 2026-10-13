@@ -1,5 +1,9 @@
 import { IconDownload, IconRefresh } from "@/assets/Icons";
 import { PopOverButton } from "@/components/Buttons/PopOverButton";
+import {
+  AIStatusBadge,
+  type AIStatusBadgeProps,
+} from "@/components/Feedback/AIStatusBadge";
 import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { SettingsView } from "@/routes/HeaderBar/SettingsView";
@@ -10,17 +14,22 @@ export type HeaderRightSideProps = {
   onRefresh: () => void;
   onExport: () => void;
   isDefaultState: boolean;
+  /** Whether the built-in AI can run here, shown before the user clicks an AI button */
+  aiStatus: AIStatusBadgeProps;
 };
 
 export const HeaderRightSide = ({
   onRefresh,
   isDefaultState,
   onExport,
+  aiStatus,
 }: HeaderRightSideProps) => {
   const accentColor = useAccentColorSelector((s) => s);
 
   return (
     <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
+      <AIStatusBadge {...aiStatus} />
+
       <Typography
         sx={{
           fontSize: themeConfig.fontSize.xs,

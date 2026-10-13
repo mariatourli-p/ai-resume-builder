@@ -1,16 +1,17 @@
 import { browserProvider, type GenerateParams } from "./providers";
 
 /**
- * Sends a text improvement request to the built-in browser AI, which runs
- * on the user's device for free.
+ * Sends one request to the built-in browser AI, which runs on the user's
+ * device for free. Used both to write text (summary, achievements, skills)
+ * and to check it (job titles, volunteer work, validators).
  *
  * @param prompt - The resolved system instruction string (e.g. the full prompt text
  *   from {@link AI_PROMPTS}).
- * @param text - The raw user content to improve (e.g. achievements, summary).
- * @returns The improved text string.
+ * @param text - The user content the AI works on (e.g. a job title, notes).
+ * @returns The AI's reply as text.
  * @throws {AIProviderError} If the built-in AI is unavailable or the request fails.
  */
-export const improveText = (params: GenerateParams): Promise<string> =>
+export const askAI = (params: GenerateParams): Promise<string> =>
   browserProvider.generate(params);
 
 /** The two answers validators allow, used to constrain the model's output */

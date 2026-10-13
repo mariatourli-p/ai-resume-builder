@@ -25,12 +25,12 @@ export type AIProvider = {
  * - `unsupported`: this browser has no built-in AI (not Chrome, or too old)
  * - `unsupported_device`: Chrome has it, but this computer can't run the
  *   model (graphics card, memory or disk space)
+ * - `download_failed`: the one-time model download didn't finish (usually
+ *   disk space or connection)
  * - `request_failed`: anything else went wrong
  */
 export type AIProviderErrorCode =
-  | "unsupported"
-  | "unsupported_device"
-  | "request_failed";
+  "unsupported" | "unsupported_device" | "download_failed" | "request_failed";
 
 /**
  * Error thrown by the AI provider so the UI can show a message based on

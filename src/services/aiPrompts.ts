@@ -71,3 +71,33 @@ export const JOB_TITLE_RESPONSE_SCHEMA = {
   },
   required: ["isProfession", "jobTitle"],
 };
+
+/**
+ * Instructions for checking that a volunteering card says what the work was
+ * about, before the AI writes its achievements. Volunteer titles are often a
+ * cause or an area, not a profession, so they can't use
+ * {@link JOB_TITLE_PROMPT}. The reply follows
+ * {@link VOLUNTEER_WORK_RESPONSE_SCHEMA}.
+ */
+export const VOLUNTEER_WORK_PROMPT = `You read the volunteer role and, if given, the organization from a volunteering entry on a resume.
+Decide if they show what the volunteer work was about: a cause, a field, a group of people or animals helped, a task, or a real organization.
+Generic words for a role, a position or a group don't show that on their own, and neither do numbers, placeholders, random letters, made-up words, a person's name or a greeting.
+Set isVolunteerWork to false if neither the role nor the organization shows what the work was about.
+One of them is enough, even if the other doesn't.
+
+Examples:
+Volunteer role: Beach cleanup -> {"isVolunteerWork": true}
+Volunteer role: Member, Organization: Red Cross -> {"isVolunteerWork": true}
+Volunteer role: Tutor, Organization: Hope Center -> {"isVolunteerWork": true}
+Volunteer role: Helper 2, Organization: qwerty zxcv -> {"isVolunteerWork": false}
+Volunteer role: Position A -> {"isVolunteerWork": false}
+Volunteer role: Team member 3, Organization: Groups xkqwe -> {"isVolunteerWork": false}`;
+
+/** Shape of the reply to {@link VOLUNTEER_WORK_PROMPT} */
+export const VOLUNTEER_WORK_RESPONSE_SCHEMA = {
+  type: "object",
+  properties: {
+    isVolunteerWork: { type: "boolean" },
+  },
+  required: ["isVolunteerWork"],
+};

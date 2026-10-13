@@ -1,8 +1,4 @@
-import {
-  improveText,
-  isValidVerdict,
-  VERDICT_CHOICES,
-} from "@/services";
+import { askAI, isValidVerdict, VERDICT_CHOICES } from "@/services";
 import { AI_PROMPTS } from "@/services/aiPrompts";
 
 /**
@@ -21,10 +17,8 @@ import { AI_PROMPTS } from "@/services/aiPrompts";
  *   dispatch(toggleDialog("moreContext"));
  * }
  */
-export const validateAIResult = async (
-  result: string,
-): Promise<boolean> => {
-  const validation = await improveText({
+export const validateAIResult = async (result: string): Promise<boolean> => {
+  const validation = await askAI({
     prompt: AI_PROMPTS.validationPrompt,
     text: result,
     choices: VERDICT_CHOICES,

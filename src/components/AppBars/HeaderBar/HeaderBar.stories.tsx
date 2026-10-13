@@ -34,6 +34,11 @@ export const Default: Story = {
         onRefresh={() => {}}
         onExport={() => {}}
         isDefaultState={false}
+        aiStatus={{
+          label: "AI ready",
+          tooltip: "Ready - nothing leaves your device.",
+          tone: "success",
+        }}
       />
     );
   },
@@ -51,6 +56,12 @@ export const AnalysisTab: Story = {
         onRefresh={() => {}}
         onExport={() => {}}
         isDefaultState={false}
+        aiStatus={{
+          label: "AI not supported",
+          tooltip:
+            "Not supported in this browser. The AI features need a recent desktop version of Google Chrome.",
+          tone: "warning",
+        }}
       />
     );
   },

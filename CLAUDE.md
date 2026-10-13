@@ -32,7 +32,7 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
   - `onBrowserAIDownloadProgress()` - the `monitor`'s `downloadprogress` events, for the progress bar and toast.
   - `browserProvider.generate()` - every text request.
 - **Call sites:** the only views that generate text are `PersonalInfoFormView.onSmartRewrite`, `WorkExperienceFormView.onGenerateAchievements` (Work Experience and Volunteering) and `SkillsFormView.handleSuggest`. Each starts with `if (!requireAIProvider()) return;`, which opens the `aiError` dialog from `AISettingsProvider`'s `unsupportedReason`.
-- **Request flow:** View → `useAI().improve()` (`src/hooks/useAI`) → `improveText` (`src/services/aiService.ts`) → `browserProvider.generate` → `LanguageModel`.
+- **Request flow:** View → `useAI().improve()` (`src/hooks/useAI`) → `askAI` (`src/services/aiService.ts`) → `browserProvider.generate` → `LanguageModel`.
 - **`improve(promptKey, input, validatorType, { jobTitle, onPartial })`** makes up to 3 model calls:
   1. `resolveJobTitle` asks the AI which profession the title or keyword points to (e.g. "React" → "React Developer"). If it finds none, it shows the invalid-title dialog. Results are cached per lowercased title until reload.
   2. The AI writes the text from that profession. Pass `input` as a function `(profession) => string`. `onPartial` streams the text into the field.
@@ -45,11 +45,11 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
 - **Parse leniently.** `isValidVerdict` handles quoted or extra text, and `resolveJobTitle` falls back to the user's title when the JSON can't be read.
 - **Rewrite rules** (Smart Rewrite, Generate Achievements):
   - Clear the field, then write from the title. Generate Achievements also sends the role title as written (all its keywords) and the text the user wrote in the field for that title; the AI's own earlier bullets are not sent back.
-  - Volunteering uses `generateVolunteeringAchievements` and skips `resolveJobTitle`: its titles are often a cause or an area ("Advocacy & Awareness"), not a profession. It sends the role as written, the organization and the user's notes.
+  - Volunteering uses `generateVolunteeringAchievements` and skips `resolveJobTitle`: its titles are often a cause or an area ("Advocacy & Awareness"), not a profession. It sends the role as written, the organization and the user's notes. Instead, `checkVolunteerWork` (`VOLUNTEER_WORK_PROMPT`) first checks that the role and organization (not the notes) say what the work was about (a cause, field, task or organization); if not, it shows the `invalidVolunteerWork` message.
   - On failure, always restore the text from before the click: the AI never deletes the user's text without writing a new one.
   - Editing or deleting a title keeps its text (the user may be retyping it); only the AI button replaces it.
 - **Sessions:** `browserProvider` creates one base session per system prompt (`availability()` check, then `create({ initialPrompts })`), caches it, and runs each request on a `clone()` that is destroyed afterwards. A failed base session is removed from the cache so the next click retries. Keep prompts constant (no per-request text in the system prompt) so the cache works.
-- **Errors:** `AIProviderError` codes `unsupported` (no `LanguageModel`), `unsupported_device` (Chrome says `unavailable`) and `request_failed` open the `aiError` dialog. A rejected title or an `INVALID` check opens the `moreContext` dialog.
+- **Errors:** `AIProviderError` codes `unsupported` (no `LanguageModel`), `unsupported_device` (Chrome says `unavailable`), `download_failed` (the first `create()` fails while the model isn't on the computer yet) and `request_failed` open the `aiError` dialog. A rejected title or volunteer role, or an `INVALID` check, opens the `moreContext` dialog. The header's `AIStatusBadge` (`useAIStatusBadge`) always shows the AI status, with the reason on hover.
 - **Debugging:** in development, the console logs each title's resolution (`[AI] Job title: ...`) and per-step timings (`[AI] smartRewrite: ...ms`). `chrome://on-device-internals` shows the model's status in Chrome.
 
 ## Performance

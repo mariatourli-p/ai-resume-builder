@@ -1,11 +1,12 @@
 import { toggleDialog } from "@/redux/resume/resume-reducer";
 import { useAppDispatch } from "@/redux/store";
-import { AIProviderError, improveText } from "@/services";
+import { AIProviderError, askAI } from "@/services";
 import { enTokens } from "@/locale/en/en-tokens";
 import { AI_PROMPTS } from "@/services/aiPrompts";
 import { validateAchievementsResult } from "@/utils/validateAchievementsResult";
 import { validateAIResult } from "@/utils/validateAIResult";
 import { resolveJobTitle } from "@/utils/resolveJobTitle";
+import { checkVolunteerWork } from "@/utils/checkVolunteerWork";
 import { useCallback, useState } from "react";
 
 /** How the result is checked; `"skills"` is parsed and checked by the caller */
@@ -24,6 +25,12 @@ export type ImproveOptions = {
    * there is one.
    */
   jobTitle?: string;
+  /**
+   * When set, the AI first checks that these volunteering details (role and
+   * organization) say what the work was about, and only writes the
+   * text if they do.
+   */
+  volunteerWork?: string;
 };
 
 /**
@@ -65,7 +72,7 @@ export const useAI = () => {
       promptKey: keyof typeof AI_PROMPTS | string,
       input: ImproveInput,
       validatorType: ValidatorType,
-      { onPartial, jobTitle }: ImproveOptions = {},
+      { onPartial, jobTitle, volunteerWork }: ImproveOptions = {},
     ): Promise<string | null> => {
       if (!input) return null;
 
@@ -93,9 +100,25 @@ export const useAI = () => {
           profession = resolved;
         }
 
+        if (volunteerWork !== undefined) {
+          const isVolunteerWork = await timer.time(
+            "check volunteer work",
+            checkVolunteerWork(volunteerWork),
+          );
+          if (!isVolunteerWork) {
+            dispatch(
+              toggleDialog({
+                type: "moreContext",
+                message: enTokens.moreContextDialog.invalidVolunteerWork,
+              }),
+            );
+            return null;
+          }
+        }
+
         const result = await timer.time(
           "write text",
-          improveText({
+          askAI({
             prompt,
             text: typeof input === "function" ? input(profession) : input,
             onChunk: onPartial,

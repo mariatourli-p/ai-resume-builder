@@ -14,8 +14,12 @@ export const formatDownloadProgress = (progress: number): string =>
  * supported, downloading, or ready.
  */
 export const useAIStatusPanel = (): AIStatusPanelProps => {
-  const { browserAvailability, browserDownloadProgress, startBrowserAIDownload } =
-    useAISettings();
+  const {
+    browserAvailability,
+    browserDownloadProgress,
+    browserDownloadFailed,
+    startBrowserAIDownload,
+  } = useAISettings();
 
   return useMemo(() => {
     const base = { label: t.label, description: t.description };
@@ -29,6 +33,16 @@ export const useAIStatusPanel = (): AIStatusPanelProps => {
     }
 
     const status = browserAvailability ?? "checking";
+    // Chrome still says "downloadable" after a failed download
+    if (browserDownloadFailed && status === "downloadable") {
+      return {
+        ...base,
+        note: t.downloadFailed,
+        noteSeverity: "warning" as const,
+        action: { label: t.retryDownload, onClick: startBrowserAIDownload },
+      };
+    }
+
     return {
       ...base,
       note: status === "downloading" ? t.downloadingBackground : t[status],
@@ -41,5 +55,10 @@ export const useAIStatusPanel = (): AIStatusPanelProps => {
           ? { label: t.downloadButton, onClick: startBrowserAIDownload }
           : undefined,
     };
-  }, [browserAvailability, browserDownloadProgress, startBrowserAIDownload]);
+  }, [
+    browserAvailability,
+    browserDownloadProgress,
+    browserDownloadFailed,
+    startBrowserAIDownload,
+  ]);
 };
