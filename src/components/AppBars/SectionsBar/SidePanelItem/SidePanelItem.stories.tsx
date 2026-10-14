@@ -5,7 +5,7 @@ import {
   IconExperience,
   IconEducation,
   IconSkills,
-  IconProjects,
+  IconCourses,
 } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
 import { themeConfig } from "@/theme";
@@ -70,8 +70,8 @@ export const Skills: Story = {
   args: { text: "Skills", icon: <IconSkills /> },
 };
 
-export const Projects: Story = {
-  args: { text: "Projects", icon: <IconProjects /> },
+export const Courses: Story = {
+  args: { text: "Courses & Seminars", icon: <IconCourses /> },
 };
 
 export const NoActiveStyle: Story = {

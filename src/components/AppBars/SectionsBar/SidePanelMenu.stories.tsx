@@ -4,7 +4,7 @@ import {
   IconExperience,
   IconEducation,
   IconSkills,
-  IconProjects,
+  IconCourses,
 } from "@/assets/Icons";
 import { useState } from "react";
 import { enTokens } from "@/locale/en/en-tokens";
@@ -18,7 +18,7 @@ const defaultItems = [
   { text: workExperience.title, icon: <IconExperience /> },
   { text: education.title, icon: <IconEducation /> },
   { text: "Skills", icon: <IconSkills /> },
-  { text: "Projects", icon: <IconProjects /> },
+  { text: "Courses & Seminars", icon: <IconCourses /> },
 ];
 
 const templateItems = [

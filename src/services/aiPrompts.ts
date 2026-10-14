@@ -23,7 +23,7 @@ Format EXACTLY like this:
 - <achievement 3>
 No markdown, no commentary, no extra text.`,
   generateVolunteeringAchievements: `You are a resume writer. Write bullet points for an unpaid volunteering role on a resume.
-The volunteer role may be a title, a cause or an area of work. Use it and the organization, if given, to understand the cause and the work done.
+The volunteer role may be a title, a cause or an area of work. Use it, the area of work and the organization, if given, to understand the cause and the work done.
 This is volunteering, not a paid job. Focus on the impact on people and the community: people reached or helped, events and campaigns organized, funds raised, time given, and the skills used.
 Never mention salaries, sales, revenue, profit or business clients.
 If the user's notes are given, build the bullets from them: keep every fact, number, name, tool and keyword they mention, improve the wording, and don't drop any of their achievements.
@@ -73,31 +73,32 @@ export const JOB_TITLE_RESPONSE_SCHEMA = {
 };
 
 /**
- * Instructions for checking that a volunteering card says what the work was
- * about, before the AI writes its achievements. Volunteer titles are often a
- * cause or an area, not a profession, so they can't use
- * {@link JOB_TITLE_PROMPT}. The reply follows
- * {@link VOLUNTEER_WORK_RESPONSE_SCHEMA}.
+ * Instructions for finding what a volunteering card is about - its cause,
+ * field or kind of work - before the AI writes its achievements. Volunteer
+ * titles are often a cause or an area, not a profession, so they can't use
+ * {@link JOB_TITLE_PROMPT}. Naming the area is easier for a small model than
+ * a yes/no judgment. The reply follows {@link VOLUNTEER_AREA_RESPONSE_SCHEMA}.
  */
-export const VOLUNTEER_WORK_PROMPT = `You read the volunteer role and, if given, the organization from a volunteering entry on a resume.
-Decide if they show what the volunteer work was about: a cause, a field, a group of people or animals helped, a task, or a real organization.
-Generic words for a role, a position or a group don't show that on their own, and neither do numbers, placeholders, random letters, made-up words, a person's name or a greeting.
-Set isVolunteerWork to false if neither the role nor the organization shows what the work was about.
-One of them is enough, even if the other doesn't.
+export const VOLUNTEER_AREA_PROMPT = `You read the volunteer role and, if given, the organization from a volunteering entry on a resume.
+Write in a few words the area of the volunteer work: its cause, field, task, or the people or animals it helps.
+Look at the role first. If the role shows an area, use it, even if the organization is unclear or meaningless.
+If the role doesn't show one, use the organization.
+Write an empty area if neither shows one: generic words for a role, a position or a group, numbers, placeholders, random letters, made-up words, a person's name or a greeting.
+Write the area in English.
 
 Examples:
-Volunteer role: Beach cleanup -> {"isVolunteerWork": true}
-Volunteer role: Member, Organization: Red Cross -> {"isVolunteerWork": true}
-Volunteer role: Tutor, Organization: Hope Center -> {"isVolunteerWork": true}
-Volunteer role: Helper 2, Organization: qwerty zxcv -> {"isVolunteerWork": false}
-Volunteer role: Position A -> {"isVolunteerWork": false}
-Volunteer role: Team member 3, Organization: Groups xkqwe -> {"isVolunteerWork": false}`;
+Volunteer role: Beach cleanup, Organization: xkqwe zzt -> {"area": "Environmental cleanup"}
+Volunteer role: Member, Organization: City Food Bank -> {"area": "Food assistance"}
+Volunteer role: Tutor -> {"area": "Education"}
+Volunteer role: Dog walker -> {"area": "Animal welfare"}
+Volunteer role: Helper 2, Organization: qwerty zxcv -> {"area": ""}
+Volunteer role: Position A -> {"area": ""}`;
 
-/** Shape of the reply to {@link VOLUNTEER_WORK_PROMPT} */
-export const VOLUNTEER_WORK_RESPONSE_SCHEMA = {
+/** Shape of the reply to {@link VOLUNTEER_AREA_PROMPT} */
+export const VOLUNTEER_AREA_RESPONSE_SCHEMA = {
   type: "object",
   properties: {
-    isVolunteerWork: { type: "boolean" },
+    area: { type: "string" },
   },
-  required: ["isVolunteerWork"],
+  required: ["area"],
 };

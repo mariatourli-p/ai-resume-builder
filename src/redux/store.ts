@@ -1,4 +1,7 @@
-import { DEFAULT_ACCENT_COLOR } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
+import {
+  DEFAULT_ACCENT_COLOR,
+  LEGACY_ACCENT_COLORS,
+} from "@/components/AppBars/SectionsBar/BrandingColors/constants";
 import { configureStore } from "@reduxjs/toolkit";
 import { shallowEqual, useDispatch, useSelector, useStore } from "react-redux";
 import {
@@ -76,13 +79,23 @@ const migrations = {
     ...state,
     resume: { volunteering: [], courses: [], ...state.resume },
   }),
+  // The bright accents were replaced by formal ones
+  5: (state: MigrationState): MigrationState => ({
+    ...state,
+    resume: {
+      ...state.resume,
+      accentColor:
+        LEGACY_ACCENT_COLORS[state.resume.accentColor ?? ""] ??
+        DEFAULT_ACCENT_COLOR,
+    },
+  }),
 };
 
 const persistedReducer = persistReducer(
   {
     key: "resume_builder",
     storage,
-    version: 4,
+    version: 5,
     migrate: createMigrate(
       migrations as unknown as Parameters<typeof createMigrate>[0],
       {

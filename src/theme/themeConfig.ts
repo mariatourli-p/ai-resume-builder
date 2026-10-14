@@ -1,17 +1,43 @@
 export const themeConfig = {
-  sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-  serif: ["Literata", "Georgia", "serif"],
-  mono: ["JetBrains Mono", "ui-monospace", "monospace"],
-  display: ["Space Grotesk", "sans-serif"],
+  sans: ["Inter Variable", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+  serif: ["Literata Variable", "Literata", "Georgia", "serif"],
+  mono: [
+    "JetBrains Mono Variable",
+    "JetBrains Mono",
+    "ui-monospace",
+    "monospace",
+  ],
+  display: ["Space Grotesk Variable", "Space Grotesk", "sans-serif"],
   fontFamily: {
-    sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-    serif: ["Literata", "Georgia", "serif"],
-    mono: ["JetBrains Mono", "ui-monospace", "monospace"],
-    display: ["Space Grotesk", "sans-serif"],
+    sans: [
+      "Inter Variable",
+      "Inter",
+      "ui-sans-serif",
+      "system-ui",
+      "sans-serif",
+    ],
+    serif: ["Literata Variable", "Literata", "Georgia", "serif"],
+    mono: [
+      "JetBrains Mono Variable",
+      "JetBrains Mono",
+      "ui-monospace",
+      "monospace",
+    ],
+    display: ["Space Grotesk Variable", "Space Grotesk", "sans-serif"],
     templates: {
-      "Executive Serif": ["Literata", "Georgia", "serif"], // elegant serif
-      "Classic Modern": ["Inter", "ui-sans-serif", "sans-serif"], // clean sans
-      "Technical Mono": ["JetBrains Mono", "ui-monospace", "monospace"], // mono
+      "Executive Serif": ["Literata Variable", "Literata", "Georgia", "serif"], // elegant serif
+      "Classic Modern": [
+        "Inter Variable",
+        "Inter",
+        "ui-sans-serif",
+        "sans-serif",
+      ], // clean sans
+      "Technical Mono": [
+        "JetBrains Mono Variable",
+        "JetBrains Mono",
+        "ui-monospace",
+        "monospace",
+      ], // mono
     },
   },
   colors: {
@@ -42,27 +68,16 @@ export const themeConfig = {
       cta: "#030712",
     },
     // ─── Resume Color Palette ──────────────────────────
+    /**
+     * Muted, dark accents that suit a formal resume and stay readable when
+     * printed in black and white. All have light text on them (4.5:1+).
+     */
     palette: {
-      indigo: {
-        primary: "#4b41e1",
-        gradient: { from: "#4b41e1", to: "#645efb" },
-      },
-      emerald: {
-        primary: "#059669",
-        gradient: { from: "#059669", to: "#10b981" },
-      },
-      amber: {
-        primary: "#d97706",
-        gradient: { from: "#d97706", to: "#f59e0b" },
-      },
-      rose: {
-        primary: "#e11d48",
-        gradient: { from: "#e11d48", to: "#f43f5e" },
-      },
-      slate: {
-        primary: "#334155",
-        gradient: { from: "#334155", to: "#475569" },
-      },
+      navy: { primary: "#1e3a5f" },
+      charcoal: { primary: "#374151" },
+      forest: { primary: "#2f5d50" },
+      burgundy: { primary: "#7b2d3b" },
+      teal: { primary: "#1f5f6b" },
     },
   },
   spacing: {

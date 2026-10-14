@@ -7,13 +7,7 @@ import {
   Download,
   Settings,
   Plus,
-  Undo2,
-  Check,
   Trash2,
-  Mail,
-  MapPin,
-  FolderOpen,
-  AlertCircle,
   LayoutTemplate,
   RefreshCw,
   HandHeart,
@@ -52,10 +46,6 @@ export const IconSkills = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <Brain size={size} {...props} />
 );
 
-export const IconProjects = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <FolderOpen size={size} {...props} />
-);
-
 // ── Action Icons ──────────────────────────────────────────────────────────────
 
 export const IconAI = ({ size = ICON_SIZE, ...props }: IconProps) => (
@@ -74,30 +64,8 @@ export const IconAdd = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <Plus size={size} {...props} />
 );
 
-export const IconUndo = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <Undo2 size={size} {...props} />
-);
-
-export const IconSaved = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <Check size={size} {...props} />
-);
-
 export const IconDelete = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <Trash2 size={size} {...props} />
-);
-
-export const IconError = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <AlertCircle size={size} {...props} />
-);
-
-// ── Contact Icons ─────────────────────────────────────────────────────────────
-
-export const IconEmail = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <Mail size={size} {...props} />
-);
-
-export const IconLocation = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <MapPin size={size} {...props} />
 );
 
 export const IconTemplate = ({ size = ICON_SIZE, ...props }: IconProps) => (

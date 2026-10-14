@@ -13,7 +13,7 @@ import {
 import { useAppDispatch } from "@/redux/store";
 import { parseSkillList } from "@/utils/parseSkillList";
 import { useAI } from "@hooks/useAI";
-import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
+import { useEnsureAIAvailable } from "@hooks/useEnsureAIAvailable";
 import type { KeyboardEvent } from "react";
 import { useCallback, useState } from "react";
 
@@ -34,16 +34,14 @@ import { useCallback, useState } from "react";
 export const SkillsFormView = () => {
   const dispatch = useAppDispatch();
   const skills = useSkillsSelector((s) => s, shallowEqual);
-  const professionalTitle = usePersonalInfoSelector(
-    (s) => s.professionalTitle,
-  );
+  const professionalTitle = usePersonalInfoSelector((s) => s.professionalTitle);
   const [suggestions, setSuggestions] = useState<{
     title: string;
     skills: string[];
   }>();
   const [input, setInput] = useState("");
   const { improve, isLoading } = useAI();
-  const { requireAIProvider } = useRequireAIProvider();
+  const { ensureAIAvailable } = useEnsureAIAvailable();
 
   const title = professionalTitle.trim();
   // Suggestions for an older title no longer apply
@@ -85,7 +83,7 @@ export const SkillsFormView = () => {
   );
 
   const handleSuggest = useCallback(async () => {
-    if (!requireAIProvider()) return;
+    if (!ensureAIAvailable()) return;
 
     // The title tells the AI which skills fit the role
     if (!title) {
@@ -113,13 +111,13 @@ export const SkillsFormView = () => {
     }
 
     setSuggestions({ title, skills: newSkills });
-  }, [requireAIProvider, title, skills, improve, showMessage]);
+  }, [ensureAIAvailable, title, skills, improve, showMessage]);
 
   return (
     <SkillsForm
       skills={skills}
       suggestedSkills={suggestedSkills}
-      jobTitle={suggestedSkills.length ? title : undefined}
+      jobTitle={title || undefined}
       input={input}
       appliedSet={new Set(skills)}
       isSuggesting={isLoading}

@@ -8,11 +8,11 @@ import { useCallback } from "react";
  * model can't run - in another browser, or on a computer that doesn't meet
  * Chrome's requirements.
  */
-export const useRequireAIProvider = () => {
+export const useEnsureAIAvailable = () => {
   const dispatch = useAppDispatch();
   const { unsupportedReason } = useAISettings();
 
-  const requireAIProvider = useCallback((): boolean => {
+  const ensureAIAvailable = useCallback((): boolean => {
     if (unsupportedReason) {
       dispatch(toggleDialog({ type: "aiError", message: unsupportedReason }));
       return false;
@@ -20,5 +20,5 @@ export const useRequireAIProvider = () => {
     return true;
   }, [unsupportedReason, dispatch]);
 
-  return { requireAIProvider };
+  return { ensureAIAvailable };
 };

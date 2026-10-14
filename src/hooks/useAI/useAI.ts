@@ -6,7 +6,7 @@ import { AI_PROMPTS } from "@/services/aiPrompts";
 import { validateAchievementsResult } from "@/utils/validateAchievementsResult";
 import { validateAIResult } from "@/utils/validateAIResult";
 import { resolveJobTitle } from "@/utils/resolveJobTitle";
-import { checkVolunteerWork } from "@/utils/checkVolunteerWork";
+import { findVolunteerArea } from "@/utils/findVolunteerArea";
 import { useCallback, useState } from "react";
 
 /** How the result is checked; `"skills"` is parsed and checked by the caller */
@@ -26,9 +26,9 @@ export type ImproveOptions = {
    */
   jobTitle?: string;
   /**
-   * When set, the AI first checks that these volunteering details (role and
-   * organization) say what the work was about, and only writes the
-   * text if they do.
+   * When set, the AI first finds the area of these volunteering details
+   * (role and organization), e.g. "Health and safety", and only writes the
+   * text if there is one. The area is passed to `input` like a profession.
    */
   volunteerWork?: string;
 };
@@ -83,11 +83,13 @@ export const useAI = () => {
       setIsLoading(true);
       try {
         let profession = "";
+
         if (jobTitle) {
           const resolved = await timer.time(
             "find profession",
             resolveJobTitle(jobTitle),
           );
+
           if (!resolved) {
             dispatch(
               toggleDialog({
@@ -101,11 +103,12 @@ export const useAI = () => {
         }
 
         if (volunteerWork !== undefined) {
-          const isVolunteerWork = await timer.time(
-            "check volunteer work",
-            checkVolunteerWork(volunteerWork),
+          const area = await timer.time(
+            "find volunteer area",
+            findVolunteerArea(volunteerWork),
           );
-          if (!isVolunteerWork) {
+
+          if (!area) {
             dispatch(
               toggleDialog({
                 type: "moreContext",
@@ -114,6 +117,8 @@ export const useAI = () => {
             );
             return null;
           }
+          // Passed to `input` like a profession, so the text is built from it
+          profession = area;
         }
 
         const result = await timer.time(

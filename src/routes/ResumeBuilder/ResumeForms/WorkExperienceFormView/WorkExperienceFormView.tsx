@@ -7,15 +7,16 @@ import { enTokens } from "@/locale/en/en-tokens";
 import {
   addExperience,
   removeExperience,
+  updateAchievements,
   updateExperienceField,
+  type ExperienceField,
   type ExperienceSection,
-  type WorkExperienceEntry,
 } from "@/redux/resume/resume-reducer";
 import { shallowEqual, useExperienceSelector } from "@/redux/selectors";
 import { useAppDispatch, useAppStore } from "@/redux/store";
 import { useAI } from "@hooks/useAI";
-import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
-import { useCallback, useRef, useState } from "react";
+import { useEnsureAIAvailable } from "@hooks/useEnsureAIAvailable";
+import { useCallback, useState } from "react";
 
 const { volunteering } = enTokens.sections;
 
@@ -52,6 +53,9 @@ export type WorkExperienceFormViewProps = {
  *   stay stable and typing in one entry doesn't re-render the others
  * - Editing or deleting a role title keeps the achievements; only Generate
  *   Achievements replaces them, and a failed run brings the previous text back
+ * - Each card saves who wrote its achievements (`isAIWritten`) and for which
+ *   role (`achievementsRole`), so only the user's text for the current role
+ *   is sent to the AI as notes, even after a reload
  */
 export const WorkExperienceFormView = ({
   section = "workExperience",
@@ -62,16 +66,9 @@ export const WorkExperienceFormView = ({
   const entries = useExperienceSelector(section, (s) => s, shallowEqual);
   const { improve } = useAI();
   // Checked before every AI request: explains why the AI can't run here
-  const { requireAIProvider } = useRequireAIProvider();
+  const { ensureAIAvailable } = useEnsureAIAvailable();
   // Cards whose achievements the AI is writing - shows their spinner
   const [generatingIds, setGeneratingIds] = useState<string[]>([]);
-  /**
-   * Cards whose achievements the AI wrote and the user hasn't edited since.
-   * Their text is not sent back as the user's notes, so each run writes new
-   * bullets. A ref, because it is only read when the button is clicked and
-   * must not re-render the form.
-   */
-  const aiWrittenIds = useRef(new Set<string>());
 
   /**
    * Returns a card's latest data from the store.
@@ -105,21 +102,16 @@ export const WorkExperienceFormView = ({
    *
    * When: on every key press in a card (passed as `onChange`).
    *
-   * Why, besides saving the value: once the user edits the achievements,
-   * they count as the user's own notes again, even if the AI wrote them.
+   * Once the user edits the achievements, the reducer counts them as the
+   * user's own notes for the current role, even if the AI wrote them.
    *
    * Editing or deleting the role title never touches the achievements - the
    * user may be retyping the title. They only change when the user clicks
    * Generate Achievements.
    */
   const handleChange = useCallback(
-    (
-      id: string,
-      field: keyof Omit<WorkExperienceEntry, "id">,
-      value: string,
-    ) => {
+    (id: string, field: ExperienceField, value: string) => {
       dispatch(updateExperienceField({ section, id, field, value }));
-      if (field === "achievements") aiWrittenIds.current.delete(id);
     },
     [dispatch, section],
   );
@@ -132,8 +124,9 @@ export const WorkExperienceFormView = ({
    *
    * Steps:
    * 1. Stops if the AI can't run in this browser
-   * 2. Keeps the current text; if the user wrote it, it becomes the notes
-   *    the AI builds the bullets from
+   * 2. Keeps the current text; if the user wrote it for this same role, it
+   *    becomes the notes the AI builds the bullets from. If the role changed,
+   *    only the role is sent
    * 3. Empties the field and shows the spinner
    * 4. `improve` finds the profession the role title points to (work), or
    *    checks that the role and organization say what the volunteer work
@@ -146,21 +139,31 @@ export const WorkExperienceFormView = ({
    */
   const onGenerateAchievements = useCallback(
     async (id: string, roleTitle: string) => {
-      if (!requireAIProvider()) return;
+      if (!ensureAIAvailable()) return;
 
       const entry = findEntry(id);
       const previous = entry?.achievements ?? "";
-      const updateAchievements = (value: string) =>
-        dispatch(
-          updateExperienceField({ section, id, field: "achievements", value }),
-        );
-
+      const wasAIWritten = entry?.isAIWritten ?? false;
+      const previousRole = entry?.achievementsRole;
       const title = roleTitle.trim();
+      // Bullets the AI writes now belong to the current role
+      const writeAchievements = (
+        value: string,
+        isAIWritten = true,
+        role: string | undefined = title,
+      ) =>
+        dispatch(updateAchievements({ section, id, value, isAIWritten, role }));
+
       /**
-       * What the user wrote is the base for the new bullets. The AI's own
-       * earlier bullets are not, so each run writes new ones.
+       * What the user wrote for this role is the base for the new bullets.
+       * Text written for another role is not (it would bring the old role
+       * back), and neither are the AI's own bullets, so each run writes new
+       * ones. Text written before any title counts as written for this one.
        */
-      const notes = aiWrittenIds.current.has(id) ? "" : previous.trim();
+      const isSameRole =
+        previousRole === "" ||
+        previousRole?.toLowerCase() === title.toLowerCase();
+      const notes = !wasAIWritten && isSameRole ? previous.trim() : "";
       const isVolunteering = section === "volunteering";
       const organization = entry?.company.trim() ?? "";
       const isSameAsTitle = (profession: string) =>
@@ -169,27 +172,31 @@ export const WorkExperienceFormView = ({
        * Work: the profession alone loses the other keywords of the title
        * (e.g. the tools in "Python developer, Django, AWS"), so send both.
        *
-       * Volunteering: the role as written and the organization tell the
-       * cause, so they are sent as they are.
+       * Volunteering: `profession` is the area the AI found (e.g. "Health
+       * and safety"). It is sent with the role as written and the
+       * organization, which tell the cause.
        */
-      const buildInput = (profession: string) =>
-        (isVolunteering
-          ? [
-              `Volunteer role: ${title}`,
-              organization && `Organization: ${organization}`,
-              notes && `User's notes:\n${notes}`,
-            ]
-          : [
-              `Job title: ${profession}`,
-              !isSameAsTitle(profession) && `Role title as written: ${title}`,
-              notes && `User's notes:\n${notes}`,
-            ]
+      const buildInput = (profession: string) => {
+        return (
+          isVolunteering
+            ? [
+                `Volunteer role: ${title}`,
+                profession && `Area of work: ${profession}`,
+                organization && `Organization: ${organization}`,
+                notes && `User's notes:\n${notes}`,
+              ]
+            : [
+                `Job title: ${profession}`,
+                !isSameAsTitle(profession) && `Role title as written: ${title}`,
+                notes && `User's notes:\n${notes}`,
+              ]
         )
           .filter(Boolean)
           .join("\n\n");
+      };
 
       // Start from an empty field: the AI writes the achievements again
-      updateAchievements("");
+      writeAchievements("");
       setGeneratingIds((ids) => [...ids, id]);
       // Show the bullets in the field while the AI writes them
       const improved = await improve(
@@ -203,10 +210,9 @@ export const WorkExperienceFormView = ({
            * Work: the AI first finds the profession the title points to.
            * Volunteering skips that step: its titles are often a cause or
            * an area ("Advocacy & Awareness"), not a profession, and would be
-           * rejected. Instead, the AI checks that the role or the
-           * organization say what the work was about. The notes are left
-           * out: after a reload, old AI bullets count as notes and would
-           * let any title pass.
+           * rejected. Instead, the AI finds the area of work from the role
+           * or the organization. The notes are left out: after a reload,
+           * old AI bullets count as notes and would let any title pass.
            */
           jobTitle: isVolunteering ? undefined : title,
           volunteerWork: isVolunteering
@@ -217,20 +223,19 @@ export const WorkExperienceFormView = ({
                 .filter(Boolean)
                 .join(", ")
             : undefined,
-          onPartial: updateAchievements,
+          onPartial: writeAchievements,
         },
       ).finally(() =>
         setGeneratingIds((ids) => ids.filter((current) => current !== id)),
       );
       if (improved) {
-        aiWrittenIds.current.add(id);
-        updateAchievements(improved);
+        writeAchievements(improved);
         return;
       }
       // Rejected or failed: bring back the text from before the click
-      updateAchievements(previous);
+      writeAchievements(previous, wasAIWritten, previousRole);
     },
-    [requireAIProvider, improve, dispatch, findEntry, section],
+    [ensureAIAvailable, improve, dispatch, findEntry, section],
   );
 
   return (

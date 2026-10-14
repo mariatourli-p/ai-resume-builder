@@ -8,7 +8,7 @@ import {
   IconExperience,
   IconEducation,
   IconSkills,
-  IconProjects,
+  IconCourses,
 } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
 
@@ -19,7 +19,7 @@ const sectionItems = [
   { text: workExperience.title, icon: <IconExperience /> },
   { text: education.title, icon: <IconEducation /> },
   { text: "Skills", icon: <IconSkills /> },
-  { text: "Projects", icon: <IconProjects /> },
+  { text: "Courses & Seminars", icon: <IconCourses /> },
 ];
 
 const templateItems = [

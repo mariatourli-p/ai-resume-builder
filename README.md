@@ -63,10 +63,11 @@ Users fill in their details section by section (Personal Info, Work Experience, 
 | Framework      | React 19 + TypeScript                                     |
 | Build tool     | Vite                                                      |
 | UI library     | MUI (Material UI) v9                                      |
-| Styling        | MUI `sx` + Tailwind CSS v4                                |
+| Styling        | MUI `sx`                                                  |
 | Routing        | React Router v7                                           |
 | State          | Redux Toolkit + redux-persist (localStorage), Zustand     |
 | Icons          | Lucide React, MUI Icons                                   |
+| Fonts          | Inter, Literata, JetBrains Mono, Space Grotesk - bundled with Fontsource (SIL Open Font License), no font CDN |
 | AI             | Chrome built-in AI ([Prompt API][prompt-api]), on-device  |
 | Dates          | MUI X Date Pickers + Day.js (loaded after the page)       |
 | PDF export     | html2canvas + jsPDF (loaded only when exporting)          |
@@ -146,7 +147,7 @@ The profession is cached per title until the page reloads, so clicking again wit
 
 Taking **Smart Rewrite** with the title "React" as an example:
 
-1. `requireAIProvider()` stops here and shows a dialog if the AI can't run on this browser or computer.
+1. `ensureAIAvailable()` stops here and shows a dialog if the AI can't run on this browser or computer.
 2. The view calls `useAI().improve("smartRewrite", …)` (`src/hooks/useAI`).
 3. **Find the profession.** `resolveJobTitle` sends "React" with `JOB_TITLE_PROMPT` and a JSON Schema, so the reply is always shaped like `{"isProfession": true, "jobTitle": "React Developer"}`. If `isProfession` is `false`, a dialog asks for a real job title and nothing else runs.
 4. **Write.** It sends `Job title: React Developer` with the `smartRewrite` prompt. The reply is streamed, and each piece is shown in the summary field as it arrives.
@@ -208,7 +209,7 @@ src/
 │   ├── Forms/       # Personal Info, Work Experience, Education, Skills
 │   ├── ResumePreview/
 │   └── Settings/    # Settings panel, AI status
-├── hooks/           # useAI, useRequireAIProvider, ...
+├── hooks/           # useAI, useEnsureAIAvailable, ...
 ├── locale/en/       # All UI text (en-tokens.ts)
 ├── redux/           # Store, resume slice, selectors (persisted to localStorage)
 ├── routes/          # Views that connect components to state and the AI
@@ -283,6 +284,8 @@ What keeps it fast:
 ## License
 
 GPL v3 - see [LICENCE](./LICENCE) for details.
+
+Third-party software, fonts and icons, and their licenses, are listed in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
 
 [prompt-api]: https://developer.chrome.com/docs/ai/prompt-api
 [chrome-ai-requirements]: https://developer.chrome.com/docs/ai/get-started

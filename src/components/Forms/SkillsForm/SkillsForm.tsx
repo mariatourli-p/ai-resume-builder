@@ -1,7 +1,7 @@
 import { IconAI, IconSkills } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
-import { PALETTE_MAP } from "@/theme";
+import { getContrastText, PALETTE_MAP } from "@/theme";
 import { themeConfig } from "@/theme/themeConfig";
 import {
   Box,
@@ -10,6 +10,7 @@ import {
   CircularProgress,
   Paper,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import type { KeyboardEvent } from "react";
@@ -21,7 +22,11 @@ export type SkillsFormProps = {
   skills?: string[];
   /** List of AI-suggested skills for the current job title. */
   suggestedSkills?: string[];
-  /** The job title used to generate suggestions (shown in the section label). */
+  /**
+   * The professional title the AI suggests skills for. Shown on the suggest
+   * button and above the suggestions, so the user knows which role they fit.
+   * Without it the suggest button is disabled, with a tooltip saying why.
+   */
   jobTitle?: string;
   /** When `true`, the AI suggest button is disabled. */
   isAIDisabled?: boolean;
@@ -129,6 +134,7 @@ export const SkillsForm = ({
           disabled={!input.trim()}
           sx={{
             bgcolor: accentColor,
+            color: getContrastText(accentColor),
             borderRadius: 2,
             px: 3,
             textTransform: "none",
@@ -166,6 +172,16 @@ export const SkillsForm = ({
                   border: "1px solid",
                   borderColor: "divider",
                   bgcolor: accentColor,
+                  // Readable on every accent, including the dark ones
+                  color: getContrastText(accentColor),
+                  "& .MuiChip-deleteIcon": {
+                    color: getContrastText(accentColor),
+                    opacity: 0.7,
+                    "&:hover": {
+                      color: getContrastText(accentColor),
+                      opacity: 1,
+                    },
+                  },
                   fontSize: "0.8rem",
                 }}
               />
@@ -214,7 +230,9 @@ export const SkillsForm = ({
                     fontSize: "0.8rem",
                     cursor: isApplied ? "default" : "pointer",
                     bgcolor: isApplied ? accentColor : "background.paper",
-                    color: isApplied ? "white" : accentColor,
+                    color: isApplied
+                      ? getContrastText(accentColor)
+                      : accentColor,
                     border: "1px solid",
                     borderColor: isApplied ? accentColor : "divider",
                     fontWeight: isApplied ? 600 : 400,
@@ -242,29 +260,61 @@ export const SkillsForm = ({
 
       {/* Suggest with AI - shown when no suggestions yet */}
       {suggestedSkills.length === 0 && (
-        <Button
-          size="small"
-          disabled={isAIDisabled || isSuggesting}
-          onClick={onSuggest}
-          startIcon={
-            isSuggesting ? (
-              <CircularProgress size={12} color="inherit" />
-            ) : (
-              <IconAI size={13} />
-            )
-          }
-          sx={{
-            borderRadius: themeConfig.borderRadius.full,
-            border: `1px solid ${accentColor}`,
-            color: accentColor,
-            fontSize: "0.75rem",
-            textTransform: "none",
-            px: 1.5,
-            "&:hover": { bgcolor: PALETTE_MAP[accentColor]?.light },
-          }}
+        <Tooltip
+          title={jobTitle ? "" : ai.suggestNeedsTitle}
+          placement="top"
+          arrow
         >
-          {isSuggesting ? ai.suggesting : ai.suggest}
-        </Button>
+          {/* A disabled button gets no hover events, so the span shows the tooltip */}
+          <Box
+            component="span"
+            sx={{ display: "inline-flex", maxWidth: "100%" }}
+          >
+            <Button
+              size="small"
+              // The AI picks skills from the professional title, so it's required
+              disabled={isAIDisabled || isSuggesting || !jobTitle}
+              onClick={onSuggest}
+              startIcon={
+                isSuggesting && <CircularProgress size={12} color="inherit" />
+              }
+              sx={{
+                borderRadius: themeConfig.borderRadius.full,
+                border: `1px solid ${accentColor}`,
+                color: accentColor,
+                fontSize: "0.75rem",
+                textTransform: "none",
+                px: 1.5,
+                maxWidth: "100%",
+                "&:hover": { bgcolor: PALETTE_MAP[accentColor]?.light },
+                // Stays readable while the AI works, instead of the disabled grey
+                ...(isSuggesting && {
+                  "&.Mui-disabled": {
+                    color: accentColor,
+                    borderColor: accentColor,
+                  },
+                }),
+              }}
+            >
+              {/* A long title is cut with "…" instead of stretching the button */}
+              <Box
+                component="span"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {!jobTitle
+                  ? ai.suggest
+                  : (isSuggesting ? ai.suggestingFor : ai.suggestFor).replace(
+                      "{title}",
+                      jobTitle,
+                    )}
+              </Box>
+            </Button>
+          </Box>
+        </Tooltip>
       )}
     </Paper>
   );

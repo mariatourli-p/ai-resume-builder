@@ -1,4 +1,4 @@
-import { AIProviderError, type AIProvider } from "./types";
+import { AIProviderError, type AIProvider, type GenerateParams } from "./types";
 
 /**
  * Minimal typings for Chrome's built-in Prompt API (`LanguageModel`),
@@ -67,7 +67,6 @@ const getLanguageModel = (): LanguageModelApi | undefined =>
  */
 export const getBrowserAIAvailability = async (): Promise<BrowserAIStatus> => {
   const languageModel = getLanguageModel();
-  console.log("🚀 ~  ~ languageModel:", languageModel);
   if (!languageModel) return "unsupported_browser";
 
   try {
@@ -198,9 +197,45 @@ const readStream = async (
   }
 };
 
+/**
+ * Forgets the ready session of a prompt, so the next request creates a new
+ * one. Used after a failure: a session Chrome has dropped (e.g. after its AI
+ * process restarted) would make every later request with it fail.
+ */
+const discardBaseSession = (prompt: string) => {
+  const base = baseSessions.get(prompt);
+  baseSessions.delete(prompt);
+  base?.then((session) => session.destroy()).catch(() => undefined);
+};
+
+/** Runs one request on a clone of the prompt's ready session. */
+const runRequest = async (
+  languageModel: LanguageModelApi,
+  { prompt, text, onChunk, choices, responseSchema }: GenerateParams,
+): Promise<string> => {
+  let session: LanguageModelSession | undefined;
+  try {
+    const base = await getBaseSession(languageModel, prompt);
+    session = await base.clone();
+
+    const responseConstraint = choices
+      ? { type: "string", enum: choices }
+      : responseSchema;
+    if (responseConstraint) {
+      return await session.prompt(text, { responseConstraint });
+    }
+
+    return onChunk
+      ? await readStream(session.promptStreaming(text), onChunk)
+      : await session.prompt(text);
+  } finally {
+    session?.destroy();
+  }
+};
+
 /** On-device model via Chrome's Prompt API. Free and needs no API key. */
 export const browserProvider: AIProvider = {
-  generate: async ({ prompt, text, onChunk, choices, responseSchema }) => {
+  generate: async (params) => {
     const languageModel = getLanguageModel();
 
     if (!languageModel) {
@@ -210,32 +245,37 @@ export const browserProvider: AIProvider = {
       );
     }
 
-    let session: LanguageModelSession | undefined;
-    try {
-      const base = await getBaseSession(languageModel, prompt);
-      session = await base.clone();
+    // Whether text already reached the field, which a retry would rewrite
+    let hasOutput = false;
+    const onChunk =
+      params.onChunk &&
+      ((textSoFar: string) => {
+        hasOutput = true;
+        params.onChunk?.(textSoFar);
+      });
 
-      const responseConstraint = choices
-        ? { type: "string", enum: choices }
-        : responseSchema;
-      if (responseConstraint) {
-        return await session.prompt(text, { responseConstraint });
+    for (let attempt = 1; ; attempt++) {
+      try {
+        return await runRequest(languageModel, { ...params, onChunk });
+      } catch (error) {
+        if (error instanceof AIProviderError) throw error;
+
+        discardBaseSession(params.prompt);
+        // One retry on a fresh session fixes a session Chrome has dropped
+        if (attempt === 1 && !hasOutput) continue;
+
+        if (import.meta.env.DEV) {
+          console.error("[AI] Request failed:", error);
+        }
+        const isUnsupported =
+          error instanceof DOMException && error.name === "NotSupportedError";
+        throw new AIProviderError(
+          isUnsupported ? "unsupported" : "request_failed",
+          error instanceof Error
+            ? error.message
+            : "Built-in AI request failed.",
+        );
       }
-
-      return onChunk
-        ? await readStream(session.promptStreaming(text), onChunk)
-        : await session.prompt(text);
-    } catch (error) {
-      if (error instanceof AIProviderError) throw error;
-
-      const isUnsupported =
-        error instanceof DOMException && error.name === "NotSupportedError";
-      throw new AIProviderError(
-        isUnsupported ? "unsupported" : "request_failed",
-        error instanceof Error ? error.message : "Built-in AI request failed.",
-      );
-    } finally {
-      session?.destroy();
     }
   },
 };

@@ -58,7 +58,6 @@ export const resolveJobTitle = async (
     text: trimmed,
     responseSchema: JOB_TITLE_RESPONSE_SCHEMA,
   });
-  console.log("🚀 ~ resolveJobTitle ~ reply:", reply, resolved);
 
   const jobTitle = parseReply(reply, trimmed);
 

@@ -36,9 +36,8 @@ export const HeaderRightSide = ({
           color: themeConfig.colors.sidebar.textMuted,
         }}
       >
-        {isDefaultState
-          ? enTokens.export.save_draft
-          : enTokens.export.draft_saved}
+        {/* Every change is saved automatically - nothing to show when empty */}
+        {!isDefaultState && enTokens.export.draft_saved}
       </Typography>
 
       <IconButton size="small" onClick={onRefresh}>
@@ -48,23 +47,6 @@ export const HeaderRightSide = ({
       <PopOverButton>
         <SettingsView />
       </PopOverButton>
-
-      <Button
-        variant="outlined"
-        size="small"
-        sx={{
-          textTransform: "none",
-          fontWeight: 600,
-          borderColor: themeConfig.colors.sidebar.border,
-          color: accentColor,
-          "& .Mui-selected": {
-            backgroundColor: PALETTE_MAP[accentColor]?.light,
-          },
-          borderRadius: themeConfig.borderRadius[8],
-        }}
-      >
-        {enTokens.export.save_draft}
-      </Button>
 
       <Button
         onClick={onExport}

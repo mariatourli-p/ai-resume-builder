@@ -11,7 +11,6 @@ const PAGE_OVERFLOW_TOLERANCE_MM = 1;
 
 export const ResumePreviewView = () => {
   const resume = useAppSelector((state) => state.resume);
-  console.log("🚀 ~ ResumePreviewView ~ resume:", resume);
   /**
    * The preview updates at low priority, so typing in the forms never waits
    * for the whole resume to re-render

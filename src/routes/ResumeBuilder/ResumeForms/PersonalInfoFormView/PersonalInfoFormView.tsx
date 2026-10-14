@@ -6,7 +6,7 @@ import {
 import { shallowEqual, usePersonalInfoSelector } from "@/redux/selectors";
 import { useAppDispatch } from "@/redux/store";
 import { useAI } from "@hooks/useAI";
-import { useRequireAIProvider } from "@hooks/useRequireAIProvider";
+import { useEnsureAIAvailable } from "@hooks/useEnsureAIAvailable";
 import { resizePhoto } from "@/utils/resizePhoto";
 import { useCallback } from "react";
 
@@ -22,7 +22,7 @@ import { useCallback } from "react";
  *   points to
  * - Editing or deleting the title keeps the summary; only Smart Rewrite
  *   replaces it, and a failed rewrite brings the previous summary back
- * - If this browser can't run the AI, {@link useRequireAIProvider} explains why
+ * - If this browser can't run the AI, {@link useEnsureAIAvailable} explains why
  */
 export const PersonalInfoFormView = () => {
   const dispatch = useAppDispatch();
@@ -41,7 +41,7 @@ export const PersonalInfoFormView = () => {
    * Checked before every AI request: shows why the AI can't run in this
    * browser (e.g. not Chrome) instead of failing silently
    */
-  const { requireAIProvider } = useRequireAIProvider();
+  const { ensureAIAvailable } = useEnsureAIAvailable();
 
   /**
    * Writes the summary to Redux (and so to the field and the preview).
@@ -126,7 +126,7 @@ export const PersonalInfoFormView = () => {
    *    without writing a new one
    */
   const onSmartRewrite = useCallback(async () => {
-    if (!requireAIProvider()) return;
+    if (!ensureAIAvailable()) return;
 
     const title = data.professionalTitle.trim();
     const previous = data.professionalSummary;
@@ -147,7 +147,7 @@ export const PersonalInfoFormView = () => {
     );
     // Rejected or failed: bring back the summary from before the click
     updateSummary(improved || previous);
-  }, [requireAIProvider, data, improve, updateSummary]);
+  }, [ensureAIAvailable, data, improve, updateSummary]);
 
   return (
     <PersonalInfoForm

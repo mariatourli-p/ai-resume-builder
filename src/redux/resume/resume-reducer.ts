@@ -28,7 +28,26 @@ export type WorkExperienceEntry = {
   endDate: string;
   location: string;
   achievements: string;
+  /**
+   * `true` while the achievements are the AI's bullets, unedited. Saved with
+   * the resume, so after a reload they are still not sent back to the AI as
+   * the user's notes. Missing in older saves, which count as the user's text.
+   */
+  isAIWritten?: boolean;
+  /**
+   * The role title the achievements were written for, by the user or the AI.
+   * When the role changes, the old text is about another role, so it isn't
+   * sent to the AI. `""` means they were written before any title; missing
+   * in older saves, where the role is unknown.
+   */
+  achievementsRole?: string;
 };
+
+/** Text fields of an experience card, which the user edits */
+export type ExperienceField = Exclude<
+  keyof WorkExperienceEntry,
+  "id" | "isAIWritten" | "achievementsRole"
+>;
 
 export type EducationEntry = {
   id: string;
@@ -132,13 +151,45 @@ const resumeSlice = createSlice({
       action: PayloadAction<{
         section: ExperienceSection;
         id: string;
-        field: keyof Omit<WorkExperienceEntry, "id">;
+        field: ExperienceField;
         value: string;
       }>,
     ) {
       const { section, id, field, value } = action.payload;
       const entry = state[section].find((e) => e.id === id);
-      if (entry) entry[field] = value;
+      if (!entry) return;
+      entry[field] = value;
+      /**
+       * Once edited, the AI's bullets count as the user's own text, written
+       * for the role the card has now
+       */
+      if (field === "achievements") {
+        entry.isAIWritten = false;
+        entry.achievementsRole = entry.roleTitle.trim();
+      }
+    },
+    /**
+     * Replaces the achievements from the AI flow: the streamed and final
+     * bullets (`isAIWritten: true`, for the role they were written for), or
+     * the text from before the click, with its own flag and role, when the
+     * request fails.
+     */
+    updateAchievements(
+      state,
+      action: PayloadAction<{
+        section: ExperienceSection;
+        id: string;
+        value: string;
+        isAIWritten: boolean;
+        role?: string;
+      }>,
+    ) {
+      const { section, id, value, isAIWritten, role } = action.payload;
+      const entry = state[section].find((e) => e.id === id);
+      if (!entry) return;
+      entry.achievements = value;
+      entry.isAIWritten = isAIWritten;
+      entry.achievementsRole = role;
     },
     removeExperience(
       state,
@@ -218,6 +269,7 @@ export const {
   removeSkill,
   addExperience,
   updateExperienceField,
+  updateAchievements,
   removeExperience,
   addEducation,
   updateEducationField,

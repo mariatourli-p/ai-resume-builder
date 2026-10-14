@@ -4,17 +4,11 @@ import {
   IconExperience,
   IconEducation,
   IconSkills,
-  IconProjects,
   IconAI,
   IconDownload,
   IconSettings,
   IconAdd,
-  IconUndo,
-  IconSaved,
   IconDelete,
-  IconError,
-  IconEmail,
-  IconLocation,
   IconTemplate,
 } from "./index";
 
@@ -45,7 +39,6 @@ const sectionIcons: IconEntry[] = [
   { name: "IconExperience", component: IconExperience },
   { name: "IconEducation", component: IconEducation },
   { name: "IconSkills", component: IconSkills },
-  { name: "IconProjects", component: IconProjects },
 ];
 
 const actionIcons: IconEntry[] = [
@@ -53,16 +46,8 @@ const actionIcons: IconEntry[] = [
   { name: "IconDownload", component: IconDownload },
   { name: "IconSettings", component: IconSettings },
   { name: "IconAdd", component: IconAdd },
-  { name: "IconUndo", component: IconUndo },
-  { name: "IconSaved", component: IconSaved },
   { name: "IconDelete", component: IconDelete },
-  { name: "IconError", component: IconError },
   { name: "IconTemplate", component: IconTemplate },
-];
-
-const contactIcons: IconEntry[] = [
-  { name: "IconEmail", component: IconEmail },
-  { name: "IconLocation", component: IconLocation },
 ];
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -180,12 +165,6 @@ export const AllIcons: StoryObj<StoryArgs> = {
         size={size}
         className={className}
       />
-      <Section
-        title="Contact icons"
-        icons={contactIcons}
-        size={size}
-        className={className}
-      />
     </div>
   ),
 };
@@ -210,16 +189,6 @@ export const ActionIcons: StoryObj<StoryArgs> = {
   ),
 };
 
-export const ContactIcons: StoryObj<StoryArgs> = {
-  args: { size: 20 },
-  argTypes: {
-    size: { control: { type: "range", min: 12, max: 48, step: 2 } },
-  },
-  render: ({ size, className }) => (
-    <IconGrid icons={contactIcons} size={size} className={className} />
-  ),
-};
-
 export const Sizes: StoryObj = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -234,7 +203,6 @@ export const Sizes: StoryObj = {
           <IconPersonal size={size} />
           <IconAI size={size} />
           <IconDownload size={size} />
-          <IconEmail size={size} />
           <IconDelete size={size} />
         </div>
       ))}

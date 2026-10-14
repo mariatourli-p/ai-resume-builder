@@ -7,34 +7,34 @@ export const PALETTE_MAP: Record<
   string,
   { main: string; light: string; dark: string; contrastText: string }
 > = {
-  [palette.indigo.primary]: {
-    main: palette.indigo.primary,
-    light: "#eef2ff",
-    dark: "#4338ca",
+  [palette.navy.primary]: {
+    main: palette.navy.primary,
+    light: "#eef2f7",
+    dark: "#152a45",
     contrastText: "#ffffff",
   },
-  [palette.emerald.primary]: {
-    main: palette.emerald.primary,
-    light: "#ecfdf5",
-    dark: "#047857",
+  [palette.charcoal.primary]: {
+    main: palette.charcoal.primary,
+    light: "#f3f4f6",
+    dark: "#1f2937",
     contrastText: "#ffffff",
   },
-  [palette.amber.primary]: {
-    main: palette.amber.primary,
-    light: "#fffbeb",
-    dark: "#b45309",
+  [palette.forest.primary]: {
+    main: palette.forest.primary,
+    light: "#edf4f1",
+    dark: "#22453b",
     contrastText: "#ffffff",
   },
-  [palette.rose.primary]: {
-    main: palette.rose.primary,
-    light: "#fff1f2",
-    dark: "#be123c",
+  [palette.burgundy.primary]: {
+    main: palette.burgundy.primary,
+    light: "#f8eef0",
+    dark: "#5c2029",
     contrastText: "#ffffff",
   },
-  [palette.slate.primary]: {
-    main: palette.slate.primary,
-    light: "#f1f5f9",
-    dark: "#1e293b",
+  [palette.teal.primary]: {
+    main: palette.teal.primary,
+    light: "#ecf4f6",
+    dark: "#16464f",
     contrastText: "#ffffff",
   },
 };
@@ -42,7 +42,7 @@ export const PALETTE_MAP: Record<
 export const createMuiTheme = (accentColor: string) =>
   createTheme({
     palette: {
-      primary: PALETTE_MAP[accentColor] ?? PALETTE_MAP[palette.indigo.primary],
+      primary: PALETTE_MAP[accentColor] ?? PALETTE_MAP[palette.navy.primary],
     },
     typography: {
       fontFamily: themeConfig.fontFamily.sans.join(", "),

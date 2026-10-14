@@ -22,7 +22,6 @@ const SECTIONS = {
         professionalSummary: {
           label: "Professional Summary",
           placeholder: "Tell your story...",
-          aiButton: "Rewrite with AI",
           hint: "Use 2–3 impact sentences.",
         },
       },
@@ -116,37 +115,24 @@ export const enTokens = {
     builder: "Builder",
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
-    projects: "Projects",
-  },
-  nav: {
-    settings: "Settings",
-    newResume: "New Resume",
-    download: "Download PDF",
   },
   sections: SECTIONS.sections,
   ai: {
-    improve: "✨ Improve with AI",
-    suggest: "✨ Suggest skills with AI",
-    loading: "Improving...",
+    suggest: "Suggest skills",
+    suggestFor: 'Suggest skills for "{title}"',
+    suggestNeedsTitle: "Add your professional title in Personal Info first",
     suggesting: "Suggesting skills...",
+    suggestingFor: 'Suggesting skills for "{title}"...',
     generateAchievements: "Generate Achievements",
     generating: "Generating...",
     rewriting: "Rewriting...",
     smartRewrite: "Smart Rewrite",
-    undo: "Undo",
   },
   settings: {
-    title: "Settings",
     aiTitle: "AI Assistant",
     aiFooter:
       "Free for everyone. The AI runs inside Chrome on your computer, so your resume is never sent to an AI service.",
-    save: "Save",
-    refresh: "Refresh",
     templates: "Templates",
-    styles: "Styles",
-    optimize_all: "Optimize All",
-    optimize_resume: "Optimize Resume",
-    optimizing: "Optimizing...",
   },
   aiAssistant: {
     label: "Built-in browser AI",
@@ -176,20 +162,10 @@ export const enTokens = {
       unsupported: "AI not supported",
     },
   },
-  errors: {
-    emptyField: "Field is empty",
-    apiError: "Something went wrong. Please try again.",
-    timeout: "Request timed out. Please try again.",
-  },
   export: {
     export_pdf: "Export PDF",
-    save_draft: "Save Draft",
-    draft_saved: "Draft saved in live memory",
+    draft_saved: "Saved in this browser",
   },
-  confirmations: {
-    newResume: "This will clear everything. Are you sure?",
-  },
-  personal: {},
   aiErrors: {
     gotIt: "Got it",
     unsupported: {
