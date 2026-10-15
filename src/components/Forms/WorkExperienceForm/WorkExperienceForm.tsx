@@ -173,7 +173,7 @@ const WorkExperienceEntryCard = memo(
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
             gap: 2,
             mb: 2,
           }}
@@ -196,7 +196,7 @@ const WorkExperienceEntryCard = memo(
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
             gap: 2,
             mb: 2,
           }}
@@ -228,7 +228,7 @@ const WorkExperienceEntryCard = memo(
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
             alignItems: "center",
             gap: 2,
             mb: 2,

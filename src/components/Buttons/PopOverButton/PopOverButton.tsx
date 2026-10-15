@@ -28,6 +28,8 @@ export const PopOverButton = ({ children }: PopOverButtonProps) => {
           paper: {
             sx: {
               width: 340,
+              // Leaves a margin on phones narrower than the popover
+              maxWidth: "calc(100vw - 32px)",
               borderRadius: 3,
               boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
               mt: 1,

@@ -16,6 +16,10 @@ import { useState } from "react";
 
 export type SectionsBarViewProps = {
   sx?: SxProps;
+  /** On mobile the drawer is closed until the header's menu button opens it */
+  isMobile?: boolean;
+  open?: boolean;
+  onClose?: () => void;
 };
 /**
  * SectionsBarView manages all state for the resume builder's side navigation drawer.
@@ -27,7 +31,12 @@ export type SectionsBarViewProps = {
  * @example
  * <SectionsBarView />
  */
-export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
+export const SectionsBarView = ({
+  sx,
+  isMobile,
+  open,
+  onClose,
+}: SectionsBarViewProps) => {
   const { personalInfo, workExperience, volunteering, education, courses } =
     enTokens.sections;
 
@@ -62,6 +71,8 @@ export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
   const handleSectionClick = (title: string) => {
     setActiveSection(title);
     scrollTo(title);
+    // On mobile the drawer covers the forms, so it closes to show the section
+    if (isMobile) onClose?.();
   };
 
   return (
@@ -72,6 +83,9 @@ export const SectionsBarView = ({ sx }: SectionsBarViewProps) => {
       onSectionClick={handleSectionClick}
       activeTemplate={activeTemplate}
       onTemplateClick={handleTemplateClick}
+      isMobile={isMobile}
+      open={open}
+      onClose={onClose}
       sx={sx}
     />
   );

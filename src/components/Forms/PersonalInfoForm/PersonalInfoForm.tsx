@@ -162,7 +162,7 @@ export const PersonalInfoForm = ({
 
       {/* Row 1 */}
       <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, mb: 2 }}
+        sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2, mb: 2 }}
       >
         <TextField
           label="FULL NAME"
@@ -181,7 +181,7 @@ export const PersonalInfoForm = ({
 
       {/* Row 2 */}
       <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, mb: 2 }}
+        sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2, mb: 2 }}
       >
         <TextField
           label="EMAIL ADDRESS"
@@ -202,7 +202,7 @@ export const PersonalInfoForm = ({
 
       {/* Row 3 */}
       <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, mb: 2 }}
+        sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2, mb: 2 }}
       >
         <TextField
           label="LOCATION"

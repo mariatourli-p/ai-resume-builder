@@ -12,6 +12,7 @@ import {
   RefreshCw,
   HandHeart,
   Presentation,
+  Menu,
 } from "lucide-react";
 
 const ICON_SIZE = 20;
@@ -74,4 +75,8 @@ export const IconTemplate = ({ size = ICON_SIZE, ...props }: IconProps) => (
 
 export const IconRefresh = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <RefreshCw size={size} {...props} />
+);
+
+export const IconMenu = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Menu size={size} {...props} />
 );

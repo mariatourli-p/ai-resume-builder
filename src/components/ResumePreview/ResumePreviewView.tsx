@@ -9,7 +9,17 @@ import { ResumePreview } from "./ResumePreview";
 /** Content below the page bottom that still doesn't start a new PDF page */
 const PAGE_OVERFLOW_TOLERANCE_MM = 1;
 
-export const ResumePreviewView = () => {
+export type ResumePreviewViewProps = {
+  /**
+   * Phones have no room for the preview, so it is rendered off screen. It
+   * still has to be in the page, because Export PDF captures it.
+   */
+  offscreen?: boolean;
+};
+
+export const ResumePreviewView = ({
+  offscreen = false,
+}: ResumePreviewViewProps) => {
   const resume = useAppSelector((state) => state.resume);
   /**
    * The preview updates at low priority, so typing in the forms never waits
@@ -55,6 +65,8 @@ export const ResumePreviewView = () => {
         onclone: (_document, clone) => {
           clone.style.width = "210mm";
           clone.style.flexShrink = "0";
+          // The off-screen preview (mobile) moves into view only in the copy
+          if (clone.parentElement) clone.parentElement.style.left = "0";
         },
       });
 
@@ -90,6 +102,38 @@ export const ResumePreviewView = () => {
     });
   }, [registerExport, personalInfo.fullName]);
 
+  const preview = (
+    <ResumePreview
+      ref={previewRef}
+      personalInfo={personalInfo}
+      workExperience={workExperience}
+      volunteering={volunteering}
+      education={education}
+      courses={courses}
+      skills={skills}
+      accentColor={accentColor}
+      fontFamily={fontFamily.join(", ")}
+    />
+  );
+
+  if (offscreen) {
+    return (
+      <Box
+        aria-hidden
+        inert
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: "-10000px",
+          width: "210mm",
+          pointerEvents: "none",
+        }}
+      >
+        {preview}
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -109,17 +153,7 @@ export const ResumePreviewView = () => {
         "&::-webkit-scrollbar": { display: "none" },
       }}
     >
-      <ResumePreview
-        ref={previewRef}
-        personalInfo={personalInfo}
-        workExperience={workExperience}
-        volunteering={volunteering}
-        education={education}
-        courses={courses}
-        skills={skills}
-        accentColor={accentColor}
-        fontFamily={fontFamily.join(", ")}
-      />
+      {preview}
     </Box>
   );
 };

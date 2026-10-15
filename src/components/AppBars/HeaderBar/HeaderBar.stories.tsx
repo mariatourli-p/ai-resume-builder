@@ -33,7 +33,6 @@ export const Default: Story = {
         onTabChange={setActiveTab}
         onRefresh={() => {}}
         onExport={() => {}}
-        isDefaultState={false}
         aiStatus={{
           label: "AI ready",
           tooltip: "Ready - nothing leaves your device.",
@@ -55,7 +54,6 @@ export const AnalysisTab: Story = {
         onTabChange={setActiveTab}
         onRefresh={() => {}}
         onExport={() => {}}
-        isDefaultState={false}
         aiStatus={{
           label: "AI not supported",
           tooltip:

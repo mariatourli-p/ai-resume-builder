@@ -1,6 +1,5 @@
 import { HeaderBar } from "@/components/AppBars/HeaderBar/HeaderBar";
 import { persistor, resetAll, useAppDispatch } from "@/redux/store";
-import { useIsDefaultState } from "@hooks/useIsDefaultState";
 import type { SxProps } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useAIStatusBadge } from "../AISettings/useAIStatusBadge";
@@ -10,6 +9,8 @@ export type Tab = "builder" | "analysis";
 
 export type HeaderBarViewProps = {
   sx?: SxProps;
+  /** Opens the sections drawer; passed only on mobile, where the drawer is hidden */
+  onMenuClick?: () => void;
 };
 
 /**
@@ -22,10 +23,9 @@ export type HeaderBarViewProps = {
  * @example
  * <HeaderBar />
  */
-export const HeaderBarView = () => {
+export const HeaderBarView = ({ onMenuClick }: HeaderBarViewProps) => {
   const [activeTab, setActiveTab] = useState<Tab>("builder");
   const dispatch = useAppDispatch();
-  const isDefault = useIsDefaultState();
   const { triggerExport } = useExportContext();
   const aiStatus = useAIStatusBadge();
   const onRefresh = useCallback(async () => {
@@ -42,9 +42,9 @@ export const HeaderBarView = () => {
     <HeaderBar
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      onMenuClick={onMenuClick}
       onRefresh={onRefresh}
       onExport={onExport}
-      isDefaultState={isDefault}
       aiStatus={aiStatus}
     />
   );
