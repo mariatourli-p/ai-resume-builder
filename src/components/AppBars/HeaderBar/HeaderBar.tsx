@@ -13,14 +13,14 @@ export type HeaderBarProps = HeaderLeftSideProps & HeaderRightSideProps;
 /**
  * HeaderBar is the pure UI component for the application's top navigation bar.
  *
- * Renders the CareerFlow AI logo, Builder/Analysis tab switcher, autosave status,
- * action icon buttons (refresh, history, settings), a settings popover placeholder,
- * and the Save Draft / Export PDF action buttons.
+ * Renders the app name, Builder/Analysis tab switcher, the AI status,
+ * the refresh and settings buttons and the Export PDF button.
  *
  * All state is managed externally and passed in as props - this component is purely presentational.
  *
  * @param activeTab - The currently selected tab ("builder" or "analysis").
  * @param onTabChange - Callback fired when the user switches tabs.
+ * @param onMenuClick - When set, shows a menu button that opens the sections drawer (mobile).
  *
  * @example
  * <HeaderBar
@@ -32,8 +32,8 @@ export type HeaderBarProps = HeaderLeftSideProps & HeaderRightSideProps;
 export const HeaderBar = ({
   activeTab,
   onTabChange,
+  onMenuClick,
   onRefresh,
-  isDefaultState,
   onExport,
   aiStatus,
 }: HeaderBarProps) => {
@@ -47,12 +47,22 @@ export const HeaderBar = ({
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
-        <HeaderLeftSide activeTab={activeTab} onTabChange={onTabChange} />
+      <Toolbar
+        sx={{
+          justifyContent: "space-between",
+          gap: { xs: 1, sm: 2 },
+          // MUI shrinks the toolbar on phones, but the page is laid out for APP_BAR_HEIGHT
+          minHeight: 64,
+        }}
+      >
+        <HeaderLeftSide
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          onMenuClick={onMenuClick}
+        />
         <HeaderRightSide
           onRefresh={onRefresh}
           onExport={onExport}
-          isDefaultState={isDefaultState}
           aiStatus={aiStatus}
         />
       </Toolbar>

@@ -111,10 +111,11 @@ const SECTIONS = {
 
 export const enTokens = {
   app: {
-    title: "CareerFlow",
+    title: "AI Resume Builder",
     builder: "Builder",
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
+    open_menu: "Sections menu",
   },
   sections: SECTIONS.sections,
   ai: {
@@ -164,7 +165,46 @@ export const enTokens = {
   },
   export: {
     export_pdf: "Export PDF",
-    draft_saved: "Saved in this browser",
+  },
+  footer: {
+    copyright: "© {year} AI Resume Builder. All rights reserved.",
+    privacy:
+      "No cookies or tracking. Your resume is saved only in this browser and is never uploaded.",
+    licenses: "Open-source licenses",
+  },
+  licensesDialog: {
+    title: "Open-source licenses",
+    intro:
+      "AI Resume Builder is built with free, open-source software. Their licenses let anyone use them, including in commercial apps, as long as their copyright notices are kept. The full license texts are included with the app.",
+    groups: [
+      {
+        title: "App framework",
+        items: "React, Redux Toolkit, React Router, Zustand",
+        license: "MIT",
+      },
+      {
+        title: "Design and icons",
+        items: "Material UI, Material Icons, Lucide icons",
+        license: "MIT, ISC",
+      },
+      {
+        title: "Fonts",
+        items: "Inter, Literata, JetBrains Mono, Space Grotesk",
+        license: "SIL Open Font License 1.1",
+      },
+      {
+        title: "PDF export",
+        items: "html2canvas, jsPDF",
+        license: "MIT",
+      },
+      {
+        title: "Other small libraries",
+        items: "Day.js, Emotion, DOMPurify and others",
+        license: "MIT, BSD, Apache 2.0",
+      },
+    ],
+    ai: "The AI model (Gemini Nano) is part of Google Chrome and is not shipped with this app. Its use is covered by Google's terms.",
+    close: "Close",
   },
   aiErrors: {
     gotIt: "Got it",

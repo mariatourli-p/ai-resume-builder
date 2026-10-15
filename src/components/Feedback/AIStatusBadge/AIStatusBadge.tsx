@@ -28,11 +28,13 @@ const TONE_COLOR: Record<AIStatusTone, string> = {
  * <AIStatusBadge label="AI ready" tooltip="Ready - nothing leaves your device." tone="success" />
  */
 export const AIStatusBadge = ({ label, tooltip, tone }: AIStatusBadgeProps) => (
-  <Tooltip title={tooltip} arrow>
+  // A tap shows the reason on touch screens, where there is no hover
+  <Tooltip title={tooltip} arrow enterTouchDelay={0} leaveTouchDelay={5000}>
     <Chip
       size="small"
       variant="outlined"
       label={label}
+      aria-label={label}
       icon={
         <Box
           sx={{
@@ -43,7 +45,13 @@ export const AIStatusBadge = ({ label, tooltip, tone }: AIStatusBadgeProps) => (
           }}
         />
       }
-      sx={{ fontWeight: 600, fontSize: 12, "& .MuiChip-icon": { ml: 1 } }}
+      sx={{
+        fontWeight: 600,
+        fontSize: 12,
+        "& .MuiChip-icon": { ml: 1, mr: { xs: 1, sm: "-4px" } },
+        // Phones show only the dot, so the header fits on one line
+        "& .MuiChip-label": { display: { xs: "none", sm: "block" } },
+      }}
     />
   </Tooltip>
 );

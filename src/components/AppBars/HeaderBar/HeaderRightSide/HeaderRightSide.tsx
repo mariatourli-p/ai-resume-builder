@@ -8,19 +8,17 @@ import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { SettingsView } from "@/routes/HeaderBar/SettingsView";
 import { PALETTE_MAP, themeConfig } from "@/theme";
-import { Button, IconButton, Stack, Typography } from "@mui/material";
+import { Button, IconButton, Stack } from "@mui/material";
 
 export type HeaderRightSideProps = {
   onRefresh: () => void;
   onExport: () => void;
-  isDefaultState: boolean;
   /** Whether the built-in AI can run here, shown before the user clicks an AI button */
   aiStatus: AIStatusBadgeProps;
 };
 
 export const HeaderRightSide = ({
   onRefresh,
-  isDefaultState,
   onExport,
   aiStatus,
 }: HeaderRightSideProps) => {
@@ -29,16 +27,6 @@ export const HeaderRightSide = ({
   return (
     <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
       <AIStatusBadge {...aiStatus} />
-
-      <Typography
-        sx={{
-          fontSize: themeConfig.fontSize.xs,
-          color: themeConfig.colors.sidebar.textMuted,
-        }}
-      >
-        {/* Every change is saved automatically - nothing to show when empty */}
-        {!isDefaultState && enTokens.export.draft_saved}
-      </Typography>
 
       <IconButton size="small" onClick={onRefresh}>
         <IconRefresh size={16} color={themeConfig.colors.sidebar.textMuted} />

@@ -13,6 +13,14 @@ const dirname =
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [react()],
+  build: {
+    /**
+     * Writes the licenses of every bundled package (MUI, lucide, the fonts, ...)
+     * to dist/licenses.md. Their licenses ask for the notice to ship with the
+     * app; the footer's LicensesDialog summarizes them.
+     */
+    license: { fileName: "licenses.md" },
+  },
   resolve: {
     alias: {
       "@hooks": path.resolve(__dirname, "./src/hooks"),

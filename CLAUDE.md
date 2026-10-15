@@ -17,6 +17,8 @@ There are no unit tests yet; Vitest runs the Storybook stories in Playwright (`n
 
 - **Components vs views.** `src/components/` holds presentational components: props in, callbacks out, no Redux or AI calls, each with a `*.stories.tsx`. `src/routes/**/*View.tsx` connects them to Redux and the AI.
 - **State.** Redux Toolkit slice in `src/redux/resume/resume-reducer.ts`, persisted to localStorage by redux-persist (key `resume_builder`). Read state with the selector hooks in `src/redux/selectors.ts`. Dialogs are opened with `toggleDialog({ type, message })` and rendered by `src/routes/Dialogs/ErrorDialogView`.
+- **Mobile.** Below the `md` breakpoint `HomePageView` shows only the forms: the sections drawer opens from the header's menu button, and `ResumePreviewView offscreen` renders the preview off screen, because Export PDF captures it with html2canvas (it must stay in the page, never `display: none`). Form field grids use one column on `xs`.
+- **Privacy and licenses.** The app sets no cookies, has no analytics and sends nothing over the network (fonts are self-hosted with `@fontsource`, not loaded from Google), so it needs no cookie banner; `AppFooter` says so. Keep it that way, or the footer text and the need for consent change. `build.license` writes the bundled packages' licenses to `dist/licenses.md` (their licenses ask for the full texts to ship with the app); the footer's `LicensesDialog` summarizes them. Only add packages, fonts and icons with permissive licenses (MIT, ISC, Apache, BSD, OFL).
 - **UI text.** All user-facing strings live in `src/locale/en/en-tokens.ts`. Don't hard-code text in components.
 
 ## AI

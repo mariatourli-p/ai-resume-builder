@@ -154,7 +154,7 @@ export const EducationForm = ({
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
                 gap: 2,
               }}
             >

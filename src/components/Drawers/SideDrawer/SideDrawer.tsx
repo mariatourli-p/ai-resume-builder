@@ -16,6 +16,13 @@ export type SideDrawerProps = {
   onSectionClick: (text: string) => void;
   activeTemplate: string;
   onTemplateClick: (text: string) => void;
+  /**
+   * On mobile the drawer is hidden and slides in over the page when `open`
+   * is true. On desktop it is always shown next to the forms.
+   */
+  isMobile?: boolean;
+  open?: boolean;
+  onClose?: () => void;
   sx?: SxProps;
 };
 
@@ -26,21 +33,27 @@ export const SideDrawer = ({
   onSectionClick,
   activeTemplate,
   onTemplateClick,
+  isMobile = false,
+  open = false,
+  onClose,
   sx,
 }: SideDrawerProps) => {
   const accentColor = useAppSelector((s) => s.resume.accentColor);
 
   return (
     <Drawer
-      variant="permanent"
+      variant={isMobile ? "temporary" : "permanent"}
+      open={isMobile ? open : true}
+      onClose={onClose}
       sx={{
-        width: DRAWER_WIDTH,
+        width: isMobile ? undefined : DRAWER_WIDTH,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: DRAWER_WIDTH,
           boxSizing: "border-box",
+          // Below the header, which stays on top so its menu button can close the drawer
           top: APP_BAR_HEIGHT,
-          height: `calc(100vh - ${APP_BAR_HEIGHT})`,
+          height: `calc(100dvh - ${APP_BAR_HEIGHT})`,
           backgroundColor: themeConfig.colors.sidebar.surface,
           borderRight: `1px solid ${themeConfig.colors.sidebar.border}`,
           overflowY: "auto",

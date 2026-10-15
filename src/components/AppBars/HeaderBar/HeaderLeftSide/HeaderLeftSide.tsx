@@ -1,56 +1,57 @@
-import { IconAI } from "@/assets/Icons";
+import { IconMenu } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { PALETTE_MAP, themeConfig } from "@/theme";
-import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { IconButton, Stack, Tab, Tabs, Typography } from "@mui/material";
 
 export type HeaderLeftSideProps = {
   activeTab: "builder" | "analysis";
   onTabChange: (tab: "builder" | "analysis") => void;
+  /** When set, shows a menu button that opens the sections drawer (mobile) */
+  onMenuClick?: () => void;
 };
 
 export const HeaderLeftSide = ({
   activeTab,
   onTabChange,
+  onMenuClick,
 }: HeaderLeftSideProps) => {
   const accentColor = useAccentColorSelector((s) => s);
 
   return (
-    <Stack direction="row" sx={{ alignItems: "center", gap: 2 }}>
-      {/* Logo */}
-      <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
-        <Box
-          sx={{
-            width: 36,
-            height: 36,
-            borderRadius: themeConfig.borderRadius[8],
-            backgroundColor: accentColor,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-          }}
+    <Stack direction="row" sx={{ alignItems: "center", gap: { xs: 1, sm: 2 } }}>
+      {onMenuClick && (
+        <IconButton
+          size="small"
+          onClick={onMenuClick}
+          aria-label={enTokens.app.open_menu}
+          sx={{ ml: -1 }}
         >
-          <IconAI size={18} />
-        </Box>
-        <Typography
-          sx={{
-            fontWeight: 800,
-            fontSize: themeConfig.fontSize.lg,
-            color: themeConfig.colors.sidebar.cta,
-            fontFamily: themeConfig.fontFamily.display.join(", "),
-          }}
-        >
-          {`${enTokens.app.title}  `}
-          <Box component="span">AI</Box>
-        </Typography>
-      </Stack>
+          <IconMenu size={20} color={themeConfig.colors.sidebar.textBody} />
+        </IconButton>
+      )}
+
+      {/* App name */}
+      <Typography
+        sx={{
+          // Phones keep the room for the Export PDF button
+          display: { xs: "none", sm: "block" },
+          fontWeight: 800,
+          fontSize: themeConfig.fontSize.lg,
+          color: themeConfig.colors.sidebar.cta,
+          fontFamily: themeConfig.fontFamily.display.join(", "),
+          whiteSpace: "nowrap",
+        }}
+      >
+        {enTokens.app.title}
+      </Typography>
 
       {/* Tabs */}
       <Tabs
         value={activeTab}
         onChange={(_, val) => onTabChange(val)}
         sx={{
+          display: { xs: "none", md: "flex" },
           minHeight: "unset",
           "& .MuiTabs-indicator": { display: "none" },
           "& .MuiTab-root": {
