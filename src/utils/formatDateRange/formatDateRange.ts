@@ -3,15 +3,21 @@ import { enTokens } from "@/locale/en/en-tokens";
 /** Saved as the end date while the user still works in the role */
 export const PRESENT = "present";
 
+/**
+ * Created once: `toLocaleDateString` with options builds a new formatter on
+ * every call, which made each key press format every date on the resume slowly
+ */
+const MONTH_FORMAT = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
 /** `"2020-01"` (a month input's value) -> `"Jan 2020"` */
 const formatMonth = (value: string): string => {
   const [year, month] = value.split("-").map(Number);
   if (!year || !month) return value;
-  return new Date(Date.UTC(year, month - 1)).toLocaleDateString("en-US", {
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+  return MONTH_FORMAT.format(new Date(Date.UTC(year, month - 1)));
 };
 
 /**

@@ -55,31 +55,32 @@ const toBulletLines = (text: string) =>
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-const SectionHeading = ({
-  title,
-  accentColor,
-}: {
-  title: string;
-  accentColor: string;
-}) => (
-  <Box sx={{ mb: 1 }}>
-    <Typography
-      sx={{
-        fontSize: FONT_SIZE.heading,
-        fontWeight: 700,
-        letterSpacing: "0.12em",
-        textTransform: "uppercase",
-        color: accentColor,
-        mb: 0.5,
-      }}
-    >
-      {title}
-    </Typography>
-    <Divider sx={{ borderColor: accentColor, borderWidth: 1.5 }} />
-  </Box>
+/**
+ * The parts below are memoized: Redux keeps the same objects for entries
+ * that didn't change, so a key press re-renders only the entry being edited
+ * instead of the whole page.
+ */
+const SectionHeading = memo(
+  ({ title, accentColor }: { title: string; accentColor: string }) => (
+    <Box sx={{ mb: 1 }}>
+      <Typography
+        sx={{
+          fontSize: FONT_SIZE.heading,
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: accentColor,
+          mb: 0.5,
+        }}
+      >
+        {title}
+      </Typography>
+      <Divider sx={{ borderColor: accentColor, borderWidth: 1.5 }} />
+    </Box>
+  ),
 );
 
-const WorkEntryItem = ({ entry }: { entry: WorkExperienceEntry }) => (
+const WorkEntryItem = memo(({ entry }: { entry: WorkExperienceEntry }) => (
   <Box sx={{ mb: 1.5 }}>
     <Box
       sx={{
@@ -129,9 +130,9 @@ const WorkEntryItem = ({ entry }: { entry: WorkExperienceEntry }) => (
       </Box>
     )}
   </Box>
-);
+));
 
-const EducationEntryItem = ({ entry }: { entry: EducationEntry }) => (
+const EducationEntryItem = memo(({ entry }: { entry: EducationEntry }) => (
   <Box sx={{ mb: 1.5 }}>
     <Box
       sx={{
@@ -162,9 +163,9 @@ const EducationEntryItem = ({ entry }: { entry: EducationEntry }) => (
       </Typography>
     </Box>
   </Box>
-);
+));
 
-const CourseEntryItem = ({ entry }: { entry: CourseEntry }) => (
+const CourseEntryItem = memo(({ entry }: { entry: CourseEntry }) => (
   <Box sx={{ mb: 1 }}>
     <Box
       sx={{
@@ -190,7 +191,7 @@ const CourseEntryItem = ({ entry }: { entry: CourseEntry }) => (
       {entry.organizer}
     </Typography>
   </Box>
-);
+));
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 

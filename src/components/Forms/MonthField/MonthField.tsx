@@ -2,6 +2,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
+import { memo } from "react";
 
 /** How a month is saved in the resume, e.g. `2020-03` */
 const MONTH_FORMAT = "YYYY-MM";
@@ -10,8 +11,14 @@ export type MonthFieldProps = {
   label: string;
   /** Month as `YYYY-MM`, or `""` for none */
   value: string;
-  /** Receives the month as `YYYY-MM`, or `""` when cleared */
-  onChange: (value: string) => void;
+  /**
+   * Receives the month as `YYYY-MM` (or `""` when cleared) and the field's
+   * `name`. The name lets one shared callback serve many fields, so the
+   * parent can pass the same function to every card instead of a new one.
+   */
+  onChange: (value: string, name: string) => void;
+  /** Passed back to `onChange`, e.g. the id of the card the field is in */
+  name?: string;
   disabled?: boolean;
   /** Earliest month that can be picked, as `YYYY-MM` */
   minMonth?: string;
@@ -26,6 +33,7 @@ const MonthField = ({
   label,
   value,
   onChange,
+  name = "",
   disabled,
   minMonth,
 }: MonthFieldProps) => (
@@ -41,11 +49,16 @@ const MonthField = ({
       // Work dates end at the current month; the year list stops at this year
       maxDate={dayjs()}
       onChange={(date) =>
-        onChange(date?.isValid() ? date.format(MONTH_FORMAT) : "")
+        onChange(date?.isValid() ? date.format(MONTH_FORMAT) : "", name)
       }
       slotProps={{ textField: { fullWidth: true } }}
     />
   </LocalizationProvider>
 );
 
-export default MonthField;
+/**
+ * Memoized: a date picker is heavy to render, so it skips re-rendering while
+ * the user types in the other fields of the same card. Pass a stable
+ * `onChange` (with `name` instead of a closure per card) for this to work.
+ */
+export default memo(MonthField);

@@ -56,12 +56,14 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
 
 ## Performance
 
-Measured with Playwright: about 5-7 ms of JavaScript per key press, and a main bundle of 639 KB. Keep these patterns:
+Measured with Playwright on a production build with a full resume (5 jobs, 2 volunteering roles, 3 degrees, 4 courses, 20 skills, a photo): about 7-8 ms of JavaScript per key press on desktop and 40-50 ms on a phone (CPU slowed 4x). The main bundle is 658 KB. Keep these patterns:
 
-- `ResumePreview` is memoized and fed through `useDeferredValue` in `ResumePreviewView`, so it never blocks typing.
+- `ResumePreview` is memoized and fed through `useDeferredValue` in `ResumePreviewView`, so it never blocks typing. Its entry items and section headings are memoized too, so a key press re-renders only the entry being edited.
+- On mobile the off-screen preview is mounted only while Export PDF captures it (`flushSync` in the export function), not on every key press.
+- `MonthField` (the MUI date picker) is memoized. Give it the card's id as `name` and a stable `onChange(value, name)` from the view (`onStartDateChange` / `onEndDateChange`). A new function per card makes every key press in the card re-render both pickers. Presentational components don't create callbacks with `useCallback`; the view passes them down.
+- Create `Intl` formatters once at module level (see `formatDateRange`). `toLocaleDateString` with options builds a new formatter on every call.
 - `WorkExperienceEntryCard` is memoized. Callbacks passed to it must be stable: read the latest state with `useAppStore().getState()` rather than closing over `entries`.
 - Heavy libraries that are only needed on demand are loaded with dynamic `import()`. `html2canvas` and `jspdf` load only on PDF export. The MUI date picker (`Forms/MonthField`) loads with `lazy()` after the page.
-- Import single lodash functions (`lodash/isEqual`), never the whole package.
 
 ## Code style
 

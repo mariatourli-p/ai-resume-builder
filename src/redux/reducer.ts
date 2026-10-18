@@ -21,6 +21,4 @@ export const reducer = (
   return appReducer(state, action);
 };
 
-export const initialState = appReducer(undefined, { type: "@@INIT" });
-
 export type RootState = ReturnType<typeof appReducer>;

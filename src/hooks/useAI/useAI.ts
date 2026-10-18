@@ -1,12 +1,12 @@
+import { enTokens } from "@/locale/en/en-tokens";
 import { toggleDialog } from "@/redux/resume/resume-reducer";
 import { useAppDispatch } from "@/redux/store";
 import { AIProviderError, askAI } from "@/services";
-import { enTokens } from "@/locale/en/en-tokens";
 import { AI_PROMPTS } from "@/services/aiPrompts";
+import { findVolunteerArea } from "@/utils/findVolunteerArea";
+import { resolveJobTitle } from "@/utils/resolveJobTitle";
 import { validateAchievementsResult } from "@/utils/validateAchievementsResult";
 import { validateAIResult } from "@/utils/validateAIResult";
-import { resolveJobTitle } from "@/utils/resolveJobTitle";
-import { findVolunteerArea } from "@/utils/findVolunteerArea";
 import { useCallback, useState } from "react";
 
 /** How the result is checked; `"skills"` is parsed and checked by the caller */
@@ -34,10 +34,11 @@ export type ImproveOptions = {
 };
 
 /**
- * What the AI should work on. With `jobTitle`, pass a function to build it
- * from the profession the AI found instead of the user's raw keyword.
+ * What the AI should work on. With `jobTitle` or `volunteerWork`, pass a
+ * function to build it from the profession or area the AI found instead of
+ * the user's raw keyword.
  */
-export type ImproveInput = string | ((jobTitle: string) => string);
+export type ImproveInput = string | ((profession: string) => string);
 
 /**
  * Measures how long each AI step takes. In development the steps are logged
@@ -63,22 +64,36 @@ const createStepTimer = () => {
   };
 };
 
+/**
+ * Runs AI text requests for the form views.
+ *
+ * @returns `improve`, which writes a text with the prompt `promptKey` and
+ * returns it, or `null` after showing a dialog (rejected title or area,
+ * failed check, or AI error); and `isLoading` while a request runs.
+ *
+ * @example
+ * const { improve } = useAI();
+ * const bio = await improve(
+ *   "smartRewrite",
+ *   (profession) => `Job title: ${profession}`,
+ *   "summary",
+ *   { jobTitle: "React", onPartial: updateSummary },
+ * );
+ */
 export const useAI = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
 
   const improve = useCallback(
     async (
-      promptKey: keyof typeof AI_PROMPTS | string,
+      promptKey: keyof typeof AI_PROMPTS,
       input: ImproveInput,
       validatorType: ValidatorType,
       { onPartial, jobTitle, volunteerWork }: ImproveOptions = {},
     ): Promise<string | null> => {
       if (!input) return null;
 
-      const prompt =
-        AI_PROMPTS[promptKey as keyof typeof AI_PROMPTS] ?? promptKey;
-
+      const prompt = AI_PROMPTS[promptKey];
       const timer = createStepTimer();
       setIsLoading(true);
       try {
@@ -130,22 +145,15 @@ export const useAI = () => {
           }),
         );
 
-        let validator: Promise<boolean>;
-
-        switch (validatorType) {
-          case "skills":
-            validator = Promise.resolve(true);
-            break;
-          case "achievements":
-            validator = validateAchievementsResult(result);
-            break;
-          case "summary":
-          default:
-            validator = validateAIResult(result);
-            break;
-        }
-
-        const isValid = await timer.time("check result", validator);
+        // Skills are parsed and checked by the caller, without another AI call
+        const isValid =
+          validatorType === "skills" ||
+          (await timer.time(
+            "check result",
+            validatorType === "achievements"
+              ? validateAchievementsResult(result)
+              : validateAIResult(result),
+          ));
 
         if (!isValid) {
           dispatch(toggleDialog({ type: "moreContext", message: result }));
@@ -159,7 +167,7 @@ export const useAI = () => {
         dispatch(toggleDialog({ type: "aiError", message: code }));
         return null;
       } finally {
-        timer.log(String(promptKey));
+        timer.log(promptKey);
         setIsLoading(false);
       }
     },
