@@ -3,7 +3,8 @@ import { useAppSelector } from "@/redux/store";
 import { useExportContext } from "@/routes/context/ExportProvider/ExportContext";
 import { themeConfig } from "@/theme";
 import { Box } from "@mui/material";
-import { useDeferredValue, useEffect, useRef } from "react";
+import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { ResumePreview } from "./ResumePreview";
 
 /** Content below the page bottom that still doesn't start a new PDF page */
@@ -11,8 +12,9 @@ const PAGE_OVERFLOW_TOLERANCE_MM = 1;
 
 export type ResumePreviewViewProps = {
   /**
-   * Phones have no room for the preview, so it is rendered off screen. It
-   * still has to be in the page, because Export PDF captures it.
+   * Phones have no room for the preview. It is rendered off screen and only
+   * while Export PDF captures it, so typing never spends time on a page
+   * nobody sees.
    */
   offscreen?: boolean;
 };
@@ -41,34 +43,42 @@ export const ResumePreviewView = ({
     ] ?? themeConfig.fontFamily.sans;
   const previewRef = useRef<HTMLDivElement>(null);
   const { registerExport } = useExportContext();
+  const [isCapturing, setIsCapturing] = useState(false);
 
   useEffect(() => {
     registerExport(async () => {
-      const element = previewRef.current;
-      if (!element) return;
-
       // Loaded only when the user exports, to keep the first page load small
       const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
         import("html2canvas"),
         import("jspdf"),
       ]);
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        /**
-         * On screen the page shrinks to fit the preview panel but keeps its
-         * A4 height, so the capture would be taller than A4 and spill onto a
-         * second page. The copy html2canvas renders gets the real A4 width.
-         */
-        onclone: (_document, clone) => {
-          clone.style.width = "210mm";
-          clone.style.flexShrink = "0";
-          // The off-screen preview (mobile) moves into view only in the copy
-          if (clone.parentElement) clone.parentElement.style.left = "0";
-        },
-      });
+      // On phones the preview is mounted now, synchronously, for the capture
+      if (offscreen) flushSync(() => setIsCapturing(true));
+      let canvas: HTMLCanvasElement;
+      try {
+        const element = previewRef.current;
+        if (!element) return;
+        canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          /**
+           * On screen the page shrinks to fit the preview panel but keeps its
+           * A4 height, so the capture would be taller than A4 and spill onto
+           * a second page. The copy html2canvas renders gets the A4 width.
+           */
+          onclone: (_document, clone) => {
+            clone.style.width = "210mm";
+            clone.style.flexShrink = "0";
+            // The off-screen preview (mobile) moves into view only in the copy
+            if (clone.parentElement) clone.parentElement.style.left = "0";
+          },
+        });
+      } finally {
+        // Unmounted again even if the capture fails
+        if (offscreen) setIsCapturing(false);
+      }
 
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
@@ -100,7 +110,7 @@ export const ResumePreviewView = ({
         .replace(/\s+/g, "-");
       pdf.save(name ? `${name}-resume.pdf` : "resume.pdf");
     });
-  }, [registerExport, personalInfo.fullName]);
+  }, [registerExport, personalInfo.fullName, offscreen]);
 
   const preview = (
     <ResumePreview
@@ -129,7 +139,7 @@ export const ResumePreviewView = ({
           pointerEvents: "none",
         }}
       >
-        {preview}
+        {isCapturing && preview}
       </Box>
     );
   }

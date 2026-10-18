@@ -117,6 +117,24 @@ export const WorkExperienceFormView = ({
   );
 
   /**
+   * Saves the month the user picks in a card's start or end date picker.
+   *
+   * When: the user picks or clears a month (passed as `onStartDateChange` /
+   * `onEndDateChange`). The card passes its id as the picker's `name`.
+   *
+   * Why: one stable function for all cards, instead of a new one per card,
+   * lets the memoized date pickers skip re-rendering on every key press.
+   */
+  const updateStartDate = useCallback(
+    (value: string, id: string) => handleChange(id, "startDate", value),
+    [handleChange],
+  );
+  const updateEndDate = useCallback(
+    (value: string, id: string) => handleChange(id, "endDate", value),
+    [handleChange],
+  );
+
+  /**
    * Asks the AI to write the achievements of one card.
    *
    * When: the user clicks Generate Achievements on a card (the button is
@@ -245,6 +263,8 @@ export const WorkExperienceFormView = ({
       onAdd={handleAdd}
       onDelete={handleDelete}
       onChange={handleChange}
+      onStartDateChange={updateStartDate}
+      onEndDateChange={updateEndDate}
       onGenerateAchievements={onGenerateAchievements}
       generatingIds={generatingIds}
       labels={section === "volunteering" ? VOLUNTEERING_LABELS : undefined}

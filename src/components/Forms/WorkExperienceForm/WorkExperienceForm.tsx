@@ -1,9 +1,4 @@
-import {
-  IconAdd,
-  IconAI,
-  IconDelete,
-  IconExperience,
-} from "@/assets/Icons";
+import { IconAdd, IconAI, IconDelete, IconExperience } from "@/assets/Icons";
 import { enTokens } from "@/locale/en/en-tokens";
 import { useAccentColorSelector } from "@/redux/selectors";
 import { PALETTE_MAP } from "@/theme";
@@ -115,6 +110,13 @@ export type WorkExperienceFormProps = {
     field: keyof Omit<WorkExperienceEntry, "id">,
     value: string,
   ) => void;
+  /**
+   * Fired when the user picks a start or end month. Receives the month and
+   * the entry `id`. Must be stable: the date pickers are memoized and would
+   * otherwise re-render on every key press in the card.
+   */
+  onStartDateChange?: (value: string, id: string) => void;
+  onEndDateChange?: (value: string, id: string) => void;
 
   onGenerateAchievements?: (id: string, roleTitle: string) => Promise<void>;
   /** Ids of entries whose achievements are being generated - shows a spinner on their button. */
@@ -129,13 +131,21 @@ export type WorkExperienceFormProps = {
  */
 const MonthField = lazy(() => import("../MonthField/MonthField"));
 
+// Same function every render, so a card without date callbacks stays memoized
+const NOOP = () => {};
+
 const MonthFieldPlaceholder = ({ label }: { label: string }) => (
   <TextField label={label} fullWidth disabled />
 );
 
 type WorkExperienceEntryCardProps = Pick<
   WorkExperienceFormProps,
-  "isAIDisabled" | "onChange" | "onDelete" | "onGenerateAchievements"
+  | "isAIDisabled"
+  | "onChange"
+  | "onStartDateChange"
+  | "onEndDateChange"
+  | "onDelete"
+  | "onGenerateAchievements"
 > & {
   entry: WorkExperienceEntry;
   accentColor: string;
@@ -155,6 +165,8 @@ const WorkExperienceEntryCard = memo(
     isGenerating,
     labels,
     onChange,
+    onStartDateChange = NOOP,
+    onEndDateChange = NOOP,
     onDelete,
     onGenerateAchievements,
   }: WorkExperienceEntryCardProps) => {
@@ -206,8 +218,9 @@ const WorkExperienceEntryCard = memo(
           >
             <MonthField
               label={datesTokens.start}
+              name={entry.id}
               value={entry.startDate}
-              onChange={(value) => onChange?.(entry.id, "startDate", value)}
+              onChange={onStartDateChange}
             />
           </Suspense>
           <Suspense
@@ -219,7 +232,8 @@ const WorkExperienceEntryCard = memo(
               value={isCurrent ? "" : entry.endDate}
               // The role can't end before it started
               minMonth={entry.startDate}
-              onChange={(value) => onChange?.(entry.id, "endDate", value)}
+              name={entry.id}
+              onChange={onEndDateChange}
             />
           </Suspense>
         </Box>
@@ -391,6 +405,8 @@ export const WorkExperienceForm = ({
   onAdd,
   onDelete,
   onChange,
+  onStartDateChange,
+  onEndDateChange,
   onGenerateAchievements,
   generatingIds = [],
   labels = WORK_EXPERIENCE_LABELS,
@@ -447,6 +463,8 @@ export const WorkExperienceForm = ({
             isGenerating={generatingIds.includes(entry.id)}
             labels={labels}
             onChange={onChange}
+            onStartDateChange={onStartDateChange}
+            onEndDateChange={onEndDateChange}
             onDelete={onDelete}
             onGenerateAchievements={onGenerateAchievements}
           />
