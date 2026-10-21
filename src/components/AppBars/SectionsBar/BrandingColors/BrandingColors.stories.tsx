@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BrandingColorsView } from "./BrandingColorsView";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { store } from "@/redux";
 
 const meta: Meta<typeof BrandingColorsView> = {
   title: "Components/SectionsBar/BrandingColors",

@@ -1,10 +1,7 @@
 import { PersonalInfoForm } from "@/components/Forms/PersonalInfoForm";
-import {
-  updatePersonalInfoField,
-  type PersonalInfoData,
-} from "@/redux/resume/resume-reducer";
-import { shallowEqual, usePersonalInfoSelector } from "@/redux/selectors";
-import { useAppDispatch } from "@/redux/store";
+import { updatePersonalInfoField, type PersonalInfoData } from "@/redux/resume";
+import { shallowEqual, usePersonalInfoSelector } from "@/redux";
+import { useAppDispatch } from "@/redux";
 import { useAI } from "@hooks/useAI";
 import { useEnsureAIAvailable } from "@hooks/useEnsureAIAvailable";
 import { resizePhoto } from "@/utils/resizePhoto";

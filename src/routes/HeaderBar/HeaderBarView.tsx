@@ -1,9 +1,9 @@
-import { HeaderBar } from "@/components/AppBars/HeaderBar/HeaderBar";
-import { persistor, resetAll, useAppDispatch } from "@/redux/store";
+import { HeaderBar } from "@/components/AppBars/HeaderBar";
+import { persistor, resetAll, useAppDispatch } from "@/redux";
 import type { SxProps } from "@mui/material";
 import { useCallback, useState } from "react";
-import { useAIStatusBadge } from "../AISettings/useAIStatusBadge";
-import { useExportContext } from "../context/ExportProvider/ExportContext";
+import { useAIStatusBadge } from "../AISettings";
+import { useExportContext } from "../context/ExportProvider";
 
 export type Tab = "builder" | "analysis";
 

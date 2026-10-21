@@ -2,7 +2,7 @@ import { askAI } from "@/services";
 import {
   VOLUNTEER_AREA_PROMPT,
   VOLUNTEER_AREA_RESPONSE_SCHEMA,
-} from "@/services/aiPrompts";
+} from "@/services";
 
 /** Longest area accepted from the AI, to drop rambling replies */
 const MAX_AREA_LENGTH = 80;

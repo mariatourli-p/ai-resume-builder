@@ -1,5 +1,5 @@
-// BrandingColors.constants.ts
-import { themeConfig } from "@/theme/themeConfig";
+// Accent colors users can pick for their resume
+import { themeConfig } from "./themeConfig";
 
 export const BRANDING_PALETTES = [
   { label: "Navy", value: themeConfig.colors.palette.navy.primary },

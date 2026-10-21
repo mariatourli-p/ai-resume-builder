@@ -1,6 +1,6 @@
 import { IconPersonal } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";

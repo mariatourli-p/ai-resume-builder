@@ -7,7 +7,7 @@ import {
   IconCourses,
 } from "@/assets/Icons";
 import { useState } from "react";
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 import { themeConfig } from "@/theme";
 import { SidePanelMenu } from "./SidePanelMenu";
 

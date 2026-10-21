@@ -1,16 +1,12 @@
 import { SkillsForm } from "@/components/Forms/SkillsForm";
-import { enTokens } from "@/locale/en/en-tokens";
-import {
-  addSkill,
-  removeSkill,
-  toggleDialog,
-} from "@/redux/resume/resume-reducer";
+import { enTokens } from "@/locale/en";
+import { addSkill, removeSkill, toggleDialog } from "@/redux/resume";
 import {
   shallowEqual,
   usePersonalInfoSelector,
   useSkillsSelector,
-} from "@/redux/selectors";
-import { useAppDispatch } from "@/redux/store";
+} from "@/redux";
+import { useAppDispatch } from "@/redux";
 import { parseSkillList } from "@/utils/parseSkillList";
 import { useAI } from "@hooks/useAI";
 import { useEnsureAIAvailable } from "@hooks/useEnsureAIAvailable";

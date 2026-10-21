@@ -1,8 +1,8 @@
-import { enTokens } from "@/locale/en/en-tokens";
-import { toggleDialog } from "@/redux/resume/resume-reducer";
-import { useAppDispatch } from "@/redux/store";
+import { enTokens } from "@/locale/en";
+import { toggleDialog } from "@/redux/resume";
+import { useAppDispatch } from "@/redux";
 import { AIProviderError, askAI } from "@/services";
-import { AI_PROMPTS } from "@/services/aiPrompts";
+import { AI_PROMPTS } from "@/services";
 import { findVolunteerArea } from "@/utils/findVolunteerArea";
 import { resolveJobTitle } from "@/utils/resolveJobTitle";
 import { validateAchievementsResult } from "@/utils/validateAchievementsResult";

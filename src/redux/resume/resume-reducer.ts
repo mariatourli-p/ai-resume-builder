@@ -2,7 +2,7 @@
  * Reducer for resume form data.
  * Manages all resume sections: personal info, skills, work experience, and education.
  */
-import { DEFAULT_ACCENT_COLOR } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
+import { DEFAULT_ACCENT_COLOR } from "@/theme";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 // --- Types ---

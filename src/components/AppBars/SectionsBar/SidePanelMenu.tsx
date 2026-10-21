@@ -1,7 +1,7 @@
 import { Box, MenuList } from "@mui/material";
 import type { SxProps } from "node_modules/@mui/material/styles";
 import type { SidePanelItemProps } from "./SidePanelItem";
-import { SidePanelItemView } from "./SidePanelItem/SidePanelItemView";
+import { SidePanelItemView } from "./SidePanelItem";
 
 export type SidePanelMenuProps = {
   items: SidePanelItemProps[];

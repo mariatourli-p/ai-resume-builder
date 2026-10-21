@@ -8,8 +8,8 @@ import type {
   ExperienceSection,
   PersonalInfoData,
   WorkExperienceEntry,
-} from "./resume/resume-reducer";
-import { shallowEqual, useAppSelector } from "./store";
+} from "./resume";
+import { useAppSelector } from "./store";
 
 export const usePersonalInfoSelector = <T>(
   project: (slice: PersonalInfoData) => T,
@@ -42,5 +42,3 @@ export const useAccentColorSelector = <T>(
   project: (slice: string) => T,
   equalityFn?: EqualityFn<T>,
 ) => useAppSelector((s) => project(s.resume.accentColor), equalityFn);
-
-export { shallowEqual };

@@ -1,5 +1,5 @@
 import { askAI, isValidVerdict, VERDICT_CHOICES } from "@/services";
-import { ACHIEVEMENTS_VALIDATION_PROMPT } from "@/services/aiPrompts";
+import { ACHIEVEMENTS_VALIDATION_PROMPT } from "@/services";
 
 /** A bullet line: `- `, `* `, `• ` or `1. ` */
 const BULLET_LINE = /^([-*•–]|\d+[.)])\s+\S/;

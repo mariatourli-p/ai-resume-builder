@@ -1,9 +1,6 @@
 import { themeConfig } from "@/theme";
 import { AppBar, Toolbar } from "@mui/material";
-import {
-  HeaderLeftSide,
-  type HeaderLeftSideProps,
-} from "./HeaderLeftSide/HeaderLeftSide";
+import { HeaderLeftSide, type HeaderLeftSideProps } from "./HeaderLeftSide";
 import { HeaderRightSide, type HeaderRightSideProps } from "./HeaderRightSide";
 
 export const APP_BAR_HEIGHT = "65px";

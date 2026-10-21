@@ -1,8 +1,8 @@
 import { IconAdd, IconAI, IconDelete, IconExperience } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import { PALETTE_MAP } from "@/theme";
-import { themeConfig } from "@/theme/themeConfig";
+import { themeConfig } from "@/theme";
 import {
   Box,
   Button,
@@ -130,7 +130,7 @@ export type WorkExperienceFormProps = {
  * The date picker library is large, so it loads in its own file after the
  * page. Until then, a plain disabled field holds its place.
  */
-const MonthField = lazy(() => import("../MonthField/MonthField"));
+const MonthField = lazy(() => import("../MonthField"));
 
 // Same function every render, so a card without date callbacks stays memoized
 const NOOP = () => {};

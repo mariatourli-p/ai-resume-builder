@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { store } from "@/redux";
 import { SideDrawer } from "./SideDrawer";
 import {
   IconPersonal,
@@ -10,7 +10,7 @@ import {
   IconSkills,
   IconCourses,
 } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 
 const { personalInfo, workExperience, education } = enTokens.sections;
 

@@ -1,9 +1,9 @@
 import { BrowserRouter } from "react-router-dom";
 import { AppView } from "./AppView";
 import { ThemeProvider } from "@mui/material";
-import { createMuiTheme } from "./theme/muiThemeConfig";
-import { AISettingsProvider } from "./routes/AISettings/AISettingsProvider";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { createMuiTheme } from "./theme";
+import { AISettingsProvider } from "./routes/AISettings";
+import { useAccentColorSelector } from "@/redux";
 import { useMemo } from "react";
 
 export const App = () => {

@@ -3,7 +3,7 @@ import {
   WorkExperienceForm,
   type ExperienceLabels,
 } from "@/components/Forms/WorkExperienceForm";
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 import {
   addExperience,
   removeExperience,
@@ -11,9 +11,9 @@ import {
   updateExperienceField,
   type ExperienceField,
   type ExperienceSection,
-} from "@/redux/resume/resume-reducer";
-import { shallowEqual, useExperienceSelector } from "@/redux/selectors";
-import { useAppDispatch, useAppStore } from "@/redux/store";
+} from "@/redux/resume";
+import { shallowEqual, useExperienceSelector } from "@/redux";
+import { useAppDispatch, useAppStore } from "@/redux";
 import { useAI } from "@hooks/useAI";
 import { useEnsureAIAvailable } from "@hooks/useEnsureAIAvailable";
 import { useCallback, useState } from "react";

@@ -2,8 +2,8 @@
 import { Box, Typography, Tooltip } from "@mui/material";
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import CheckIcon from "@mui/icons-material/Check";
-import { enTokens } from "@/locale/en/en-tokens";
-import { BRANDING_PALETTES } from "./constants";
+import { enTokens } from "@/locale/en";
+import { BRANDING_PALETTES } from "@/theme";
 
 export type BrandingColorsProps = {
   activeColor: string;

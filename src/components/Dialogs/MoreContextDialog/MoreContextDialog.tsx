@@ -1,5 +1,5 @@
-import { enTokens } from "@/locale/en/en-tokens";
-import { themeConfig } from "@/theme/themeConfig";
+import { enTokens } from "@/locale/en";
+import { themeConfig } from "@/theme";
 import { AutoFixHighRounded } from "@mui/icons-material";
 import {
   Box,

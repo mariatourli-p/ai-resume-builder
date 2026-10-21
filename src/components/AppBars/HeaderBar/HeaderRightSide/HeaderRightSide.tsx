@@ -4,8 +4,8 @@ import {
   AIStatusBadge,
   type AIStatusBadgeProps,
 } from "@/components/Feedback/AIStatusBadge";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import { SettingsView } from "@/routes/HeaderBar/SettingsView";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import { Button, IconButton, Stack } from "@mui/material";

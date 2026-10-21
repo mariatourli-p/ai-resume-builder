@@ -1,15 +1,15 @@
-import { setAccentColor } from "@/redux/resume/resume-reducer";
-import { useAccentColorSelector } from "@/redux/selectors";
-import { useAppDispatch } from "@/redux/store";
+import { setAccentColor } from "@/redux/resume";
+import { useAccentColorSelector } from "@/redux";
+import { useAppDispatch } from "@/redux";
 import { Box } from "@mui/material";
 import { useCallback } from "react";
 
-import { BRANDING_PALETTES } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
+import { BRANDING_PALETTES } from "@/theme";
 import { SettingsColorPalette } from "@/components/Settings/SettingsColorPalette";
 import { SettingsFooter } from "@/components/Settings/SettingsFooter";
 import { SettingsHeader } from "@/components/Settings/SettingsHeader";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAIStatusPanel } from "@/routes/AISettings/useAIStatusPanel";
+import { enTokens } from "@/locale/en";
+import { useAIStatusPanel } from "@/routes/AISettings";
 
 const t = enTokens.settings;
 

@@ -69,6 +69,7 @@ Measured with Playwright on a production build with a full resume (5 jobs, 2 vol
 ## Code style
 
 - TypeScript, function components, hooks. Match the surrounding code: JSDoc on exported functions, and short comments that explain *why*.
+- Every folder with modules has an `index.ts` barrel (`export * from "./X";` per module; add `export { default }` for `lazy()` targets). Import a folder through its barrel (`@/redux`, `@/routes/AISettings`), never a file inside another folder; inside a folder, import siblings by relative path, not through its own barrel, to avoid import cycles. A provider gets its own folder with its context, provider and hook (`routes/AISettings/AISettingsProvider`).
 - Comments longer than one line use `/** */` blocks, never several `//` lines. Single-line comments use `//` (or `{/* */}` inside JSX).
 - Functions inside views get a `/** */` comment that says when they run and why they exist.
 - Name functions `setX` only when they are real `useState` setters. Other helpers are named by what they do (`updateSummary`, `findEntry`).

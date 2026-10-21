@@ -6,10 +6,10 @@ import {
   IconSkills,
   IconVolunteering,
 } from "@/assets/Icons";
-import { SideDrawer } from "@/components/Drawers/SideDrawer/SideDrawer";
-import { enTokens } from "@/locale/en/en-tokens";
-import { setActiveTemplate } from "@/redux/resume/resume-reducer";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { SideDrawer } from "@/components/Drawers/SideDrawer";
+import { enTokens } from "@/locale/en";
+import { setActiveTemplate } from "@/redux/resume";
+import { useAppDispatch, useAppSelector } from "@/redux";
 import { useScrollStore } from "@/stores/useScrollStore";
 import type { SxProps } from "@mui/material";
 import { useState } from "react";

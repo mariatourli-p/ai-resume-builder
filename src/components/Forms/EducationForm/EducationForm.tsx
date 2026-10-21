@@ -1,6 +1,6 @@
 import { IconAdd, IconDelete, IconEducation } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import {
   Box,
   Button,

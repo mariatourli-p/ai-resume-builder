@@ -1,8 +1,8 @@
 import { IconAI, IconSkills } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import { getContrastText, PALETTE_MAP } from "@/theme";
-import { themeConfig } from "@/theme/themeConfig";
+import { themeConfig } from "@/theme";
 import {
   Box,
   Button,

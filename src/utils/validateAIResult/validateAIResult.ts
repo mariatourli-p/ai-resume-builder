@@ -1,5 +1,5 @@
 import { askAI, isValidVerdict, VERDICT_CHOICES } from "@/services";
-import { AI_PROMPTS } from "@/services/aiPrompts";
+import { AI_PROMPTS } from "@/services";
 
 /**
  * Validates the response from an AI call to ensure it is a professional bio/summary.

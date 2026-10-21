@@ -3,8 +3,8 @@ import type {
   EducationEntry,
   PersonalInfoData,
   WorkExperienceEntry,
-} from "@/redux/resume/resume-reducer";
-import { enTokens } from "@/locale/en/en-tokens";
+} from "@/redux/resume";
+import { enTokens } from "@/locale/en";
 import { formatDateRange } from "@/utils/formatDateRange";
 import { themeConfig } from "@/theme";
 import { Box, Divider, Typography } from "@mui/material";
