@@ -6,7 +6,10 @@ import { AIProviderError, type AIProvider, type GenerateParams } from "./types";
  * @see https://developer.chrome.com/docs/ai/prompt-api
  */
 export type BrowserAIAvailability =
-  "unavailable" | "downloadable" | "downloading" | "available";
+  | "unavailable"
+  | "downloadable"
+  | "downloading"
+  | "available";
 
 /**
  * What the app knows about the built-in AI: Chrome's own answer, or
