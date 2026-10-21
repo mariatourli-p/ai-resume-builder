@@ -13,8 +13,6 @@ import {
   HandHeart,
   Presentation,
   Menu,
-  Cloud,
-  Laptop,
 } from "lucide-react";
 
 const ICON_SIZE = 20;
@@ -81,14 +79,4 @@ export const IconRefresh = ({ size = ICON_SIZE, ...props }: IconProps) => (
 
 export const IconMenu = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <Menu size={size} {...props} />
-);
-
-// ── AI Choice Icons ───────────────────────────────────────────────────────────
-
-export const IconCloud = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <Cloud size={size} {...props} />
-);
-
-export const IconDevice = ({ size = ICON_SIZE, ...props }: IconProps) => (
-  <Laptop size={size} {...props} />
 );

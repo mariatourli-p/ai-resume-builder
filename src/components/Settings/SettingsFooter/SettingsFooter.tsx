@@ -1,25 +1,21 @@
 import { themeConfig } from "@/theme";
 import { Box, Divider, Typography } from "@mui/material";
 import { AIStatusPanel, type AIStatusPanelProps } from "../AIStatusPanel";
-import { CloudAISwitch, type CloudAISwitchProps } from "../CloudAISwitch";
 
 export type SettingsFooterProps = {
   title: string;
   footerText: string;
   aiStatus: AIStatusPanelProps;
-  /** Switch for the online AI, shown above the built-in AI status */
-  cloudSwitch?: CloudAISwitchProps;
 };
 
 /**
- * AI section of the settings panel: whether the online AI is allowed, the
- * built-in AI's status in this browser, and a short privacy note.
+ * AI section of the settings panel: which AI the app uses, whether it's
+ * ready in this browser, and a short privacy note.
  */
 export const SettingsFooter = ({
   title,
   footerText,
   aiStatus,
-  cloudSwitch,
 }: SettingsFooterProps) => (
   <Box sx={{ p: 2.5 }}>
     <Typography
@@ -35,12 +31,6 @@ export const SettingsFooter = ({
     </Typography>
 
     <Divider sx={{ mb: 2 }} />
-
-    {cloudSwitch && (
-      <Box sx={{ mb: 2 }}>
-        <CloudAISwitch {...cloudSwitch} />
-      </Box>
-    )}
 
     <AIStatusPanel {...aiStatus} />
 

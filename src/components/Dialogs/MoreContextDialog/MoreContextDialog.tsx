@@ -108,7 +108,7 @@ export const MoreContextDialog = ({
                 mb: 0.5,
               }}
             >
-              AI Response
+              {t.aiResponse}
             </Typography>
             <Typography
               variant="body2"

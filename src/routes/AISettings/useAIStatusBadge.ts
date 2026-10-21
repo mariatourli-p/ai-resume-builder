@@ -7,23 +7,17 @@ import { useAISettings } from "./useAISettings";
 const t = enTokens.aiAssistant;
 
 /**
- * Connects {@link AIStatusBadge} to the AI state, so the header always shows
- * which AI runs and, for the built-in one, whether it can run here and, on
- * hover, why not.
+ * Connects {@link AIStatusBadge} to the built-in AI state, so the header
+ * always shows whether the AI can run here and, on hover, why not.
  */
 export const useAIStatusBadge = (): AIStatusBadgeProps => {
   const {
-    cloudConsent,
     browserAvailability,
     browserDownloadProgress,
     browserDownloadFailed,
   } = useAISettings();
 
   return useMemo((): AIStatusBadgeProps => {
-    // The online AI works on any device, so the built-in status doesn't matter
-    if (cloudConsent === "cloud") {
-      return { label: t.badge.cloud, tooltip: t.cloud, tone: "success" };
-    }
     if (browserDownloadProgress !== null) {
       return {
         label: t.badge.downloadingPercent.replace(
@@ -82,10 +76,5 @@ export const useAIStatusBadge = (): AIStatusBadgeProps => {
           tone: "warning",
         };
     }
-  }, [
-    cloudConsent,
-    browserAvailability,
-    browserDownloadProgress,
-    browserDownloadFailed,
-  ]);
+  }, [browserAvailability, browserDownloadProgress, browserDownloadFailed]);
 };

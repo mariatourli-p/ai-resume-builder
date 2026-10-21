@@ -1,10 +1,16 @@
 import { DownloadRounded } from "@mui/icons-material";
-import { Box, LinearProgress, Paper, Snackbar, Typography } from "@mui/material";
+import {
+  Box,
+  LinearProgress,
+  Paper,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 
 export type DownloadProgressToastProps = {
   open: boolean;
   message: string;
-  /** `0`–`1`; `0` shows an indeterminate bar while the download starts */
+  /** `0`-`1`; `0` shows an indeterminate bar while the download starts */
   progress: number;
 };
 
@@ -17,7 +23,10 @@ export const DownloadProgressToast = ({
   message,
   progress,
 }: DownloadProgressToastProps) => (
-  <Snackbar open={open} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
+  <Snackbar
+    open={open}
+    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+  >
     <Paper
       elevation={4}
       sx={{ borderRadius: 2, p: 1.5, width: 320, maxWidth: "100%" }}

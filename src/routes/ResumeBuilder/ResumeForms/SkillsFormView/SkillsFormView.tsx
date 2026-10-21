@@ -83,7 +83,7 @@ export const SkillsFormView = () => {
   );
 
   const handleSuggest = useCallback(async () => {
-    if (!(await ensureAIAvailable())) return;
+    if (!ensureAIAvailable()) return;
 
     // The title tells the AI which skills fit the role
     if (!title) {

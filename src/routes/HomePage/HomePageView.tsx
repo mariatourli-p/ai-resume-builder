@@ -4,7 +4,6 @@ import { ResumePreviewView } from "@/components/ResumePreview/ResumePreviewView"
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { useCallback, useState } from "react";
 import { BrowserAIDownloadView } from "../AISettings/BrowserAIDownloadView";
-import { CloudConsentDialogView } from "../AISettings/CloudConsentDialogView";
 import { ErrorDialogView } from "../Dialogs/ErrorDialogView";
 import { HeaderBarView } from "../HeaderBar";
 import { ResumeBuilder } from "../ResumeBuilder";
@@ -65,7 +64,6 @@ export const HomePageView = () => {
           </Box>
           <ResumePreviewView offscreen={isMobile} />
           <ErrorDialogView />
-          <CloudConsentDialogView />
           <BrowserAIDownloadView />
         </Box>
       </Box>

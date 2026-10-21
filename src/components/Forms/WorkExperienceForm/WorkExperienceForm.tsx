@@ -19,8 +19,9 @@ import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import { PRESENT } from "@/utils/formatDateRange";
 import { lazy, memo, Suspense, type ComponentType } from "react";
 
-const achievementsTokens = enTokens.sections.workExperience.fields.achievements;
-const datesTokens = enTokens.sections.workExperience.fields.dates;
+const workExperienceFields = enTokens.sections.workExperience.fields;
+const achievementsTokens = workExperienceFields.achievements;
+const datesTokens = workExperienceFields.dates;
 
 /** Tips shown when hovering the lamp: what to write and how to separate it */
 const AchievementsTips = () => (
@@ -87,7 +88,7 @@ export type ExperienceLabels = {
 const WORK_EXPERIENCE_LABELS: ExperienceLabels = {
   title: enTokens.sections.workExperience.title,
   addButton: enTokens.sections.workExperience.addButton,
-  organization: "COMPANY / ORG",
+  organization: workExperienceFields.company.label,
   current: datesTokens.current,
   icon: IconExperience,
 };
@@ -191,7 +192,7 @@ const WorkExperienceEntryCard = memo(
           }}
         >
           <TextField
-            label="ROLE TITLE"
+            label={workExperienceFields.roleTitle.label}
             fullWidth
             value={entry.roleTitle}
             onChange={(e) => onChange?.(entry.id, "roleTitle", e.target.value)}
@@ -249,7 +250,7 @@ const WorkExperienceEntryCard = memo(
           }}
         >
           <TextField
-            label="LOCATION"
+            label={workExperienceFields.location.label}
             fullWidth
             value={entry.location}
             onChange={(e) => onChange?.(entry.id, "location", e.target.value)}
@@ -289,13 +290,13 @@ const WorkExperienceEntryCard = memo(
                 textTransform: "uppercase",
               }}
             >
-              Key Achievements & Milestones
+              {achievementsTokens.label}
             </Typography>
             <Typography
               variant="caption"
               sx={{ color: themeConfig.colors.black }}
             >
-              Separate points with a new line
+              {achievementsTokens.separateLines}
             </Typography>
           </Box>
           <TextField

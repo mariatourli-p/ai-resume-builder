@@ -30,8 +30,6 @@ type LanguageModelSession = {
     input: string,
     options?: { responseConstraint?: object },
   ) => Promise<string>;
-  /** Yields the response in pieces (each chunk is the newly added text) */
-  promptStreaming: (input: string) => ReadableStream<string>;
   /** Copy that keeps the instructions but not later prompts */
   clone: () => Promise<LanguageModelSession>;
   destroy: () => void;
@@ -182,21 +180,6 @@ const getBaseSession = (
   return base;
 };
 
-/** Reads the streamed chunks, reporting the text so far after each one. */
-const readStream = async (
-  stream: ReadableStream<string>,
-  onChunk: (textSoFar: string) => void,
-): Promise<string> => {
-  const reader = stream.getReader();
-  let result = "";
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) return result;
-    result += value;
-    onChunk(result);
-  }
-};
-
 /**
  * Forgets the ready session of a prompt, so the next request creates a new
  * one. Used after a failure: a session Chrome has dropped (e.g. after its AI
@@ -211,7 +194,7 @@ const discardBaseSession = (prompt: string) => {
 /** Runs one request on a clone of the prompt's ready session. */
 const runRequest = async (
   languageModel: LanguageModelApi,
-  { prompt, text, onChunk, choices, responseSchema }: GenerateParams,
+  { prompt, text, choices, responseSchema }: GenerateParams,
 ): Promise<string> => {
   let session: LanguageModelSession | undefined;
   try {
@@ -221,13 +204,10 @@ const runRequest = async (
     const responseConstraint = choices
       ? { type: "string", enum: choices }
       : responseSchema;
-    if (responseConstraint) {
-      return await session.prompt(text, { responseConstraint });
-    }
-
-    return onChunk
-      ? await readStream(session.promptStreaming(text), onChunk)
-      : await session.prompt(text);
+    return await session.prompt(
+      text,
+      responseConstraint ? { responseConstraint } : undefined,
+    );
   } finally {
     session?.destroy();
   }
@@ -245,24 +225,15 @@ export const browserProvider: AIProvider = {
       );
     }
 
-    // Whether text already reached the field, which a retry would rewrite
-    let hasOutput = false;
-    const onChunk =
-      params.onChunk &&
-      ((textSoFar: string) => {
-        hasOutput = true;
-        params.onChunk?.(textSoFar);
-      });
-
     for (let attempt = 1; ; attempt++) {
       try {
-        return await runRequest(languageModel, { ...params, onChunk });
+        return await runRequest(languageModel, params);
       } catch (error) {
         if (error instanceof AIProviderError) throw error;
 
         discardBaseSession(params.prompt);
         // One retry on a fresh session fixes a session Chrome has dropped
-        if (attempt === 1 && !hasOutput) continue;
+        if (attempt === 1) continue;
 
         if (import.meta.env.DEV) {
           console.error("[AI] Request failed:", error);

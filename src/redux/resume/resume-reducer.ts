@@ -169,10 +169,8 @@ const resumeSlice = createSlice({
       }
     },
     /**
-     * Replaces the achievements from the AI flow: the streamed and final
-     * bullets (`isAIWritten: true`, for the role they were written for), or
-     * the text from before the click, with its own flag and role, when the
-     * request fails.
+     * Replaces the achievements with the bullets the AI wrote (and checked)
+     * for `role`, so the next run knows they are not the user's own notes.
      */
     updateAchievements(
       state,
@@ -180,15 +178,14 @@ const resumeSlice = createSlice({
         section: ExperienceSection;
         id: string;
         value: string;
-        isAIWritten: boolean;
-        role?: string;
+        role: string;
       }>,
     ) {
-      const { section, id, value, isAIWritten, role } = action.payload;
+      const { section, id, value, role } = action.payload;
       const entry = state[section].find((e) => e.id === id);
       if (!entry) return;
       entry.achievements = value;
-      entry.isAIWritten = isAIWritten;
+      entry.isAIWritten = true;
       entry.achievementsRole = role;
     },
     removeExperience(

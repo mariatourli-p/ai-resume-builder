@@ -52,7 +52,8 @@ export type WorkExperienceFormViewProps = {
  * - Callbacks read the latest entries from the store when they run, so they
  *   stay stable and typing in one entry doesn't re-render the others
  * - Editing or deleting a role title keeps the achievements; only Generate
- *   Achievements replaces them, and a failed run brings the previous text back
+ *   Achievements replaces them, and only with bullets that passed the AI's
+ *   check
  * - Each card saves who wrote its achievements (`isAIWritten`) and for which
  *   role (`achievementsRole`), so only the user's text for the current role
  *   is sent to the AI as notes, even after a reload
@@ -65,7 +66,7 @@ export const WorkExperienceFormView = ({
   // All cards, to show them; callbacks read entries from `store` instead
   const entries = useExperienceSelector(section, (s) => s, shallowEqual);
   const { improve } = useAI();
-  // Checked before every AI request: asks for consent, or explains why not
+  // Checked before every AI request: explains why the AI can't run here
   const { ensureAIAvailable } = useEnsureAIAvailable();
   // Cards whose achievements the AI is writing - shows their spinner
   const [generatingIds, setGeneratingIds] = useState<string[]>([]);
@@ -141,37 +142,27 @@ export const WorkExperienceFormView = ({
    * disabled while the role title is empty).
    *
    * Steps:
-   * 1. On the first click, asks whether the text may go online; stops if
-   *    the AI can't run
+   * 1. Stops if the AI can't run in this browser
    * 2. Keeps the current text; if the user wrote it for this same role, it
    *    becomes the notes the AI builds the bullets from. If the role changed,
    *    only the role is sent
-   * 3. Empties the field and shows the spinner
+   * 3. Shows the spinner; the field keeps the user's text meanwhile
    * 4. `improve` finds the profession the role title points to (work), or
    *    checks that the role and organization say what the volunteer work
-   *    was about,
-   *    writes the bullets - showing them in the field as they are written -
-   *    and checks the result. Volunteering uses its own prompt, built from
-   *    the role as written and the organization
-   * 5. On success, keeps the new bullets. On failure, brings the previous
-   *    text back exactly as it was
+   *    was about, writes the bullets and checks them. Volunteering uses its
+   *    own prompt, built from the role as written and the organization
+   * 5. Only bullets that passed the check replace the text, so a rejected
+   *    or failed run leaves the user's text untouched
    */
   const onGenerateAchievements = useCallback(
     async (id: string, roleTitle: string) => {
-      if (!(await ensureAIAvailable())) return;
+      if (!ensureAIAvailable()) return;
 
       const entry = findEntry(id);
       const previous = entry?.achievements ?? "";
       const wasAIWritten = entry?.isAIWritten ?? false;
       const previousRole = entry?.achievementsRole;
       const title = roleTitle.trim();
-      // Bullets the AI writes now belong to the current role
-      const writeAchievements = (
-        value: string,
-        isAIWritten = true,
-        role: string | undefined = title,
-      ) =>
-        dispatch(updateAchievements({ section, id, value, isAIWritten, role }));
 
       /**
        * What the user wrote for this role is the base for the new bullets.
@@ -214,10 +205,7 @@ export const WorkExperienceFormView = ({
           .join("\n\n");
       };
 
-      // Start from an empty field: the AI writes the achievements again
-      writeAchievements("");
       setGeneratingIds((ids) => [...ids, id]);
-      // Show the bullets in the field while the AI writes them
       const improved = await improve(
         isVolunteering
           ? "generateVolunteeringAchievements"
@@ -242,17 +230,16 @@ export const WorkExperienceFormView = ({
                 .filter(Boolean)
                 .join(", ")
             : undefined,
-          onPartial: writeAchievements,
         },
       ).finally(() =>
         setGeneratingIds((ids) => ids.filter((current) => current !== id)),
       );
       if (improved) {
-        writeAchievements(improved);
-        return;
+        // The new bullets belong to the current role
+        dispatch(
+          updateAchievements({ section, id, value: improved, role: title }),
+        );
       }
-      // Rejected or failed: bring back the text from before the click
-      writeAchievements(previous, wasAIWritten, previousRole);
     },
     [ensureAIAvailable, improve, dispatch, findEntry, section],
   );

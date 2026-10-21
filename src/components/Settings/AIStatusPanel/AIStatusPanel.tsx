@@ -8,7 +8,7 @@ export type AIStatusPanelProps = {
   /** Status note shown under the name */
   note?: string;
   noteSeverity?: "info" | "warning";
-  /** Shows a progress bar under the note (`0`–`1`) */
+  /** Shows a progress bar under the note (`0`-`1`) */
   progress?: number;
   /** Optional button under the note, e.g. to start the model download */
   action?: { label: string; onClick: () => void };
