@@ -1,8 +1,8 @@
 import { IconAdd, IconCourses, IconDelete } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import { PALETTE_MAP } from "@/theme";
-import { themeConfig } from "@/theme/themeConfig";
+import { themeConfig } from "@/theme";
 import {
   Box,
   Button,
@@ -42,7 +42,7 @@ export type CoursesFormProps = {
 };
 
 /** The date picker library is large, so it loads after the page */
-const MonthField = lazy(() => import("../MonthField/MonthField"));
+const MonthField = lazy(() => import("../MonthField"));
 
 /**
  * Form section for courses, seminars and certifications.

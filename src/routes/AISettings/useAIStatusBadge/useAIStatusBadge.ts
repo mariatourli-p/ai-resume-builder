@@ -1,8 +1,8 @@
 import type { AIStatusBadgeProps } from "@/components/Feedback/AIStatusBadge";
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 import { useMemo } from "react";
-import { formatDownloadProgress } from "./useAIStatusPanel";
-import { useAISettings } from "./useAISettings";
+import { formatDownloadProgress } from "../useAIStatusPanel";
+import { useAISettings } from "../AISettingsProvider";
 
 const t = enTokens.aiAssistant;
 

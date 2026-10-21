@@ -1,6 +1,6 @@
 import { IconPersonal } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import { PALETTE_MAP, themeConfig } from "@/theme";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -170,14 +170,14 @@ export const PersonalInfoForm = ({
         }}
       >
         <TextField
-          label="FULL NAME"
+          label={personalInfo.fields.fullName.label}
           fullWidth
           value={data?.fullName ?? ""}
           onChange={(e) => onChange?.("fullName", e.target.value)}
           sx={{ userSelect: "none" }}
         />
         <TextField
-          label="PROFESSIONAL TITLE"
+          label={personalInfo.fields.professionalTitle.label}
           fullWidth
           value={data?.professionalTitle ?? ""}
           onChange={(e) => onChange?.("professionalTitle", e.target.value)}
@@ -194,7 +194,7 @@ export const PersonalInfoForm = ({
         }}
       >
         <TextField
-          label="EMAIL ADDRESS"
+          label={personalInfo.fields.emailAddress.label}
           type="email"
           fullWidth
           value={data?.emailAddress ?? ""}
@@ -202,7 +202,7 @@ export const PersonalInfoForm = ({
           sx={{ userSelect: "none" }}
         />
         <TextField
-          label="PHONE / PROFILE"
+          label={personalInfo.fields.phone.label}
           fullWidth
           value={data?.phone ?? ""}
           onChange={(e) => onChange?.("phone", e.target.value)}
@@ -220,13 +220,13 @@ export const PersonalInfoForm = ({
         }}
       >
         <TextField
-          label="LOCATION"
+          label={personalInfo.fields.location.label}
           fullWidth
           value={data?.location ?? ""}
           onChange={(e) => onChange?.("location", e.target.value)}
         />
         <TextField
-          label="PORTFOLIO / WEBSITE"
+          label={personalInfo.fields.portfolio.label}
           fullWidth
           value={data?.portfolio ?? ""}
           onChange={(e) => onChange?.("portfolio", e.target.value)}
@@ -237,7 +237,7 @@ export const PersonalInfoForm = ({
       {/* Professional Summary */}
       <Box sx={{ position: "relative" }}>
         <TextField
-          label="PROFESSIONAL SUMMARY"
+          label={personalInfo.fields.professionalSummary.label}
           multiline
           fullWidth
           value={data?.professionalSummary ?? ""}

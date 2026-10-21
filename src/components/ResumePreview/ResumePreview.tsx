@@ -3,8 +3,8 @@ import type {
   EducationEntry,
   PersonalInfoData,
   WorkExperienceEntry,
-} from "@/redux/resume/resume-reducer";
-import { enTokens } from "@/locale/en/en-tokens";
+} from "@/redux/resume";
+import { enTokens } from "@/locale/en";
 import { formatDateRange } from "@/utils/formatDateRange";
 import { themeConfig } from "@/theme";
 import { Box, Divider, Typography } from "@mui/material";
@@ -316,7 +316,7 @@ export const ResumePreview = memo(
           {professionalSummary && (
             <Box sx={{ mb: 2 }}>
               <SectionHeading
-                title="Professional Summary"
+                title={enTokens.preview.summary}
                 accentColor={accentColor}
               />
               <Typography
@@ -335,7 +335,10 @@ export const ResumePreview = memo(
           {/* ── Work Experience ── */}
           {workExperience.length > 0 && (
             <Box sx={{ mb: 2 }}>
-              <SectionHeading title="Experience" accentColor={accentColor} />
+              <SectionHeading
+                title={enTokens.preview.experience}
+                accentColor={accentColor}
+              />
               {workExperience.map((entry) => (
                 <WorkEntryItem key={entry.id} entry={entry} />
               ))}
@@ -345,7 +348,10 @@ export const ResumePreview = memo(
           {/* ── Education ── */}
           {education.length > 0 && (
             <Box sx={{ mb: 2 }}>
-              <SectionHeading title="Education" accentColor={accentColor} />
+              <SectionHeading
+                title={enTokens.sections.education.title}
+                accentColor={accentColor}
+              />
               {education.map((entry) => (
                 <EducationEntryItem key={entry.id} entry={entry} />
               ))}
@@ -356,7 +362,7 @@ export const ResumePreview = memo(
           {skills.length > 0 && (
             <Box sx={{ mb: 2 }}>
               <SectionHeading
-                title="Skills & Core Competencies"
+                title={enTokens.sections.skills.title}
                 accentColor={accentColor}
               />
               <Typography

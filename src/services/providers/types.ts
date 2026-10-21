@@ -3,8 +3,6 @@ export type GenerateParams = {
   prompt: string;
   /** The raw user content to improve */
   text: string;
-  /** Receives the text generated so far while the model writes it */
-  onChunk?: (textSoFar: string) => void;
   /**
    * Forces the answer to be exactly one of these words (e.g. VALID/INVALID).
    * The reply may come back JSON-quoted (`"VALID"`).

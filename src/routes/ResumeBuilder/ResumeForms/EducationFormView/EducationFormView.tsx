@@ -4,9 +4,9 @@ import {
   removeEducation,
   updateEducationField,
   type EducationEntry,
-} from "@/redux/resume/resume-reducer";
-import { shallowEqual, useEducationSelector } from "@/redux/selectors";
-import { useAppDispatch } from "@/redux/store";
+} from "@/redux/resume";
+import { shallowEqual, useEducationSelector } from "@/redux";
+import { useAppDispatch } from "@/redux";
 import { useCallback } from "react";
 
 /**

@@ -1,8 +1,8 @@
-import { enTokens } from "@/locale/en/en-tokens";
-import { toggleDialog } from "@/redux/resume/resume-reducer";
-import { useAppDispatch } from "@/redux/store";
+import { enTokens } from "@/locale/en";
+import { toggleDialog } from "@/redux/resume";
+import { useAppDispatch } from "@/redux";
 import { AIProviderError, askAI } from "@/services";
-import { AI_PROMPTS } from "@/services/aiPrompts";
+import { AI_PROMPTS } from "@/services";
 import { findVolunteerArea } from "@/utils/findVolunteerArea";
 import { resolveJobTitle } from "@/utils/resolveJobTitle";
 import { validateAchievementsResult } from "@/utils/validateAchievementsResult";
@@ -17,8 +17,6 @@ const formatInvalidTitle = (title: string) =>
   enTokens.moreContextDialog.invalidTitle.replace("{title}", title.trim());
 
 export type ImproveOptions = {
-  /** Receives the text so far while the AI is still writing */
-  onPartial?: (textSoFar: string) => void;
   /**
    * When set, the AI first finds the profession this title or keyword points
    * to (e.g. a technology → its developer), and only writes the text if
@@ -68,8 +66,9 @@ const createStepTimer = () => {
  * Runs AI text requests for the form views.
  *
  * @returns `improve`, which writes a text with the prompt `promptKey` and
- * returns it, or `null` after showing a dialog (rejected title or area,
- * failed check, or AI error); and `isLoading` while a request runs.
+ * returns it only once the check has passed, or `null` after showing a
+ * dialog (rejected title or area, failed check, or AI error); and
+ * `isLoading` while a request runs.
  *
  * @example
  * const { improve } = useAI();
@@ -77,7 +76,7 @@ const createStepTimer = () => {
  *   "smartRewrite",
  *   (profession) => `Job title: ${profession}`,
  *   "summary",
- *   { jobTitle: "React", onPartial: updateSummary },
+ *   { jobTitle: "React" },
  * );
  */
 export const useAI = () => {
@@ -89,7 +88,7 @@ export const useAI = () => {
       promptKey: keyof typeof AI_PROMPTS,
       input: ImproveInput,
       validatorType: ValidatorType,
-      { onPartial, jobTitle, volunteerWork }: ImproveOptions = {},
+      { jobTitle, volunteerWork }: ImproveOptions = {},
     ): Promise<string | null> => {
       if (!input) return null;
 
@@ -141,7 +140,6 @@ export const useAI = () => {
           askAI({
             prompt,
             text: typeof input === "function" ? input(profession) : input,
-            onChunk: onPartial,
           }),
         );
 
@@ -162,6 +160,7 @@ export const useAI = () => {
 
         return result;
       } catch (error) {
+        if (import.meta.env.DEV) console.info("[AI] Request failed", error);
         const code =
           error instanceof AIProviderError ? error.code : "request_failed";
         dispatch(toggleDialog({ type: "aiError", message: code }));

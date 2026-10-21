@@ -2,7 +2,8 @@
 import { Box, Typography, Tooltip } from "@mui/material";
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import CheckIcon from "@mui/icons-material/Check";
-import { BRANDING_PALETTES } from "./constants";
+import { enTokens } from "@/locale/en";
+import { BRANDING_PALETTES } from "@/theme";
 
 export type BrandingColorsProps = {
   activeColor: string;
@@ -36,7 +37,7 @@ export const BrandingColors = ({
           variant="caption"
           sx={{ fontWeight: 600, letterSpacing: 1, color: "text.secondary" }}
         >
-          BRANDING COLORS
+          {enTokens.app.branding_colors}
         </Typography>
       </Box>
 

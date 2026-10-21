@@ -38,6 +38,11 @@ Format EXACTLY like this:
 No markdown, no commentary, no extra text.`,
 } as const;
 
+/** Instructions for checking the bullets Generate Achievements wrote */
+export const ACHIEVEMENTS_VALIDATION_PROMPT = `You are a validator. Determine if the following text is a list of achievement bullet points that start with action verbs and describe real accomplishments from a job or a volunteering role.
+It is INVALID if it asks for information, talks to the reader, or describes what it will do instead of listing achievements.
+Reply ONLY with "VALID" or "INVALID". Nothing else.`;
+
 /**
  * Instructions for turning what the user typed in a job title field - a full
  * title or just a keyword - into the profession it points to. The reply

@@ -10,11 +10,12 @@ import {
   type AISettingsContextType,
 } from "./AISettingsContext";
 
-/** Provider choice and API keys saved by earlier versions of the app */
+/** Provider choice, API keys and online AI choice saved by earlier versions */
 const OBSOLETE_STORAGE_KEYS = [
   "resume_ai_provider",
   "resume_ai_api_keys",
   "resume_api_key",
+  "resume_ai_cloud_consent",
 ];
 
 export const AISettingsProvider = ({

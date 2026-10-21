@@ -1,10 +1,7 @@
 import { PersonalInfoForm } from "@/components/Forms/PersonalInfoForm";
-import {
-  updatePersonalInfoField,
-  type PersonalInfoData,
-} from "@/redux/resume/resume-reducer";
-import { shallowEqual, usePersonalInfoSelector } from "@/redux/selectors";
-import { useAppDispatch } from "@/redux/store";
+import { updatePersonalInfoField, type PersonalInfoData } from "@/redux/resume";
+import { shallowEqual, usePersonalInfoSelector } from "@/redux";
+import { useAppDispatch } from "@/redux";
 import { useAI } from "@hooks/useAI";
 import { useEnsureAIAvailable } from "@hooks/useEnsureAIAvailable";
 import { resizePhoto } from "@/utils/resizePhoto";
@@ -21,7 +18,7 @@ import { useCallback } from "react";
  *   {@link useAI}, after the AI finds the profession the title (or keyword)
  *   points to
  * - Editing or deleting the title keeps the summary; only Smart Rewrite
- *   replaces it, and a failed rewrite brings the previous summary back
+ *   replaces it, and only with a summary that passed the AI's check
  * - If this browser can't run the AI, {@link useEnsureAIAvailable} explains why
  */
 export const PersonalInfoFormView = () => {
@@ -34,7 +31,7 @@ export const PersonalInfoFormView = () => {
   const data = usePersonalInfoSelector((s) => s, shallowEqual);
   /**
    * `improve` runs the AI request; `isLoading` shows the spinner on the
-   * Smart Rewrite button while the AI writes
+   * Smart Rewrite button while the AI writes and checks the summary
    */
   const { improve, isLoading } = useAI();
   /**
@@ -42,23 +39,6 @@ export const PersonalInfoFormView = () => {
    * browser (e.g. not Chrome) instead of failing silently
    */
   const { ensureAIAvailable } = useEnsureAIAvailable();
-
-  /**
-   * Writes the summary to Redux (and so to the field and the preview).
-   *
-   * When: Smart Rewrite empties the field before the AI starts, fills it
-   * while the AI writes, and sets the final or previous text at the end.
-   *
-   * Why: one shared helper instead of repeating the same dispatch in every
-   * place; `useCallback` keeps it the same function between renders.
-   */
-  const updateSummary = useCallback(
-    (value: string) =>
-      dispatch(
-        updatePersonalInfoField({ field: "professionalSummary", value }),
-      ),
-    [dispatch],
-  );
 
   /**
    * Saves what the user types in any Personal Info field.
@@ -117,37 +97,36 @@ export const PersonalInfoFormView = () => {
    *
    * Steps:
    * 1. Stops if the AI can't run in this browser
-   * 2. Keeps the current summary, then empties the field
-   * 3. `improve` finds the profession the title points to (e.g. "React" ->
-   *    "React Developer"), writes the summary - showing it in the field as
-   *    it is written - and checks the result
-   * 4. On success, keeps the new summary. On failure, brings the previous
-   *    summary back exactly as it was - the AI never deletes the user's text
-   *    without writing a new one
+   * 2. `improve` finds the profession the title points to (e.g. "React" ->
+   *    "React Developer"), writes a new summary from it and checks it
+   * 3. Only a summary that passed the check replaces the current one. Until
+   *    then the field keeps the user's text, so a rejected or failed rewrite
+   *    leaves it untouched - the AI never deletes the user's text without
+   *    writing a new one
    */
   const onSmartRewrite = useCallback(async () => {
     if (!ensureAIAvailable()) return;
 
     const title = data.professionalTitle.trim();
-    const previous = data.professionalSummary;
     // The button is disabled without a title - the summary is written from it
     if (!title) return;
 
-    // Start from an empty field: the AI writes a new summary from the title
     const improved = await improve(
       "smartRewrite",
       (profession) => `Job title: ${profession}`,
       "summary",
-      {
-        // The AI first finds the profession the title points to
-        jobTitle: title,
-        // Show the text in the field while the AI writes it
-        onPartial: updateSummary,
-      },
+      // The AI first finds the profession the title points to
+      { jobTitle: title },
     );
-    // Rejected or failed: bring back the summary from before the click
-    updateSummary(improved || previous);
-  }, [ensureAIAvailable, data, improve, updateSummary]);
+    if (improved) {
+      dispatch(
+        updatePersonalInfoField({
+          field: "professionalSummary",
+          value: improved,
+        }),
+      );
+    }
+  }, [ensureAIAvailable, data.professionalTitle, improve, dispatch]);
 
   return (
     <PersonalInfoForm

@@ -1,8 +1,5 @@
 import { askAI } from "@/services";
-import {
-  JOB_TITLE_PROMPT,
-  JOB_TITLE_RESPONSE_SCHEMA,
-} from "@/services/aiPrompts";
+import { JOB_TITLE_PROMPT, JOB_TITLE_RESPONSE_SCHEMA } from "@/services";
 
 /** Longest job title accepted from the AI, to drop rambling replies */
 const MAX_JOB_TITLE_LENGTH = 80;

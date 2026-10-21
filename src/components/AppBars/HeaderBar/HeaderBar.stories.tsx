@@ -1,4 +1,4 @@
-import { store } from "@/redux/store";
+import { store } from "@/redux";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Provider } from "react-redux";

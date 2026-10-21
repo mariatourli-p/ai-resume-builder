@@ -1,5 +1,6 @@
 import { IconAdd, IconDelete, IconEducation } from "@/assets/Icons";
-import { useAccentColorSelector } from "@/redux/selectors";
+import { enTokens } from "@/locale/en";
+import { useAccentColorSelector } from "@/redux";
 import {
   Box,
   Button,
@@ -60,6 +61,8 @@ export type EducationFormProps = {
  */
 const NO_AUTOFILL = { htmlInput: { autoComplete: "off" } };
 
+const { education } = enTokens.sections;
+
 export const EducationForm = ({
   entries = [],
   onAdd,
@@ -85,7 +88,7 @@ export const EducationForm = ({
             component="span"
             sx={{ fontWeight: 600, userSelect: "none" }}
           >
-            Education
+            {education.title}
           </Typography>
         </Box>
         <Button
@@ -97,7 +100,7 @@ export const EducationForm = ({
             textTransform: "none",
           }}
         >
-          Add Degree
+          {education.addButton}
         </Button>
       </Box>
 
@@ -130,7 +133,7 @@ export const EducationForm = ({
 
             {/* Institution - full width */}
             <TextField
-              label="INSTITUTION / SCHOOL NAME"
+              label={education.fields.institution.label}
               fullWidth
               slotProps={NO_AUTOFILL}
               value={entry.institution}
@@ -142,7 +145,7 @@ export const EducationForm = ({
 
             {/* Degree - full width, degree names are long */}
             <TextField
-              label="DEGREE / FIELD & HONORS"
+              label={education.fields.degree.label}
               fullWidth
               slotProps={NO_AUTOFILL}
               value={entry.degree}
@@ -159,17 +162,17 @@ export const EducationForm = ({
               }}
             >
               <TextField
-                label="GRADUATION DATE"
+                label={education.fields.graduationDate.label}
                 fullWidth
                 slotProps={NO_AUTOFILL}
-                placeholder="2011 – 2015"
+                placeholder={education.fields.graduationDate.placeholder}
                 value={entry.graduationDate}
                 onChange={(e) =>
                   onChange?.(entry.id, "graduationDate", e.target.value)
                 }
               />
               <TextField
-                label="LOCATION"
+                label={education.fields.location.label}
                 fullWidth
                 slotProps={NO_AUTOFILL}
                 value={entry.location}

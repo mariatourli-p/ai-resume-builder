@@ -1,5 +1,5 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import { resumeReducer } from "./resume/resume-reducer";
+import { resumeReducer } from "./resume";
 
 const projectReducers = {
   resume: resumeReducer,

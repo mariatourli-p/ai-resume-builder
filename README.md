@@ -24,7 +24,22 @@ These requirements come from [Chrome's documentation][chrome-ai-requirements], a
 - **The AI is provided by Google, not by this app.** It is Gemini Nano, built into Chrome. Google decides which browsers, versions and devices support it, and may change or remove it.
 - **Check what the AI writes.** Its text can be wrong or invented. Users should review every suggestion before using it in a resume.
 - **Google's rules apply.** Using the built-in AI is subject to Google's [Generative AI Prohibited Use Policy][google-ai-policy].
-- **Privacy.** Resume data stays in the browser (localStorage). The AI runs on the user's computer, so the resume is not sent to an AI service.
+- **Privacy.** The resume stays in the browser, and the AI runs on the user's computer. See [Privacy: what leaves the browser](#privacy-what-leaves-the-browser).
+
+## Privacy: what leaves the browser
+
+Nothing the user writes. The app has no accounts, no cookies, no analytics and no backend: it is a static site. Fonts and icons are bundled with the app, not loaded from other sites.
+
+| Data | Where it goes |
+| ---- | ------------- |
+| The whole resume (every field and the photo) | Saved only in this browser (localStorage, key `resume_builder`). Clearing the browser's site data deletes it. |
+| The PDF | Made in the browser. It is never uploaded. |
+| What the AI buttons work on (titles, notes, skills) | Chrome's built-in AI (Gemini Nano), which runs on the user's computer. It is not sent to any AI service, Google's included. |
+
+Good to know:
+
+- **The model download.** The first time, Chrome downloads the AI model from Google, like any Chrome update. The resume is not part of that download.
+- **The web host.** The host that serves the app (Vercel) sees each visitor's IP address, like any website. It never receives the resume.
 
 ---
 
@@ -93,8 +108,8 @@ The AI features are free for every user: no account and no API key. They use Chr
 
 Behavior shared by all AI actions:
 
-- The field is cleared and the AI writes from scratch, showing the text as it is written.
-- If the AI fails or rejects the title, the text from before the click comes back.
+- The AI writes from scratch. The field keeps your text until the new text has been checked, and only then is it replaced.
+- If the AI fails or rejects the title, your text stays as it was.
 - Editing or deleting a title keeps its text (the user may be retyping it); only the AI button replaces it.
 - A spinner shows on the button while the AI works.
 
@@ -120,8 +135,7 @@ The app uses these parts of the API, all in `src/services/providers/browserProvi
 | `LanguageModel.create()`                 | Loads the model with its instructions (the system prompt). `monitor` reports download progress | Once per prompt, and from the Settings download button       |
 | `session.clone()`                        | Copies a ready session cheaply                                                                | Every request                                                |
 | `session.prompt(text, { responseConstraint })` | Returns the whole reply. The constraint (a JSON Schema) forces the reply's shape        | Finding the profession, checking results                     |
-| `session.promptStreaming(text)`          | Returns the reply piece by piece while it is written                                          | Smart Rewrite, Generate Achievements                         |
-| `session.prompt(text)`                   | Returns the whole reply, with no constraint                                                   | Suggest skills                                               |
+| `session.prompt(text)`                   | Returns the whole reply, with no constraint                                                   | Smart Rewrite, Generate Achievements, Suggest skills         |
 | `session.destroy()`                      | Frees the copy                                                                                | After every request                                          |
 
 Every call declares English text in and out (`expectedInputs` / `expectedOutputs`), because the AI features are English only.
@@ -137,8 +151,8 @@ Every call declares English text in and out (`expectedInputs` / `expectedOutputs
 
 | Button                  | Handler (view)                                      | AI calls per click                                                        |
 | ----------------------- | --------------------------------------------------- | ------------------------------------------------------------------------- |
-| Smart Rewrite           | `onSmartRewrite` in `PersonalInfoFormView`          | find profession → write summary (streamed) → check summary                |
-| Generate Achievements   | `onGenerateAchievements` in `WorkExperienceFormView` | find profession → write bullets (streamed) → check bullets                |
+| Smart Rewrite           | `onSmartRewrite` in `PersonalInfoFormView`          | find profession → write summary → check summary                           |
+| Generate Achievements   | `onGenerateAchievements` in `WorkExperienceFormView` | find profession → write bullets → check bullets                           |
 | Suggest skills with AI  | `handleSuggest` in `SkillsFormView`                 | find profession → write list. The list is checked in code (`parseSkillList`), not by the AI |
 
 The profession is cached per title until the page reloads, so clicking again with the same title skips that call.
@@ -150,9 +164,9 @@ Taking **Smart Rewrite** with the title "React" as an example:
 1. `ensureAIAvailable()` stops here and shows a dialog if the AI can't run on this browser or computer.
 2. The view calls `useAI().improve("smartRewrite", …)` (`src/hooks/useAI`).
 3. **Find the profession.** `resolveJobTitle` sends "React" with `JOB_TITLE_PROMPT` and a JSON Schema, so the reply is always shaped like `{"isProfession": true, "jobTitle": "React Developer"}`. If `isProfession` is `false`, a dialog asks for a real job title and nothing else runs.
-4. **Write.** It sends `Job title: React Developer` with the `smartRewrite` prompt. The reply is streamed, and each piece is shown in the summary field as it arrives.
+4. **Write.** It sends `Job title: React Developer` with the `smartRewrite` prompt. The field still shows the user's text meanwhile.
 5. **Check.** The finished text is sent with a validation prompt, and the reply is forced to be `VALID` or `INVALID`. On `INVALID`, a dialog asks for more context.
-6. **Result.** On success, the new text stays. On any failure, the text from before the click comes back.
+6. **Result.** Only a text that passed the check goes into the field. On any failure, the user's text stays as it was.
 
 Every call goes through the same path:
 
@@ -168,11 +182,11 @@ View (src/routes/ResumeBuilder/ResumeForms/*View)
 
 Creating a session loads the model and reads the instructions, which takes a few seconds. So `browserProvider` creates **one base session per prompt** the first time that prompt is used, keeps it in memory, and runs every request on a `clone()` of it, which it destroys afterwards. The base session never sees the requests, so each one starts clean.
 
-There are six prompts, so at most six base sessions: find profession, summary, achievements, skills and the two validators. The first click after loading the page is the slowest. Reloading the page starts over.
+There are eight prompts, so at most eight base sessions: find profession, find volunteer area, summary, achievements, volunteering achievements, skills and the two validators. The first click after loading the page is the slowest. Reloading the page starts over.
 
 ### The prompts
 
-All instructions sent to the AI are in `src/services/aiPrompts.ts`, except the achievements validator prompt, which is in `src/utils/validateAchievementsResult`. They contain no user text, so the base sessions can be reused. The user's text is only in the request (`Job title: …`, the user's notes, the current skills).
+All instructions sent to the AI are in `src/services/aiPrompts.ts`. They contain no user text, so the base sessions can be reused. The user's text is only in the request (`Job title: …`, the user's notes, the current skills).
 
 ### Errors
 
@@ -191,7 +205,8 @@ The header also shows the AI's status at all times (**AI ready**, **AI needs dow
 In development, the browser console (F12) shows:
 
 - what the AI found for each title: `[AI] Job title: "React" → {"isProfession":true,"jobTitle":"React Developer"} → React Developer`;
-- how long each step took: `[AI] smartRewrite: 4210ms { find profession: 820, write text: 2650, check result: 740 }`.
+- how long each step took: `[AI] smartRewrite: 4210ms { find profession: 820, write text: 2650, check result: 740 }`;
+- why a request failed: `[AI] Request failed`, with the full error.
 
 To see the model's status in Chrome, open `chrome://on-device-internals`.
 
@@ -203,7 +218,7 @@ src/
 ├── components/      # Presentational UI components, each with Storybook stories
 │   ├── AppBars/     # Header bar and sections bar
 │   ├── Buttons/
-│   ├── Dialogs/     # Error and "more context" dialogs
+│   ├── Dialogs/     # Errors, "more context", licenses
 │   ├── Drawers/
 │   ├── Feedback/    # Toasts (e.g. AI model download progress)
 │   ├── Forms/       # Personal Info, Work Experience, Education, Skills
@@ -262,7 +277,7 @@ Measured with Playwright on the production build, with a resume of 3 work entrie
 
 | Measurement                         | Result                                          |
 | ----------------------------------- | ----------------------------------------------- |
-| Main JavaScript bundle              | 639 KB (201 KB gzip)                            |
+| Main JavaScript bundle              | 656 KB (205 KB gzip)                            |
 | Typing, per key press               | ~5-7 ms of JavaScript (~40-45 ms on a 4x slower CPU) |
 | Saving to localStorage, per key     | under 0.1 ms                                    |
 
@@ -271,7 +286,7 @@ What keeps it fast:
 - The resume preview updates at low priority (`useDeferredValue`) and is memoized, so typing never waits for it.
 - Each work experience entry is memoized, so typing in one entry doesn't re-render the others.
 - The PDF libraries load only when the user exports.
-- The AI keeps one ready session per instruction and clones it for each request, and streams the text as it is written.
+- The AI keeps one ready session per instruction and clones it for each request.
 
 ## Branch Strategy
 

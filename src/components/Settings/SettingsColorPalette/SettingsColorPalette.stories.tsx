@@ -1,4 +1,4 @@
-import { BRANDING_PALETTES } from "@/components/AppBars/SectionsBar/BrandingColors/constants";
+import { BRANDING_PALETTES } from "@/theme";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { SettingsColorPalette } from "./SettingsColorPalette";

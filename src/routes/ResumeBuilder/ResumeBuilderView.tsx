@@ -1,4 +1,4 @@
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 import { useScrollStore } from "@/stores/useScrollStore";
 import { Box, type SxProps } from "@mui/material";
 import { useEffect, useRef } from "react";

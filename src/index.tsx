@@ -10,7 +10,7 @@ import "@fontsource-variable/literata/wght-italic.css";
 import "@fontsource-variable/jetbrains-mono/wght.css";
 import "@fontsource-variable/jetbrains-mono/wght-italic.css";
 import "@fontsource-variable/space-grotesk/wght.css";
-import { persistor, store } from "@/redux/store";
+import { persistor, store } from "@/redux";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";

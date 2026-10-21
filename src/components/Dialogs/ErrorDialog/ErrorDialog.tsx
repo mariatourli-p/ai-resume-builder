@@ -1,4 +1,4 @@
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 import { WarningAmberRounded } from "@mui/icons-material";
 import {
   Box,

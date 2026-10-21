@@ -1,4 +1,4 @@
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 
 /** Saved as the end date while the user still works in the role */
 export const PRESENT = "present";

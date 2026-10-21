@@ -1,4 +1,4 @@
-import { useAccentColorSelector } from "@/redux/selectors";
+import { useAccentColorSelector } from "@/redux";
 import { PALETTE_MAP } from "@/theme";
 import { Box, Typography, type SxProps } from "@mui/material";
 import type { ReactNode } from "react";

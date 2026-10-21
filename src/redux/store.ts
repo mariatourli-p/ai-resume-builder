@@ -1,7 +1,4 @@
-import {
-  DEFAULT_ACCENT_COLOR,
-  LEGACY_ACCENT_COLORS,
-} from "@/components/AppBars/SectionsBar/BrandingColors/constants";
+import { DEFAULT_ACCENT_COLOR, LEGACY_ACCENT_COLORS } from "@/theme";
 import { configureStore } from "@reduxjs/toolkit";
 import { shallowEqual, useDispatch, useSelector, useStore } from "react-redux";
 import {

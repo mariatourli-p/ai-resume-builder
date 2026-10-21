@@ -1,9 +1,6 @@
 import { themeConfig } from "@/theme";
 import { Box, Divider, Typography } from "@mui/material";
-import {
-  AIStatusPanel,
-  type AIStatusPanelProps,
-} from "../AIStatusPanel";
+import { AIStatusPanel, type AIStatusPanelProps } from "../AIStatusPanel";
 
 export type SettingsFooterProps = {
   title: string;

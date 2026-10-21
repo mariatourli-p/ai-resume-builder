@@ -1,4 +1,4 @@
-import { store } from "@/redux/store";
+import { store } from "@/redux";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { KeyboardEvent } from "react";
 import { useState } from "react";

@@ -1,8 +1,8 @@
 import { ErrorDialog } from "@/components/Dialogs/ErrorDialog";
 import { MoreContextDialog } from "@/components/Dialogs/MoreContextDialog";
-import { enTokens } from "@/locale/en/en-tokens";
-import { toggleDialog } from "@/redux/resume/resume-reducer";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { enTokens } from "@/locale/en";
+import { toggleDialog } from "@/redux/resume";
+import { useAppDispatch, useAppSelector } from "@/redux";
 import { useDialogType } from "@hooks/useDialogType";
 
 type AIErrorCode = keyof Omit<typeof enTokens.aiErrors, "gotIt">;

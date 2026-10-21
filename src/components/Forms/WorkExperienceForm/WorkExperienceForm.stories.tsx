@@ -1,4 +1,4 @@
-import { store } from "@/redux/store";
+import { store } from "@/redux";
 import { PRESENT } from "@/utils/formatDateRange";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";

@@ -1,6 +1,6 @@
-import { toggleDialog } from "@/redux/resume/resume-reducer";
-import { useAppDispatch } from "@/redux/store";
-import { useAISettings } from "@/routes/AISettings/useAISettings";
+import { toggleDialog } from "@/redux/resume";
+import { useAppDispatch } from "@/redux";
+import { useAISettings } from "@/routes/AISettings";
 import { useCallback } from "react";
 
 /**

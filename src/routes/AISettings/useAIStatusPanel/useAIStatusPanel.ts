@@ -1,7 +1,7 @@
 import type { AIStatusPanelProps } from "@/components/Settings/AIStatusPanel";
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 import { useMemo } from "react";
-import { useAISettings } from "./useAISettings";
+import { useAISettings } from "../AISettingsProvider";
 
 const t = enTokens.aiAssistant;
 

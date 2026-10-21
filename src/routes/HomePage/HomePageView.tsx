@@ -1,14 +1,14 @@
 import { AppFooter } from "@/components/AppBars/AppFooter";
 import { APP_BAR_HEIGHT } from "@/components/AppBars/HeaderBar";
-import { ResumePreviewView } from "@/components/ResumePreview/ResumePreviewView";
+import { ResumePreviewView } from "@/components/ResumePreview";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { useCallback, useState } from "react";
-import { BrowserAIDownloadView } from "../AISettings/BrowserAIDownloadView";
+import { BrowserAIDownloadView } from "../AISettings";
 import { ErrorDialogView } from "../Dialogs/ErrorDialogView";
 import { HeaderBarView } from "../HeaderBar";
 import { ResumeBuilder } from "../ResumeBuilder";
 import { SectionsBarView } from "../SectionsBar";
-import { ExportProvider } from "../context/ExportProvider/ExportProvider";
+import { ExportProvider } from "../context/ExportProvider";
 
 /**
  * The app page: header, sections drawer, forms and resume preview.

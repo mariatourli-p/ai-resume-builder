@@ -1,5 +1,5 @@
 import { IconTemplate } from "@/assets/Icons";
-import { enTokens } from "@/locale/en/en-tokens";
+import { enTokens } from "@/locale/en";
 import { Typography } from "@mui/material";
 import type { SxProps } from "node_modules/@mui/material";
 

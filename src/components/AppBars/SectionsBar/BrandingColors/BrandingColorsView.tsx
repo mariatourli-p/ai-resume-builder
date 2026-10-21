@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { BrandingColors } from "./BrandingColors";
-import { useAppDispatch } from "@/redux/store";
-import { useAccentColorSelector } from "@/redux/selectors";
-import { setAccentColor } from "@/redux/resume/resume-reducer";
+import { useAppDispatch } from "@/redux";
+import { useAccentColorSelector } from "@/redux";
+import { setAccentColor } from "@/redux/resume";
 
 export const BrandingColorsView = () => {
   const dispatch = useAppDispatch();

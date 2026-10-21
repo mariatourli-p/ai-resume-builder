@@ -11,18 +11,15 @@ const SECTIONS = {
           hint: "Optional - a clear, square headshot works best",
           alt: "Profile photo",
         },
-        fullName: {
-          label: "Full Name",
-          placeholder: "John Doe",
-        },
-        professionalTitle: {
-          label: "Professional Title",
-          placeholder: "Senior Product Designer",
-        },
+        fullName: { label: "FULL NAME" },
+        professionalTitle: { label: "PROFESSIONAL TITLE" },
+        emailAddress: { label: "EMAIL ADDRESS" },
+        phone: { label: "PHONE / PROFILE" },
+        location: { label: "LOCATION" },
+        portfolio: { label: "PORTFOLIO / WEBSITE" },
         professionalSummary: {
-          label: "Professional Summary",
-          placeholder: "Tell your story...",
-          hint: "Use 2–3 impact sentences.",
+          label: "PROFESSIONAL SUMMARY",
+          hint: "Use 2-3 impact sentences.",
         },
       },
     },
@@ -31,12 +28,9 @@ const SECTIONS = {
       title: "Work Experience",
       addButton: "Add Experience",
       fields: {
-        jobTitle: {
-          placeholder: "Principal Designer",
-        },
-        company: {
-          placeholder: "TechFlow Corp",
-        },
+        roleTitle: { label: "ROLE TITLE" },
+        company: { label: "COMPANY / ORG" },
+        location: { label: "LOCATION" },
         dates: {
           start: "START DATE",
           end: "END DATE",
@@ -44,6 +38,8 @@ const SECTIONS = {
           present: "Present",
         },
         achievements: {
+          label: "Key Achievements & Milestones",
+          separateLines: "Separate points with a new line",
           placeholder:
             "e.g.\nBuilt the payments API used by 50K customers\nCut cloud costs by 30%\nMentored 2 junior developers",
           hint: "Rough notes are enough - the AI polishes them",
@@ -80,12 +76,13 @@ const SECTIONS = {
       title: "Education",
       addButton: "Add Degree",
       fields: {
-        institution: {
-          placeholder: "Institution",
+        institution: { label: "INSTITUTION / SCHOOL NAME" },
+        degree: { label: "DEGREE / FIELD & HONORS" },
+        graduationDate: {
+          label: "GRADUATION DATE",
+          placeholder: "2011 - 2015",
         },
-        degreeField: {
-          placeholder: "Degree / Field",
-        },
+        location: { label: "LOCATION" },
       },
     },
     courses: {
@@ -116,13 +113,18 @@ export const enTokens = {
     analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
     open_menu: "Sections menu",
+    branding_colors: "BRANDING COLORS",
+  },
+  /** Section headings of the resume itself; the other sections use their form's title */
+  preview: {
+    summary: "Professional Summary",
+    experience: "Experience",
   },
   sections: SECTIONS.sections,
   ai: {
     suggest: "Suggest skills",
     suggestFor: 'Suggest skills for "{title}"',
     suggestNeedsTitle: "Add your professional title in Personal Info first",
-    suggesting: "Suggesting skills...",
     suggestingFor: 'Suggesting skills for "{title}"...',
     generateAchievements: "Generate Achievements",
     generating: "Generating...",
@@ -130,6 +132,7 @@ export const enTokens = {
     smartRewrite: "Smart Rewrite",
   },
   settings: {
+    title: "Visual Style Customizer",
     aiTitle: "AI Assistant",
     aiFooter:
       "Free for everyone. The AI runs inside Chrome on your computer, so your resume is never sent to an AI service.",
@@ -236,6 +239,7 @@ export const enTokens = {
   moreContextDialog: {
     title: "More context needed",
     subtitle: "AI context checklist",
+    aiResponse: "AI Response",
     description:
       "The AI needs a real achievement to work with. Try describing a task, result, or responsibility from your role - even a rough sentence is enough.",
     structureLabel: "Recommended structure",

@@ -4,7 +4,7 @@ import { createContext } from "react";
 export type AISettingsContextType = {
   /** `null` while the check is still running */
   browserAvailability: BrowserAIStatus | null;
-  /** Built-in model download progress (`0`–`1`), `null` when not downloading */
+  /** Built-in model download progress (`0`-`1`), `null` when not downloading */
   browserDownloadProgress: number | null;
   /** The last download started from Settings failed (disk space, connection) */
   browserDownloadFailed: boolean;
