@@ -125,7 +125,7 @@ The serverless function protects the key and its free quota:
 ### Setting up the online AI
 
 1. Create a free API key in [Google AI Studio][ai-studio] (no card needed).
-2. In the Vercel project, open **Settings → Environment Variables** and add `GEMINI_API_KEY`. Optionally add `GEMINI_MODEL` to use another model than `gemini-2.5-flash`.
+2. In the Vercel project, open **Settings → Environment Variables** and add `GEMINI_API_KEY`. Optionally add `GEMINI_MODEL` to pin a model (e.g. `gemini-3.8-flash`). By default the function uses `gemini-flash-latest`, which Google moves to its newest Flash model, so a retired model never breaks the app.
 3. Redeploy. The free tier's current limits are shown per project in AI Studio.
 
 Without the key, `/api/generate` answers `503` and the app uses Chrome's built-in AI. `npm run dev` has no serverless functions, so locally the app also uses the built-in AI; `vercel dev` runs the function too.

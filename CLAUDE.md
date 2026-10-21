@@ -23,7 +23,7 @@ There are no unit tests yet; Vitest runs the Storybook stories in Playwright (`n
 
 ## AI
 
-There are two AIs, both free. The **online AI** is Google's Gemini API (free tier), called by the serverless function `api/generate.ts` (Vercel), which holds the key in `GEMINI_API_KEY` (model in `GEMINI_MODEL`, default `gemini-2.5-flash`). The **built-in AI** is Gemini Nano, the model built into Chrome, used through the Prompt API (the global `LanguageModel`); it runs on the user's computer and needs no key. The README section "Behind the scenes" explains the whole flow.
+There are two AIs, both free. The **online AI** is Google's Gemini API (free tier), called by the serverless function `api/generate.ts` (Vercel), which holds the key in `GEMINI_API_KEY` (model in `GEMINI_MODEL`, default `gemini-flash-latest`, Google's alias for its newest Flash model, so a retired model doesn't break the app). The **built-in AI** is Gemini Nano, the model built into Chrome, used through the Prompt API (the global `LanguageModel`); it runs on the user's computer and needs no key. The README section "Behind the scenes" explains the whole flow.
 
 - **Product decisions:**
   - Online AI first, built-in AI as fallback. `askAI` tries `cloudProvider` when the user allowed it, and falls back to `browserProvider` when the online AI fails or answers 429 (after any failure it skips the online AI for a minute, so the other calls of a click don't wait for it again). With "Keep it on my computer" every request goes to the built-in AI.

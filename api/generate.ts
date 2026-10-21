@@ -24,8 +24,11 @@ import {
 import type { ApiErrorBody } from "../src/services/api/apiClient.js";
 import type { GenerateRequest } from "../src/services/api/generateApi.js";
 
-/** Free-tier Flash model; override with `GEMINI_MODEL` when Google renames it */
-const DEFAULT_MODEL = "gemini-2.5-flash";
+/**
+ * Google's alias for its newest Flash model (free tier), so the app keeps
+ * working when Google retires a model. Set `GEMINI_MODEL` to pin one.
+ */
+const DEFAULT_MODEL = "gemini-flash-latest";
 
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
