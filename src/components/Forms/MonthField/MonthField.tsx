@@ -7,6 +7,9 @@ import { memo } from "react";
 /** How a month is saved in the resume, e.g. `2020-03` */
 const MONTH_FORMAT = "YYYY-MM";
 
+// The year list starts here instead of MUI's default 1900, which no resume needs
+const EARLIEST_MONTH = dayjs("1950-01");
+
 export type MonthFieldProps = {
   label: string;
   /** Month as `YYYY-MM`, or `""` for none */
@@ -45,13 +48,17 @@ const MonthField = ({
       format="MMM YYYY"
       disabled={disabled}
       value={value ? dayjs(value) : null}
-      minDate={minMonth ? dayjs(minMonth) : undefined}
+      minDate={minMonth ? dayjs(minMonth) : EARLIEST_MONTH}
       // Work dates end at the current month; the year list stops at this year
       maxDate={dayjs()}
       onChange={(date) =>
         onChange(date?.isValid() ? date.format(MONTH_FORMAT) : "", name)
       }
-      slotProps={{ textField: { fullWidth: true } }}
+      slotProps={{
+        textField: { fullWidth: true },
+        // Room under the last row of years, which otherwise touches the edge
+        layout: { sx: { "& .MuiYearCalendar-root": { pb: 2 } } },
+      }}
     />
   </LocalizationProvider>
 );
