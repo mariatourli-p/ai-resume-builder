@@ -132,7 +132,7 @@ export const enTokens = {
   settings: {
     aiTitle: "AI Assistant",
     aiFooter:
-      "Free for everyone. The AI runs inside Chrome on your computer, so your resume is never sent to an AI service.",
+      "Free for everyone. With the online AI, only the text the AI works on is sent to Google's Gemini - never your name, contact details or photo. Without it, the AI runs inside Chrome on your computer.",
     templates: "Templates",
   },
   aiAssistant: {
@@ -153,7 +153,10 @@ export const enTokens = {
     downloadFailed:
       "The AI model download didn't finish. Check that you have at least 22 GB of free disk space and a stable internet connection, then try again.",
     retryDownload: "Try the download again",
+    cloud:
+      "Online AI (Google Gemini), with Chrome's built-in AI when it's busy.",
     badge: {
+      cloud: "Online AI",
       checking: "Checking AI…",
       available: "AI ready",
       downloadable: "AI needs download",
@@ -169,7 +172,7 @@ export const enTokens = {
   footer: {
     copyright: "© {year} AI Resume Builder. All rights reserved.",
     privacy:
-      "No cookies or tracking. Your resume is saved only in this browser and is never uploaded.",
+      "No cookies or tracking. Your resume is saved only in this browser. If you allow the online AI, only the text it works on is sent to Google.",
     licenses: "Open-source licenses",
   },
   licensesDialog: {
@@ -203,7 +206,7 @@ export const enTokens = {
         license: "MIT, BSD, Apache 2.0",
       },
     ],
-    ai: "The AI model (Gemini Nano) is part of Google Chrome and is not shipped with this app. Its use is covered by Google's terms.",
+    ai: "The online AI is Google's Gemini API, and the on-device AI (Gemini Nano) is part of Google Chrome. Neither is shipped with this app; their use is covered by Google's terms.",
     close: "Close",
   },
   aiErrors: {
@@ -226,12 +229,50 @@ export const enTokens = {
       description:
         "Chrome downloads the AI model once before the first use, and the download didn't finish. Check that your computer has at least 22 GB of free disk space and a stable internet connection, then try again. You can see the model's status in Chrome at chrome://on-device-internals.",
     },
+    cloud_limit: {
+      title: "The AI is busy",
+      subtitle: "Limit reached",
+      description:
+        "The free online AI has reached its limit for now. Try again in a minute, or later today. On a computer with a recent desktop Chrome, the built-in AI takes over automatically.",
+    },
     request_failed: {
       title: "AI request failed",
       subtitle: "Something went wrong",
       description:
         "The AI couldn't complete the request. Please try again in a moment.",
     },
+  },
+  cloudConsent: {
+    title: "Where should the AI work?",
+    intro:
+      "The AI helps you write your summary, achievements and skills. Pick one - you can change it later in Settings.",
+    recommended: "Recommended",
+    options: {
+      cloud: {
+        title: "Online",
+        points: [
+          "Works on any phone or computer",
+          "Writes the best text",
+          "Sends your job titles, skills and notes to Google - never your name, contact details or photo",
+        ],
+        button: "Use online AI",
+      },
+      device: {
+        title: "On this computer only",
+        points: [
+          "Nothing leaves your computer",
+          "Needs Google Chrome on a computer - not on phones",
+          "Simpler text, and the first time can be slow",
+        ],
+        button: "Keep it on my computer",
+      },
+    },
+    note: "Online, Google may use what you send to improve its AI. Don't put private details in your notes.",
+  },
+  cloudSwitch: {
+    label: "Use online AI",
+    description:
+      "On: works on any phone or computer and writes the best text. Your job titles, skills and notes are sent to Google. Off: the AI works only on this computer, in Google Chrome.",
   },
   moreContextDialog: {
     title: "More context needed",

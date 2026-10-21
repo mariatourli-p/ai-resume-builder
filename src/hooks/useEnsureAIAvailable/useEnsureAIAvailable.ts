@@ -4,21 +4,30 @@ import { useAISettings } from "@/routes/AISettings/useAISettings";
 import { useCallback } from "react";
 
 /**
- * Guards AI actions: returns `false` and explains why when the built-in AI
- * model can't run - in another browser, or on a computer that doesn't meet
- * Chrome's requirements.
+ * Guards AI actions. On the first AI click it asks the user whether their
+ * text may be sent to the online AI, and waits for the answer.
+ *
+ * Resolves to `false` when the AI can't run: the user closed the consent
+ * dialog, or chose to keep their text on the device and this browser or
+ * computer has no built-in AI (the AI error dialog explains why).
  */
 export const useEnsureAIAvailable = () => {
   const dispatch = useAppDispatch();
-  const { unsupportedReason } = useAISettings();
+  const { cloudConsent, requestCloudConsent, unsupportedReason } =
+    useAISettings();
 
-  const ensureAIAvailable = useCallback((): boolean => {
+  const ensureAIAvailable = useCallback(async (): Promise<boolean> => {
+    const consent = cloudConsent ?? (await requestCloudConsent());
+    if (!consent) return false;
+    // The online AI works on any device
+    if (consent === "cloud") return true;
+
     if (unsupportedReason) {
       dispatch(toggleDialog({ type: "aiError", message: unsupportedReason }));
       return false;
     }
     return true;
-  }, [unsupportedReason, dispatch]);
+  }, [cloudConsent, requestCloudConsent, unsupportedReason, dispatch]);
 
   return { ensureAIAvailable };
 };

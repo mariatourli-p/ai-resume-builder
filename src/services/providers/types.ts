@@ -27,10 +27,16 @@ export type AIProvider = {
  *   model (graphics card, memory or disk space)
  * - `download_failed`: the one-time model download didn't finish (usually
  *   disk space or connection)
+ * - `cloud_limit`: the online AI is busy (its free quota is used up) and
+ *   this browser has no built-in AI to fall back to
  * - `request_failed`: anything else went wrong
  */
 export type AIProviderErrorCode =
-  "unsupported" | "unsupported_device" | "download_failed" | "request_failed";
+  | "unsupported"
+  | "unsupported_device"
+  | "download_failed"
+  | "cloud_limit"
+  | "request_failed";
 
 /**
  * Error thrown by the AI provider so the UI can show a message based on
@@ -39,8 +45,12 @@ export type AIProviderErrorCode =
 export class AIProviderError extends Error {
   readonly code: AIProviderErrorCode;
 
-  constructor(code: AIProviderErrorCode, message: string) {
-    super(message);
+  constructor(
+    code: AIProviderErrorCode,
+    message: string,
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
     this.name = "AIProviderError";
     this.code = code;
   }

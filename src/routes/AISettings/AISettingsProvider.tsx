@@ -1,13 +1,15 @@
 import {
+  allowCloudAI,
   getBrowserAIAvailability,
   onBrowserAIDownloadProgress,
   prepareBrowserAI,
   type BrowserAIStatus,
 } from "@/services";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AISettingsContext,
   type AISettingsContextType,
+  type CloudConsent,
 } from "./AISettingsContext";
 
 /** Provider choice and API keys saved by earlier versions of the app */
@@ -16,6 +18,19 @@ const OBSOLETE_STORAGE_KEYS = [
   "resume_ai_api_keys",
   "resume_api_key",
 ];
+
+/** Where the user's consent choice is saved in this browser */
+const CONSENT_STORAGE_KEY = "resume_ai_cloud_consent";
+
+/** The saved choice; `null` if none, or if the browser blocks storage */
+const readSavedConsent = (): CloudConsent | null => {
+  try {
+    const saved = localStorage.getItem(CONSENT_STORAGE_KEY);
+    return saved === "cloud" || saved === "device" ? saved : null;
+  } catch {
+    return null;
+  }
+};
 
 export const AISettingsProvider = ({
   children,
@@ -28,10 +43,57 @@ export const AISettingsProvider = ({
     number | null
   >(null);
   const [browserDownloadFailed, setBrowserDownloadFailed] = useState(false);
+  const [cloudConsent, setCloudConsent] = useState(readSavedConsent);
+  const [isConsentDialogOpen, setIsConsentDialogOpen] = useState(false);
+  // Resolves the promise of the AI click that opened the consent dialog
+  const resolveConsentRef = useRef<
+    ((choice: CloudConsent | null) => void) | null
+  >(null);
 
   // The app no longer uses API keys - don't leave them in the browser
   useEffect(() => {
     OBSOLETE_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+  }, []);
+
+  // The AI service sends text online only while the user allows it
+  useEffect(() => {
+    allowCloudAI(cloudConsent === "cloud");
+  }, [cloudConsent]);
+
+  /**
+   * Opens the consent dialog. When: an AI button is clicked before the user
+   * has chosen. The click waits for the answer, so it can go on right away
+   * instead of asking the user to click again.
+   */
+  const requestCloudConsent = useCallback(
+    () =>
+      new Promise<CloudConsent | null>((resolve) => {
+        resolveConsentRef.current?.(null);
+        resolveConsentRef.current = resolve;
+        setIsConsentDialogOpen(true);
+      }),
+    [],
+  );
+
+  /**
+   * Saves the user's choice and closes the dialog. When: a button in the
+   * consent dialog, or the switch in Settings. `null` (the dialog closed
+   * without a choice) saves nothing, so the dialog asks again next time.
+   */
+  const answerCloudConsent = useCallback((choice: CloudConsent | null) => {
+    if (choice) {
+      // Right away, not in the effect: the waiting AI click goes on now
+      allowCloudAI(choice === "cloud");
+      setCloudConsent(choice);
+      try {
+        localStorage.setItem(CONSENT_STORAGE_KEY, choice);
+      } catch {
+        // Storage blocked: the choice still holds until the page reloads
+      }
+    }
+    setIsConsentDialogOpen(false);
+    resolveConsentRef.current?.(choice);
+    resolveConsentRef.current = null;
   }, []);
 
   const refreshBrowserAvailability = useCallback(() => {
@@ -89,6 +151,10 @@ export const AISettingsProvider = ({
 
   const value = useMemo(
     () => ({
+      cloudConsent,
+      requestCloudConsent,
+      isConsentDialogOpen,
+      answerCloudConsent,
       browserAvailability,
       browserDownloadProgress,
       browserDownloadFailed,
@@ -97,6 +163,10 @@ export const AISettingsProvider = ({
       unsupportedReason,
     }),
     [
+      cloudConsent,
+      requestCloudConsent,
+      isConsentDialogOpen,
+      answerCloudConsent,
       browserAvailability,
       browserDownloadProgress,
       browserDownloadFailed,

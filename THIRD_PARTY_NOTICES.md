@@ -41,9 +41,9 @@ Every other package installed for production is MIT, ISC or BSD-3-Clause. Check 
 npx license-checker-rseidelsohn --production --summary
 ```
 
-## AI model
+## AI models
 
-The AI features use Gemini Nano, which Google builds into Chrome. It is not part of this project and is not distributed with it. Using it is subject to Google's terms, including the [Generative AI Prohibited Use Policy](https://policies.google.com/terms/generative-ai/use-policy).
+The AI features use two Google services, neither of which is part of this project or distributed with it: the [Gemini API](https://ai.google.dev/gemini-api/docs) (free tier), called by the serverless function `api/generate.ts`, and Gemini Nano, which Google builds into Chrome. Using them is subject to Google's terms, including the [Gemini API Additional Terms of Service](https://ai.google.dev/gemini-api/terms) and the [Generative AI Prohibited Use Policy](https://policies.google.com/terms/generative-ai/use-policy).
 
 ## Colors
 

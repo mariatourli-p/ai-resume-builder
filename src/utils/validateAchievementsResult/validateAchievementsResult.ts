@@ -1,4 +1,5 @@
 import { askAI, isValidVerdict, VERDICT_CHOICES } from "@/services";
+import { ACHIEVEMENTS_VALIDATION_PROMPT } from "@/services/aiPrompts";
 
 /** A bullet line: `- `, `* `, `• ` or `1. ` */
 const BULLET_LINE = /^([-*•–]|\d+[.)])\s+\S/;
@@ -46,12 +47,8 @@ export const validateAchievementsResult = async (
 ): Promise<boolean> => {
   if (!isBulletList(result)) return false;
 
-  const validationPrompt = `You are a validator. Determine if the following text is a list of achievement bullet points that start with action verbs and describe real accomplishments from a job or a volunteering role.
-It is INVALID if it asks for information, talks to the reader, or describes what it will do instead of listing achievements.
-Reply ONLY with "VALID" or "INVALID". Nothing else.`;
-
   const validation = await askAI({
-    prompt: validationPrompt,
+    prompt: ACHIEVEMENTS_VALIDATION_PROMPT,
     text: result,
     choices: VERDICT_CHOICES,
   });

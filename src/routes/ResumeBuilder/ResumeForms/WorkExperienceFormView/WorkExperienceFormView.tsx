@@ -65,7 +65,7 @@ export const WorkExperienceFormView = ({
   // All cards, to show them; callbacks read entries from `store` instead
   const entries = useExperienceSelector(section, (s) => s, shallowEqual);
   const { improve } = useAI();
-  // Checked before every AI request: explains why the AI can't run here
+  // Checked before every AI request: asks for consent, or explains why not
   const { ensureAIAvailable } = useEnsureAIAvailable();
   // Cards whose achievements the AI is writing - shows their spinner
   const [generatingIds, setGeneratingIds] = useState<string[]>([]);
@@ -141,7 +141,8 @@ export const WorkExperienceFormView = ({
    * disabled while the role title is empty).
    *
    * Steps:
-   * 1. Stops if the AI can't run in this browser
+   * 1. On the first click, asks whether the text may go online; stops if
+   *    the AI can't run
    * 2. Keeps the current text; if the user wrote it for this same role, it
    *    becomes the notes the AI builds the bullets from. If the role changed,
    *    only the role is sent
@@ -157,7 +158,7 @@ export const WorkExperienceFormView = ({
    */
   const onGenerateAchievements = useCallback(
     async (id: string, roleTitle: string) => {
-      if (!ensureAIAvailable()) return;
+      if (!(await ensureAIAvailable())) return;
 
       const entry = findEntry(id);
       const previous = entry?.achievements ?? "";

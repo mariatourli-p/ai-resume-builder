@@ -162,6 +162,7 @@ export const useAI = () => {
 
         return result;
       } catch (error) {
+        if (import.meta.env.DEV) console.info("[AI] Request failed", error);
         const code =
           error instanceof AIProviderError ? error.code : "request_failed";
         dispatch(toggleDialog({ type: "aiError", message: code }));

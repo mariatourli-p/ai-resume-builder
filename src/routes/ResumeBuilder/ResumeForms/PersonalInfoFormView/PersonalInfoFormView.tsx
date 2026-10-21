@@ -38,8 +38,8 @@ export const PersonalInfoFormView = () => {
    */
   const { improve, isLoading } = useAI();
   /**
-   * Checked before every AI request: shows why the AI can't run in this
-   * browser (e.g. not Chrome) instead of failing silently
+   * Checked before every AI request: asks once whether the text may go
+   * online, or shows why the AI can't run instead of failing silently
    */
   const { ensureAIAvailable } = useEnsureAIAvailable();
 
@@ -116,7 +116,8 @@ export const PersonalInfoFormView = () => {
    * button is disabled while the title is empty.
    *
    * Steps:
-   * 1. Stops if the AI can't run in this browser
+   * 1. On the first click, asks whether the text may go online; stops if
+   *    the AI can't run
    * 2. Keeps the current summary, then empties the field
    * 3. `improve` finds the profession the title points to (e.g. "React" ->
    *    "React Developer"), writes the summary - showing it in the field as
@@ -126,7 +127,7 @@ export const PersonalInfoFormView = () => {
    *    without writing a new one
    */
   const onSmartRewrite = useCallback(async () => {
-    if (!ensureAIAvailable()) return;
+    if (!(await ensureAIAvailable())) return;
 
     const title = data.professionalTitle.trim();
     const previous = data.professionalSummary;

@@ -9,6 +9,7 @@ import { SettingsColorPalette } from "@/components/Settings/SettingsColorPalette
 import { SettingsFooter } from "@/components/Settings/SettingsFooter";
 import { SettingsHeader } from "@/components/Settings/SettingsHeader";
 import { enTokens } from "@/locale/en/en-tokens";
+import { useAISettings } from "@/routes/AISettings/useAISettings";
 import { useAIStatusPanel } from "@/routes/AISettings/useAIStatusPanel";
 
 const t = enTokens.settings;
@@ -17,6 +18,16 @@ export const SettingsView = () => {
   const dispatch = useAppDispatch();
   const activeColor = useAccentColorSelector((s) => s);
   const aiStatus = useAIStatusPanel();
+  const { cloudConsent, answerCloudConsent } = useAISettings();
+
+  /**
+   * Saves the user's new choice. When: the online AI switch is flipped.
+   * Why: the consent dialog asks only once, so this is where it changes.
+   */
+  const updateCloudConsent = useCallback(
+    (checked: boolean) => answerCloudConsent(checked ? "cloud" : "device"),
+    [answerCloudConsent],
+  );
 
   const handleColorSelect = useCallback(
     (value: string) => {
@@ -42,6 +53,10 @@ export const SettingsView = () => {
         title={t.aiTitle}
         footerText={t.aiFooter}
         aiStatus={aiStatus}
+        cloudSwitch={{
+          checked: cloudConsent === "cloud",
+          onChange: updateCloudConsent,
+        }}
       />
     </Box>
   );

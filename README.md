@@ -1,12 +1,12 @@
 # AI Resume Builder
 
-An AI-powered resume builder that helps anyone create a polished, professional resume in minutes - no design or writing skills required. The AI features are free and run on the user's own computer.
+An AI-powered resume builder that helps anyone create a polished, professional resume in minutes - no design or writing skills required. The AI features are free: Google's Gemini online when the user allows it, or Chrome's built-in AI on the user's own computer.
 
 > 🚧 This project is in active development. Features marked ✅ are implemented; the rest are planned.
 
 ## Requirements
 
-The resume editor, preview and PDF export work in any modern browser. **The AI features need Chrome's built-in AI**, which runs only on some computers:
+The resume editor, preview and PDF export work in any modern browser. With the user's consent, **the AI runs online** (Google's Gemini) and works in any browser, phones included. Without it, or when the online AI is busy, **the AI features need Chrome's built-in AI**, which runs only on some computers:
 
 | Requirement      | Details                                                                                  |
 | ---------------- | ---------------------------------------------------------------------------------------- |
@@ -21,10 +21,10 @@ These requirements come from [Chrome's documentation][chrome-ai-requirements], a
 
 ### Good to know
 
-- **The AI is provided by Google, not by this app.** It is Gemini Nano, built into Chrome. Google decides which browsers, versions and devices support it, and may change or remove it.
+- **The AI is provided by Google, not by this app.** Online it is the free tier of the [Gemini API][gemini-api]; on the device it is Gemini Nano, built into Chrome. Google decides the models, limits, browsers and devices, and may change them.
 - **Check what the AI writes.** Its text can be wrong or invented. Users should review every suggestion before using it in a resume.
 - **Google's rules apply.** Using the built-in AI is subject to Google's [Generative AI Prohibited Use Policy][google-ai-policy].
-- **Privacy.** Resume data stays in the browser (localStorage). The AI runs on the user's computer, so the resume is not sent to an AI service.
+- **Privacy.** Resume data stays in the browser (localStorage). Before the first AI request the app asks where the AI may run. With the online AI, only the text the AI works on is sent to Google: titles, skills, the user's achievement notes and the AI's own text. Names, contact details, photos and organizations never are. On the Gemini API's free tier, Google may use that text to improve its products. With **Keep it on my computer**, nothing is sent.
 
 ---
 
@@ -68,7 +68,7 @@ Users fill in their details section by section (Personal Info, Work Experience, 
 | State          | Redux Toolkit + redux-persist (localStorage), Zustand     |
 | Icons          | Lucide React, MUI Icons                                   |
 | Fonts          | Inter, Literata, JetBrains Mono, Space Grotesk - bundled with Fontsource (SIL Open Font License), no font CDN |
-| AI             | Chrome built-in AI ([Prompt API][prompt-api]), on-device  |
+| AI             | Google Gemini API (free tier) through a Vercel serverless function, with Chrome's built-in AI ([Prompt API][prompt-api]) on the device as fallback |
 | Dates          | MUI X Date Pickers + Day.js (loaded after the page)       |
 | PDF export     | html2canvas + jsPDF (loaded only when exporting)          |
 | Component docs | Storybook 10                                              |
@@ -76,9 +76,14 @@ Users fill in their details section by section (Personal Info, Work Experience, 
 
 ## AI Assistant
 
-The AI features are free for every user: no account and no API key. They use Chrome's built-in AI ([Prompt API][prompt-api]), which runs the model on the user's own computer, so resume data is never sent to an AI service.
+The AI features are free for every user, with no account. Users choose where the AI runs the first time they click an AI button, and can change it in **Settings** (gear icon):
 
-- **Requirements:** a recent desktop version of Google Chrome on hardware that supports the built-in model (see [Requirements](#requirements)).
+- **Use online AI:** Google's Gemini, through the app's serverless function. Better text, on any device. When its free quota is used up, Chrome's built-in AI takes over, if the computer has it.
+- **Keep it on my computer:** Chrome's built-in AI ([Prompt API][prompt-api]), which runs the model on the user's own computer, so nothing is sent.
+
+More about the AI:
+
+- **Requirements for the built-in AI:** a recent desktop version of Google Chrome on hardware that supports the model (see [Requirements](#requirements)).
 - **First use:** the model downloads once (a few minutes). Users can start the download from **Settings** (gear icon), or it starts on the first AI action. A progress bar shows the download.
 - **English only:** the AI features work in English.
 - **Job title or keyword:** users can type a full job title ("Senior Accountant") or a keyword about their work - a skill, tool, technology or field ("React", "bookkeeping"). The AI first finds the profession it points to, then writes about that profession. Input that can't be linked to any kind of work (random letters, names, greetings) shows a message asking for a real job title.
@@ -100,7 +105,32 @@ Behavior shared by all AI actions:
 
 ## Behind the scenes: how the AI works
 
-### What Google provides
+### Online AI first, built-in AI as fallback
+
+`askAI` (`src/services/aiService.ts`) picks the AI for every request:
+
+1. **The user allowed the online AI:** `cloudProvider` sends the request to `/api/generate`, the app's serverless function (`api/generate.ts`). The function adds the API key, calls the Gemini API and returns the reply, streamed for Smart Rewrite and Generate Achievements.
+2. **The online AI fails or its quota is used up (HTTP 429):** the same request goes to Chrome's built-in AI, if this computer has it. After any failure the online AI is skipped for a minute, so the other requests of the same click (and the next clicks) don't wait for it again.
+3. **The user chose Keep it on my computer:** every request goes to Chrome's built-in AI and nothing is sent.
+
+The serverless function protects the key and its free quota:
+
+- **The key stays on the server.** It is set in Vercel, never in the browser's code.
+- **Only the app's prompts run.** The function accepts only the system prompts in `src/services/aiPrompts.ts` and texts up to 4,000 characters, so nobody can use it as a free general-purpose AI.
+- **A limit per visitor.** Each IP address gets 20 requests a minute (about seven AI clicks), so one person can't use up the daily quota for everyone. The limit is kept in memory, per server instance.
+- **Nothing is stored, and the user's text is never logged.** When Google fails, the function logs and returns only Google's status and reason (e.g. `403 PERMISSION_DENIED`), so a broken deploy shows in the Vercel logs and in the browser's Network tab.
+
+`cloudProvider` also leaves out the organization (`Organization: ...`) from volunteering requests. Chrome's built-in AI still gets it, because it stays on the computer.
+
+### Setting up the online AI
+
+1. Create a free API key in [Google AI Studio][ai-studio] (no card needed).
+2. In the Vercel project, open **Settings → Environment Variables** and add `GEMINI_API_KEY`. Optionally add `GEMINI_MODEL` to use another model than `gemini-2.5-flash`.
+3. Redeploy. The free tier's current limits are shown per project in AI Studio.
+
+Without the key, `/api/generate` answers `503` and the app uses Chrome's built-in AI. `npm run dev` has no serverless functions, so locally the app also uses the built-in AI; `vercel dev` runs the function too.
+
+### What Chrome provides
 
 Chrome has an AI model built in, **Gemini Nano**, and gives web pages access to it through the **[Prompt API][prompt-api]**: a global JavaScript object called `LanguageModel`. That object is the whole "setup":
 
@@ -147,7 +177,7 @@ The profession is cached per title until the page reloads, so clicking again wit
 
 Taking **Smart Rewrite** with the title "React" as an example:
 
-1. `ensureAIAvailable()` stops here and shows a dialog if the AI can't run on this browser or computer.
+1. `ensureAIAvailable()` asks where the AI may run, the first time only (`CloudConsentDialog`). With Keep it on my computer, it stops here and shows a dialog if the built-in AI can't run on this browser or computer.
 2. The view calls `useAI().improve("smartRewrite", …)` (`src/hooks/useAI`).
 3. **Find the profession.** `resolveJobTitle` sends "React" with `JOB_TITLE_PROMPT` and a JSON Schema, so the reply is always shaped like `{"isProfession": true, "jobTitle": "React Developer"}`. If `isProfession` is `false`, a dialog asks for a real job title and nothing else runs.
 4. **Write.** It sends `Job title: React Developer` with the `smartRewrite` prompt. The reply is streamed, and each piece is shown in the summary field as it arrives.
@@ -159,7 +189,9 @@ Every call goes through the same path:
 ```
 View (src/routes/ResumeBuilder/ResumeForms/*View)
   → useAI().improve (src/hooks/useAI)            find profession → write text → check result
-  → askAI (src/services/aiService.ts)
+  → askAI (src/services/aiService.ts)               online AI first, if the user allowed it
+  → cloudProvider.generate → postGenerate (src/services/api) → /api/generate (api/generate.ts) → Gemini API
+     or, as fallback or with Keep it on my computer:
   → browserProvider.generate (src/services/providers/browserProvider.ts)
   → Chrome's LanguageModel (Gemini Nano, on this computer)
 ```
@@ -172,7 +204,7 @@ There are six prompts, so at most six base sessions: find profession, summary, a
 
 ### The prompts
 
-All instructions sent to the AI are in `src/services/aiPrompts.ts`, except the achievements validator prompt, which is in `src/utils/validateAchievementsResult`. They contain no user text, so the base sessions can be reused. The user's text is only in the request (`Job title: …`, the user's notes, the current skills).
+All instructions sent to the AI are in `src/services/aiPrompts.ts`. They contain no user text, so the base sessions can be reused, and the serverless function accepts only these. The user's text is only in the request (`Job title: …`, the user's notes, the current skills).
 
 ### Errors
 
@@ -181,10 +213,11 @@ All instructions sent to the AI are in `src/services/aiPrompts.ts`, except the a
 | The browser has no `LanguageModel`                     | `unsupported`        | AI not available in this browser      |
 | Chrome says `unavailable` (the computer can't run it)  | `unsupported_device` | AI not available on this computer     |
 | Creating the first session fails before the model is on the computer (disk space, connection) | `download_failed` | The AI model couldn't download |
+| The online AI is busy (quota used up) and there is no built-in AI to fall back to | `cloud_limit` | The AI is busy |
 | Any other failure                                      | `request_failed`     | AI request failed                     |
 | The title is not a profession, the volunteer role doesn't say what the work was, or the check says `INVALID` | - | More context needed |
 
-The header also shows the AI's status at all times (**AI ready**, **AI needs download**, **AI downloading**, **AI not supported**, **AI download failed**), with the reason on hover, so users know before they click an AI button.
+The header also shows the AI's status at all times (**Online AI**, **AI ready**, **AI needs download**, **AI downloading**, **AI not supported**, **AI download failed**), with the reason on hover, so users know before they click an AI button.
 
 ### Debugging
 
@@ -198,6 +231,8 @@ To see the model's status in Chrome, open `chrome://on-device-internals`.
 ## Project Structure
 
 ```
+api/
+└── generate.ts      # Serverless function that calls the Gemini API
 src/
 ├── assets/          # Icons
 ├── components/      # Presentational UI components, each with Storybook stories
@@ -213,13 +248,13 @@ src/
 ├── locale/en/       # All UI text (en-tokens.ts)
 ├── redux/           # Store, resume slice, selectors (persisted to localStorage)
 ├── routes/          # Views that connect components to state and the AI
-│   ├── AISettings/  # Built-in AI availability and model download
+│   ├── AISettings/  # Online AI consent, built-in AI availability and model download
 │   ├── Dialogs/
 │   ├── HeaderBar/
 │   ├── HomePage/
 │   ├── ResumeBuilder/ResumeForms/   # One view per form section
 │   └── SectionsBar/
-├── services/        # AI service, prompts and the browser AI provider
+├── services/        # AI service, prompts, the AI providers and the backend calls (api/)
 ├── stores/          # Zustand stores (section scrolling)
 ├── theme/           # MUI theme and design tokens
 └── utils/           # resolveJobTitle, parseSkillList, AI result validators
@@ -230,7 +265,8 @@ src/
 ### Prerequisites
 
 - Node.js 18+
-- A recent desktop version of Google Chrome to use the AI features (see [Requirements](#requirements))
+- For the online AI: a free Gemini API key (see [Setting up the online AI](#setting-up-the-online-ai))
+- For the built-in AI: a recent desktop version of Google Chrome (see [Requirements](#requirements))
 
 ### Installation
 
@@ -290,3 +326,5 @@ Third-party software, fonts and icons, and their licenses, are listed in [THIRD_
 [prompt-api]: https://developer.chrome.com/docs/ai/prompt-api
 [chrome-ai-requirements]: https://developer.chrome.com/docs/ai/get-started
 [google-ai-policy]: https://policies.google.com/terms/generative-ai/use-policy
+[gemini-api]: https://ai.google.dev/gemini-api/docs
+[ai-studio]: https://aistudio.google.com/apikey
