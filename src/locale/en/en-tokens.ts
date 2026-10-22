@@ -83,6 +83,11 @@ const SECTIONS = {
           placeholder: "2011 - 2015",
         },
         location: { label: "LOCATION" },
+        description: {
+          label: "DETAILS (OPTIONAL)",
+          placeholder:
+            "Thesis, key modules or grade, e.g. Thesis on pain management in the ICU, GPA 8.5/10",
+        },
       },
     },
     courses: {

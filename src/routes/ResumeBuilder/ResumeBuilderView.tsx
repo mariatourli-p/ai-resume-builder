@@ -44,6 +44,14 @@ export const ResumeBuilderView = ({ sx }: ResumeBuilderViewProps) => {
       >
         <PersonalInfoFormView />
       </div>
+      {/* Same order as the resume: skills come right after the summary */}
+      <div
+        ref={(el) => {
+          sectionRefs.current[skills.skills] = el;
+        }}
+      >
+        <SkillsFormView />
+      </div>
       <div
         ref={(el) => {
           sectionRefs.current[workExperience.title] = el;
@@ -57,13 +65,6 @@ export const ResumeBuilderView = ({ sx }: ResumeBuilderViewProps) => {
         }}
       >
         <EducationFormView />
-      </div>
-      <div
-        ref={(el) => {
-          sectionRefs.current[skills.skills] = el;
-        }}
-      >
-        <SkillsFormView />
       </div>
       <div
         ref={(el) => {

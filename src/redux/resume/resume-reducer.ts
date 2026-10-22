@@ -55,6 +55,8 @@ export type EducationEntry = {
   degree: string;
   graduationDate: string;
   location: string;
+  /** Thesis, key modules, grade, in the user's own words; may be `""` */
+  description: string;
 };
 
 /** Sections that use the experience card: role, organization, dates, achievements */
@@ -138,7 +140,11 @@ const resumeSlice = createSlice({
 
     // Work Experience and Volunteering
     addExperience(state, action: PayloadAction<ExperienceSection>) {
-      state[action.payload].push({
+      /**
+       * Newest first: the new card opens at the top of the form, right under
+       * the Add button, and the resume lists the latest role first
+       */
+      state[action.payload].unshift({
         id: crypto.randomUUID(),
         roleTitle: "",
         company: "",
@@ -206,6 +212,7 @@ const resumeSlice = createSlice({
         degree: "",
         graduationDate: "",
         location: "",
+        description: "",
       });
     },
     updateEducationField(

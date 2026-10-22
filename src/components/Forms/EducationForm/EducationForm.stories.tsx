@@ -13,6 +13,7 @@ const defaultEntries: Entry[] = [
     degree: "BFA in Interaction Design",
     graduationDate: "2011 – 2015",
     location: "Providence, RI",
+    description: "Thesis on accessible navigation patterns for mobile apps",
   },
 ];
 
@@ -30,6 +31,7 @@ const withState = (_Story: unknown, context: { args: EducationFormProps }) => {
         degree: "",
         graduationDate: "",
         location: "",
+        description: "",
       },
     ]);
 
@@ -93,6 +95,7 @@ export const MultipleEntries: Story = {
         degree: "MSc in Human-Computer Interaction",
         graduationDate: "2015 – 2017",
         location: "Cambridge, MA",
+        description: "",
       },
     ],
   },

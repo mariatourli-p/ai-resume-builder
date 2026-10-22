@@ -37,14 +37,21 @@ export const SectionsBarView = ({
   open,
   onClose,
 }: SectionsBarViewProps) => {
-  const { personalInfo, workExperience, volunteering, education, courses } =
-    enTokens.sections;
+  const {
+    personalInfo,
+    workExperience,
+    volunteering,
+    education,
+    courses,
+    skills,
+  } = enTokens.sections;
 
+  // Same order as the forms and the resume
   const sectionItems = [
     { text: personalInfo.title, icon: <IconPersonal /> },
+    { text: skills.skills, icon: <IconSkills /> },
     { text: workExperience.title, icon: <IconExperience /> },
     { text: education.title, icon: <IconEducation /> },
-    { text: "Skills", icon: <IconSkills /> },
     { text: courses.title, icon: <IconCourses /> },
     { text: volunteering.title, icon: <IconVolunteering /> },
   ];

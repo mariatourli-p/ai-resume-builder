@@ -16,6 +16,8 @@ export type EducationEntry = {
   degree: string;
   graduationDate: string;
   location: string;
+  /** Thesis, key modules, grade, in the user's own words; may be `""` */
+  description: string;
 };
 
 /**
@@ -40,7 +42,9 @@ export type EducationFormProps = {
  * Form section for collecting and editing a candidate's education history.
  *
  * Renders a list of education entries, each with institution name, degree,
- * graduation date, and location. The user can add new entries or delete existing ones.
+ * graduation date, location and optional details in the user's own words
+ * (thesis, key modules, grade). The user can add new entries or delete
+ * existing ones.
  *
  * This is a controlled component - the parent owns `entries` and must handle
  * `onChange`, `onAdd`, and `onDelete` to keep state in sync.
@@ -181,6 +185,21 @@ export const EducationForm = ({
                 }
               />
             </Box>
+
+            {/* Optional: thesis, key modules, grade, in the user's own words */}
+            <TextField
+              label={education.fields.description.label}
+              placeholder={education.fields.description.placeholder}
+              fullWidth
+              multiline
+              minRows={2}
+              slotProps={NO_AUTOFILL}
+              value={entry.description}
+              onChange={(e) =>
+                onChange?.(entry.id, "description", e.target.value)
+              }
+              sx={{ mt: 2 }}
+            />
           </Paper>
         ))}
       </Box>
