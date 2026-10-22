@@ -13,6 +13,10 @@ import {
   HandHeart,
   Presentation,
   Menu,
+  MapPin,
+  Mail,
+  Phone,
+  Link,
 } from "lucide-react";
 
 const ICON_SIZE = 20;
@@ -79,4 +83,22 @@ export const IconRefresh = ({ size = ICON_SIZE, ...props }: IconProps) => (
 
 export const IconMenu = ({ size = ICON_SIZE, ...props }: IconProps) => (
   <Menu size={size} {...props} />
+);
+
+// ── Contact Icons ─────────────────────────────────────────────────────────────
+
+export const IconLocation = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <MapPin size={size} {...props} />
+);
+
+export const IconEmail = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Mail size={size} {...props} />
+);
+
+export const IconPhone = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Phone size={size} {...props} />
+);
+
+export const IconLink = ({ size = ICON_SIZE, ...props }: IconProps) => (
+  <Link size={size} {...props} />
 );

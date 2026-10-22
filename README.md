@@ -279,7 +279,7 @@ Measured with Playwright on the production build, with a resume of 3 work entrie
 | ----------------------------------- | ----------------------------------------------- |
 | Main JavaScript bundle              | 656 KB (205 KB gzip)                            |
 | Typing, per key press               | ~5-7 ms of JavaScript (~40-45 ms on a 4x slower CPU) |
-| Saving to localStorage, per key     | under 0.1 ms                                    |
+| Saving to localStorage              | at most twice a second (5 saves for 40 keys)    |
 
 What keeps it fast:
 

@@ -66,6 +66,8 @@ export type CourseEntry = {
   organizer: string;
   /** Month as `YYYY-MM`, or `""` */
   date: string;
+  /** What the user learned or did there, in their own words; may be `""` */
+  description: string;
 };
 
 export type DialogType = "aiError" | "moreContext" | null;
@@ -228,6 +230,7 @@ const resumeSlice = createSlice({
         title: "",
         organizer: "",
         date: "",
+        description: "",
       });
     },
     updateCourseField(

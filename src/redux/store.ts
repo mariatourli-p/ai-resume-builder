@@ -86,13 +86,29 @@ const migrations = {
         DEFAULT_ACCENT_COLOR,
     },
   }),
+  // Courses got a description the user writes
+  6: (state: MigrationState): MigrationState => ({
+    ...state,
+    resume: {
+      ...state.resume,
+      courses: (state.resume.courses ?? []).map((entry) => ({
+        description: "",
+        ...(entry as Record<string, unknown>),
+      })),
+    },
+  }),
 };
 
 const persistedReducer = persistReducer(
   {
     key: "resume_builder",
     storage,
-    version: 5,
+    /**
+     * Saves at most twice a second instead of on every key press: the whole
+     * resume (photo included) is written each time
+     */
+    throttle: 500,
+    version: 6,
     migrate: createMigrate(
       migrations as unknown as Parameters<typeof createMigrate>[0],
       {
@@ -114,6 +130,11 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+// Saves right away when the tab is hidden or closed, so no key press is lost
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") void persistor.flush();
+});
 
 export type AppStore = typeof store;
 export type AppDispatch = typeof store.dispatch;

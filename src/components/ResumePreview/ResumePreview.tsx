@@ -1,3 +1,4 @@
+import { IconEmail, IconLink, IconLocation, IconPhone } from "@/assets/Icons";
 import type {
   CourseEntry,
   EducationEntry,
@@ -36,6 +37,30 @@ const FONT_SIZE = {
   body: 13,
   meta: 11.5,
 } as const;
+
+/** Longest link shown in the header; longer ones end with "…" */
+const LINK_MAX_LENGTH = 40;
+
+/**
+ * A link as people read it on paper: without `https://`, `www.`, the query
+ * or a trailing slash (e.g. `https://www.site.com/me?ref=x` -> `site.com/me`).
+ * Cut here, not with CSS, because the PDF capture (html2canvas) doesn't
+ * draw `text-overflow: ellipsis`.
+ */
+const showLink = (url: string) => {
+  const link = url
+    .trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/^www\./i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/\/$/, "");
+  return link.length > LINK_MAX_LENGTH
+    ? `${link.slice(0, LINK_MAX_LENGTH - 1)}…`
+    : link;
+};
+
+/** Icon size in the contact line: about the height of its letters */
+const CONTACT_ICON_SIZE = 11;
 
 /**
  * Leading bullet a line may start with (`- `, `* `, `• `, `– `), but not a
@@ -190,6 +215,20 @@ const CourseEntryItem = memo(({ entry }: { entry: CourseEntry }) => (
     >
       {entry.organizer}
     </Typography>
+    {entry.description.trim() && (
+      <Typography
+        sx={{
+          fontSize: FONT_SIZE.body,
+          lineHeight: 1.6,
+          color: "#374151",
+          mt: 0.25,
+          // Keeps the user's line breaks
+          whiteSpace: "pre-line",
+        }}
+      >
+        {entry.description.trim()}
+      </Typography>
+    )}
   </Box>
 ));
 
@@ -222,9 +261,12 @@ export const ResumePreview = memo(
         photo,
       } = personalInfo;
 
-      const contactParts = [location, emailAddress, phone, portfolio].filter(
-        Boolean,
-      );
+      const contacts = [
+        { field: "location", Icon: IconLocation, text: location },
+        { field: "email", Icon: IconEmail, text: emailAddress },
+        { field: "phone", Icon: IconPhone, text: phone },
+        { field: "portfolio", Icon: IconLink, text: showLink(portfolio) },
+      ].filter((contact) => contact.text.trim());
 
       return (
         <Box
@@ -238,6 +280,8 @@ export const ResumePreview = memo(
             p: "12mm",
             fontFamily,
             boxSizing: "border-box",
+            // A long word or link without spaces wraps instead of leaving the page
+            overflowWrap: "anywhere",
           }}
         >
           {/* ── Header ── */}
@@ -277,22 +321,8 @@ export const ResumePreview = memo(
                   fontFamily: "inherit",
                 }}
               >
-                {fullName || "Your Name"}
+                {fullName || enTokens.preview.namePlaceholder}
               </Typography>
-
-              {contactParts.length > 0 && (
-                <Typography
-                  sx={{
-                    fontSize: FONT_SIZE.meta,
-                    color: "text.secondary",
-                    mt: 0.5,
-                    letterSpacing: "0.02em",
-                    fontFamily: "inherit",
-                  }}
-                >
-                  {contactParts.join("  ·  ")}
-                </Typography>
-              )}
 
               {professionalTitle && (
                 <Typography
@@ -308,6 +338,50 @@ export const ResumePreview = memo(
                 >
                   {professionalTitle}
                 </Typography>
+              )}
+
+              {/**
+               * Contact details in one line, each with a small muted icon.
+               * A detail that doesn't fit moves whole to the next line,
+               * never breaking in the middle.
+               */}
+              {contacts.length > 0 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: photo ? "flex-start" : "center",
+                    columnGap: 2,
+                    rowGap: 0.5,
+                    mt: 1,
+                  }}
+                >
+                  {contacts.map(({ field, Icon, text }) => (
+                    <Typography
+                      key={field}
+                      component="span"
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 0.625,
+                        whiteSpace: "nowrap",
+                        fontSize: FONT_SIZE.meta,
+                        color: "text.secondary",
+                        letterSpacing: "0.02em",
+                        lineHeight: 1.5,
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      <Icon
+                        size={CONTACT_ICON_SIZE}
+                        strokeWidth={1.5}
+                        aria-hidden
+                        style={{ flexShrink: 0, opacity: 0.7 }}
+                      />
+                      {text}
+                    </Typography>
+                  ))}
+                </Box>
               )}
             </Box>
           </Box>
