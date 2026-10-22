@@ -130,6 +130,11 @@ export const enTokens = {
     summary: "Professional Summary",
     experience: "Experience",
   },
+  /** Shown in an empty date field instead of MUI's format code "MMMM YYYY" */
+  monthField: {
+    monthPlaceholder: "Month",
+    yearPlaceholder: "Year",
+  },
   sections: SECTIONS.sections,
   ai: {
     suggest: "Suggest skills",

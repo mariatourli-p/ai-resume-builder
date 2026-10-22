@@ -1,3 +1,4 @@
+import { enTokens } from "@/locale/en";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -9,6 +10,16 @@ const MONTH_FORMAT = "YYYY-MM";
 
 // The year list starts here instead of MUI's default 1900, which no resume needs
 const EARLIEST_MONTH = dayjs("1950-01");
+
+/**
+ * An empty field shows "Month Year" instead of the format code "MMMM YYYY",
+ * which means nothing to the user. Module-level, so every render gets the
+ * same object.
+ */
+const LOCALE_TEXT = {
+  fieldMonthPlaceholder: () => enTokens.monthField.monthPlaceholder,
+  fieldYearPlaceholder: () => enTokens.monthField.yearPlaceholder,
+};
 
 export type MonthFieldProps = {
   label: string;
@@ -40,7 +51,7 @@ const MonthField = ({
   disabled,
   minMonth,
 }: MonthFieldProps) => (
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
+  <LocalizationProvider dateAdapter={AdapterDayjs} localeText={LOCALE_TEXT}>
     <DatePicker
       label={label}
       views={["year", "month"]}

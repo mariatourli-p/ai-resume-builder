@@ -23,7 +23,7 @@ There are no unit tests yet; Vitest runs the Storybook stories in Playwright (`n
 
 ## AI
 
-The AI is Gemini Nano, the model built into Chrome, used through the Prompt API (the global `LanguageModel`). It is free and runs on the user's computer. There is nothing to configure on Google's side: no account, API key, cloud project or backend. The model downloads once into Chrome and nothing is sent over the network. The README section "Behind the scenes" explains the whole flow.
+The AI is Gemini Nano, the model built into Chrome, used through the Prompt API (the global `LanguageModel`). It is free and runs on the user's computer. There is nothing to configure on Google's side: no account, API key, cloud project or backend. The model downloads once into Chrome, and the AI sends nothing over the network. The README section "Behind the scenes" explains the whole flow.
 
 - **Product decisions:**
   - Only the free built-in AI is supported. Don't add paid providers or API key fields.
@@ -57,7 +57,7 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
 
 ## Performance
 
-Measured with Playwright on a production build with a full resume (5 jobs, 2 volunteering roles, 3 degrees, 4 courses, 20 skills, a photo): about 7-8 ms of JavaScript per key press on desktop and 40-50 ms on a phone (CPU slowed 4x). The main bundle is 656 KB. Keep these patterns:
+Measured with Playwright on a production build with a full resume (5 jobs, 2 volunteering roles, 3 degrees, 4 courses, 20 skills, a photo): about 7-8 ms of JavaScript per key press on desktop and 40-50 ms on a phone (CPU slowed 4x). The main bundle is 647 KB. Keep these patterns:
 
 - `ResumePreview` is memoized and fed through `useDeferredValue` in `ResumePreviewView`, so it never blocks typing. Its entry items and section headings are memoized too, so a key press re-renders only the entry being edited.
 - On mobile the off-screen preview is mounted only while Export PDF captures it (`flushSync` in the export function), not on every key press.

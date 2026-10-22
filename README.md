@@ -225,7 +225,7 @@ src/
 │   ├── Dialogs/     # Errors, "more context", licenses
 │   ├── Drawers/
 │   ├── Feedback/    # Toasts (e.g. AI model download progress)
-│   ├── Forms/       # Personal Info, Work Experience, Education, Skills
+│   ├── Forms/       # Personal Info, Skills, Work Experience, Education, Courses
 │   ├── ResumePreview/
 │   └── Settings/    # Settings panel, AI status
 ├── hooks/           # useAI, useEnsureAIAvailable, ...
@@ -238,7 +238,7 @@ src/
 │   ├── HomePage/
 │   ├── ResumeBuilder/ResumeForms/   # One view per form section
 │   └── SectionsBar/
-├── services/        # AI service, prompts and the browser AI provider
+├── services/        # AI service, prompts and the browser AI (browserAI/)
 ├── stores/          # Zustand stores (section scrolling)
 ├── theme/           # MUI theme and design tokens
 └── utils/           # resolveJobTitle, parseSkillList, AI result validators
@@ -281,7 +281,7 @@ Measured with Playwright on the production build, with a resume of 3 work entrie
 
 | Measurement                         | Result                                          |
 | ----------------------------------- | ----------------------------------------------- |
-| Main JavaScript bundle              | 656 KB (205 KB gzip)                            |
+| Main JavaScript bundle              | 647 KB (203 KB gzip)                            |
 | Typing, per key press               | ~5-7 ms of JavaScript (~40-45 ms on a 4x slower CPU) |
 | Saving to localStorage              | at most twice a second (5 saves for 40 keys)    |
 
