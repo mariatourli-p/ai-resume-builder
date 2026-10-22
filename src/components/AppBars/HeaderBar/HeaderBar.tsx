@@ -10,25 +10,17 @@ export type HeaderBarProps = HeaderLeftSideProps & HeaderRightSideProps;
 /**
  * HeaderBar is the pure UI component for the application's top navigation bar.
  *
- * Renders the app name, Builder/Analysis tab switcher, the AI status,
+ * Renders the app name, the AI status,
  * the refresh and settings buttons and the Export PDF button.
  *
  * All state is managed externally and passed in as props - this component is purely presentational.
  *
- * @param activeTab - The currently selected tab ("builder" or "analysis").
- * @param onTabChange - Callback fired when the user switches tabs.
  * @param onMenuClick - When set, shows a menu button that opens the sections drawer (mobile).
  *
  * @example
- * <HeaderBar
- *   activeTab="builder"
- *   onTabChange={setActiveTab}
- *   onRefresh= {onRefresh}
- * />
+ * <HeaderBar onRefresh={onRefresh} onExport={onExport} aiStatus={aiStatus} />
  */
 export const HeaderBar = ({
-  activeTab,
-  onTabChange,
   onMenuClick,
   onRefresh,
   onExport,
@@ -52,11 +44,7 @@ export const HeaderBar = ({
           minHeight: 64,
         }}
       >
-        <HeaderLeftSide
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-          onMenuClick={onMenuClick}
-        />
+        <HeaderLeftSide onMenuClick={onMenuClick} />
         <HeaderRightSide
           onRefresh={onRefresh}
           onExport={onExport}

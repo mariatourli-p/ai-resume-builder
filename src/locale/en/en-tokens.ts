@@ -119,8 +119,6 @@ const SECTIONS = {
 export const enTokens = {
   app: {
     title: "AI Resume Builder",
-    builder: "Builder",
-    analysis: "Analysis",
     resume_sections: "RESUME SECTIONS",
     open_menu: "Sections menu",
     branding_colors: "BRANDING COLORS",

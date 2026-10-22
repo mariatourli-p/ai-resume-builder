@@ -1,6 +1,5 @@
 import { store } from "@/redux";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
 import { Provider } from "react-redux";
 import { HeaderBar } from "./HeaderBar";
 
@@ -24,13 +23,8 @@ type Story = StoryObj<typeof HeaderBar>;
 
 export const Default: Story = {
   render: () => {
-    const [activeTab, setActiveTab] = useState<"builder" | "analysis">(
-      "builder",
-    );
     return (
       <HeaderBar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
         onRefresh={() => {}}
         onExport={() => {}}
         aiStatus={{
@@ -43,15 +37,10 @@ export const Default: Story = {
   },
 };
 
-export const AnalysisTab: Story = {
+export const AIUnsupported: Story = {
   render: () => {
-    const [activeTab, setActiveTab] = useState<"builder" | "analysis">(
-      "analysis",
-    );
     return (
       <HeaderBar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
         onRefresh={() => {}}
         onExport={() => {}}
         aiStatus={{
