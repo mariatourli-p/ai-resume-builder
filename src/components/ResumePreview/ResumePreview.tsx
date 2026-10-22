@@ -105,6 +105,57 @@ const SectionHeading = memo(
   ),
 );
 
+/** Size of a timeline dot and where it sits, level with the entry's title */
+const TIMELINE_DOT = { size: 7, top: 7 } as const;
+
+/**
+ * One step of the experience timeline: a dot next to the entry, and a thin
+ * line down to the next entry's dot, so the roles read as one career path.
+ * `flow-root` keeps the entry's bottom margin inside, so the line reaches
+ * the next dot. Memoized like the other entries, so a key press re-renders
+ * only the entry being edited.
+ */
+const TimelineEntryItem = memo(
+  ({
+    entry,
+    accentColor,
+    isLast,
+  }: {
+    entry: WorkExperienceEntry;
+    accentColor: string;
+    isLast: boolean;
+  }) => (
+    <Box sx={{ position: "relative", display: "flow-root", pl: "18px" }}>
+      <Box
+        sx={{
+          position: "absolute",
+          left: 0,
+          top: TIMELINE_DOT.top,
+          width: TIMELINE_DOT.size,
+          height: TIMELINE_DOT.size,
+          borderRadius: "50%",
+          backgroundColor: accentColor,
+        }}
+      />
+      {!isLast && (
+        <Box
+          sx={{
+            position: "absolute",
+            left: (TIMELINE_DOT.size - 1) / 2,
+            top: TIMELINE_DOT.top + TIMELINE_DOT.size + 3,
+            // Stops just above the next dot
+            bottom: -TIMELINE_DOT.top + 3,
+            width: "1px",
+            backgroundColor: accentColor,
+            opacity: 0.3,
+          }}
+        />
+      )}
+      <WorkEntryItem entry={entry} />
+    </Box>
+  ),
+);
+
 const WorkEntryItem = memo(({ entry }: { entry: WorkExperienceEntry }) => (
   <Box sx={{ mb: 1.5 }}>
     <Box
@@ -187,6 +238,20 @@ const EducationEntryItem = memo(({ entry }: { entry: EducationEntry }) => (
         {entry.location}
       </Typography>
     </Box>
+    {entry.description.trim() && (
+      <Typography
+        sx={{
+          fontSize: FONT_SIZE.body,
+          lineHeight: 1.6,
+          color: "#374151",
+          mt: 0.25,
+          // Keeps the user's line breaks
+          whiteSpace: "pre-line",
+        }}
+      >
+        {entry.description.trim()}
+      </Typography>
+    )}
   </Box>
 ));
 
@@ -406,32 +471,6 @@ export const ResumePreview = memo(
             </Box>
           )}
 
-          {/* ── Work Experience ── */}
-          {workExperience.length > 0 && (
-            <Box sx={{ mb: 2 }}>
-              <SectionHeading
-                title={enTokens.preview.experience}
-                accentColor={accentColor}
-              />
-              {workExperience.map((entry) => (
-                <WorkEntryItem key={entry.id} entry={entry} />
-              ))}
-            </Box>
-          )}
-
-          {/* ── Education ── */}
-          {education.length > 0 && (
-            <Box sx={{ mb: 2 }}>
-              <SectionHeading
-                title={enTokens.sections.education.title}
-                accentColor={accentColor}
-              />
-              {education.map((entry) => (
-                <EducationEntryItem key={entry.id} entry={entry} />
-              ))}
-            </Box>
-          )}
-
           {/* ── Skills ── */}
           {skills.length > 0 && (
             <Box sx={{ mb: 2 }}>
@@ -449,6 +488,37 @@ export const ResumePreview = memo(
               >
                 {skills.join("  ·  ")}
               </Typography>
+            </Box>
+          )}
+
+          {/* ── Work Experience ── */}
+          {workExperience.length > 0 && (
+            <Box sx={{ mb: 2 }}>
+              <SectionHeading
+                title={enTokens.preview.experience}
+                accentColor={accentColor}
+              />
+              {workExperience.map((entry, i) => (
+                <TimelineEntryItem
+                  key={entry.id}
+                  entry={entry}
+                  accentColor={accentColor}
+                  isLast={i === workExperience.length - 1}
+                />
+              ))}
+            </Box>
+          )}
+
+          {/* ── Education ── */}
+          {education.length > 0 && (
+            <Box sx={{ mb: 2 }}>
+              <SectionHeading
+                title={enTokens.sections.education.title}
+                accentColor={accentColor}
+              />
+              {education.map((entry) => (
+                <EducationEntryItem key={entry.id} entry={entry} />
+              ))}
             </Box>
           )}
 
@@ -472,8 +542,13 @@ export const ResumePreview = memo(
                 title={enTokens.sections.volunteering.title}
                 accentColor={accentColor}
               />
-              {volunteering.map((entry) => (
-                <WorkEntryItem key={entry.id} entry={entry} />
+              {volunteering.map((entry, i) => (
+                <TimelineEntryItem
+                  key={entry.id}
+                  entry={entry}
+                  accentColor={accentColor}
+                  isLast={i === volunteering.length - 1}
+                />
               ))}
             </Box>
           )}

@@ -97,6 +97,17 @@ const migrations = {
       })),
     },
   }),
+  // Degrees got details the user writes (thesis, key modules, grade)
+  7: (state: MigrationState): MigrationState => ({
+    ...state,
+    resume: {
+      ...state.resume,
+      education: (state.resume.education ?? []).map((entry) => ({
+        description: "",
+        ...(entry as Record<string, unknown>),
+      })),
+    },
+  }),
 };
 
 const persistedReducer = persistReducer(
@@ -108,7 +119,7 @@ const persistedReducer = persistReducer(
      * resume (photo included) is written each time
      */
     throttle: 500,
-    version: 6,
+    version: 7,
     migrate: createMigrate(
       migrations as unknown as Parameters<typeof createMigrate>[0],
       {

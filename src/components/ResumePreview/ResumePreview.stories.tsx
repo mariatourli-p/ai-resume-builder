@@ -100,6 +100,7 @@ export const Filled: Story = {
         degree: "BFA in Interaction Design",
         graduationDate: "2015",
         location: "Providence, RI",
+        description: "Thesis on accessible navigation patterns for mobile apps",
       },
     ],
     skills: [

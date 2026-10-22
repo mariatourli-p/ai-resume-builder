@@ -69,7 +69,7 @@ Good to know:
 
 ## Overview
 
-Users fill in their details section by section (Personal Info, Work Experience, Education, Skills, Courses & Seminars, Volunteering) and see the resume update live next to the form. The AI writes the professional summary, key achievements and skill suggestions from the user's job title, and the finished resume downloads as a PDF.
+Users fill in their details section by section (Personal Info, Skills, Work Experience, Education, Courses & Seminars, Volunteering) and see the resume update live next to the form. The AI writes the professional summary, key achievements and skill suggestions from the user's job title, and the finished resume downloads as a PDF.
 
 ## Tech Stack
 
