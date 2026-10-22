@@ -29,7 +29,8 @@ The SIL Open Font License allows using, embedding and bundling the fonts in comm
 | react, react-dom                                                                        | MIT                   |
 | @mui/material, @mui/x-date-pickers (community edition), @emotion/react, @emotion/styled | MIT                   |
 | @reduxjs/toolkit, react-redux, redux-persist, zustand, react-router-dom                 | MIT                   |
-| dayjs, lodash                                                                           | MIT                   |
+| dayjs                                                                                   | MIT                   |
+| @vercel/analytics (anonymous visit counts, no cookies)                                  | MIT                   |
 | html2canvas                                                                             | MIT                   |
 | jspdf                                                                                   | MIT                   |
 | dompurify (used by jspdf)                                                               | MPL-2.0 or Apache-2.0 |
@@ -48,3 +49,7 @@ The AI features use Gemini Nano, which Google builds into Chrome. It is not part
 ## Colors
 
 The resume accent colors are plain color values chosen for this project. Colors can't be copyrighted.
+
+## Favicon and link preview image
+
+`public/favicon.svg` and `public/og-image.png` (the picture shown when the link is shared, e.g. on LinkedIn) were made for this project. The image is a screenshot of the app with made-up sample data (no real person, company or school), and its text uses Inter (SIL Open Font License 1.1), the app's own font.

@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { BrowserRouter } from "react-router-dom";
 import { AppView } from "./AppView";
 import { ThemeProvider } from "@mui/material";
@@ -16,6 +17,8 @@ export const App = () => {
         <AISettingsProvider>
           <AppView />
         </AISettingsProvider>
+        {/* Anonymous visit counts, without cookies; it never sees the resume */}
+        <Analytics />
       </ThemeProvider>
     </BrowserRouter>
   );

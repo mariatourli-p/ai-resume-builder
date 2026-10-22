@@ -182,7 +182,7 @@ export const enTokens = {
   footer: {
     copyright: "© {year} AI Resume Builder. All rights reserved.",
     privacy:
-      "No cookies or tracking. Your resume is saved only in this browser and is never uploaded.",
+      "No cookies, only anonymous visit counts. Your resume is saved only in this browser and is never uploaded.",
     licenses: "Open-source licenses",
   },
   licensesDialog: {
@@ -212,7 +212,7 @@ export const enTokens = {
       },
       {
         title: "Other small libraries",
-        items: "Day.js, Emotion, DOMPurify and others",
+        items: "Day.js, Emotion, DOMPurify, Vercel Analytics and others",
         license: "MIT, BSD, Apache 2.0",
       },
     ],

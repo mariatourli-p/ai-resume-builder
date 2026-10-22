@@ -2,6 +2,8 @@
 
 An AI-powered resume builder that helps anyone create a polished, professional resume in minutes - no design or writing skills required. The AI features are free and run on the user's own computer.
 
+**Try it:** https://ai-resume-builder-maria.vercel.app
+
 > 🚧 This project is in active development. Features marked ✅ are implemented; the rest are planned.
 
 ## Requirements
@@ -28,18 +30,20 @@ These requirements come from [Chrome's documentation][chrome-ai-requirements], a
 
 ## Privacy: what leaves the browser
 
-Nothing the user writes. The app has no accounts, no cookies, no analytics and no backend: it is a static site. Fonts and icons are bundled with the app, not loaded from other sites.
+Nothing the user writes. The app has no accounts, no cookies and no backend: it is a static site. Fonts and icons are bundled with the app, not loaded from other sites. The only thing sent is an anonymous count of each visit.
 
 | Data | Where it goes |
 | ---- | ------------- |
 | The whole resume (every field and the photo) | Saved only in this browser (localStorage, key `resume_builder`). Clearing the browser's site data deletes it. |
 | The PDF | Made in the browser. It is never uploaded. |
 | What the AI buttons work on (titles, notes, skills) | Chrome's built-in AI (Gemini Nano), which runs on the user's computer. It is not sent to any AI service, Google's included. |
+| Each page visit | [Vercel Web Analytics][vercel-analytics] counts it: the page, the site the visitor came from (e.g. linkedin.com), the country, and the browser and device type. It uses no cookies, and its visitor ID is reset every 24 hours, so nobody is followed across days or sites. It never receives the resume. |
 
 Good to know:
 
 - **The model download.** The first time, Chrome downloads the AI model from Google, like any Chrome update. The resume is not part of that download.
-- **The web host.** The host that serves the app (Vercel) sees each visitor's IP address, like any website. It never receives the resume.
+- **The web host.** The host that serves the app (Vercel) sees each visitor's IP address, like any website. It never receives the resume. Speed Insights is off.
+- **Link previews.** When the link is shared, sites like LinkedIn download the preview image (`public/og-image.png`) from the host. It shows only made-up sample data.
 
 ---
 
@@ -305,3 +309,4 @@ Third-party software, fonts and icons, and their licenses, are listed in [THIRD_
 [prompt-api]: https://developer.chrome.com/docs/ai/prompt-api
 [chrome-ai-requirements]: https://developer.chrome.com/docs/ai/get-started
 [google-ai-policy]: https://policies.google.com/terms/generative-ai/use-policy
+[vercel-analytics]: https://vercel.com/docs/analytics/privacy-policy

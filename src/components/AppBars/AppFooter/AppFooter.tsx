@@ -12,9 +12,9 @@ export type AppFooterProps = {
  * Page footer with the copyright, a short privacy note and a button that
  * opens a summary of the open-source packages and fonts the app uses.
  *
- * The app sets no cookies and has no tracking, so there is no cookie banner:
- * the resume is kept only in the browser's localStorage, which the app needs
- * to work.
+ * The app sets no cookies, so there is no cookie banner: visits are counted
+ * anonymously by Vercel Web Analytics, which uses no cookies, and the resume
+ * is kept only in the browser's localStorage, which the app needs to work.
  *
  * @example
  * <AppFooter />
