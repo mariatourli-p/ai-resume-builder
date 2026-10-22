@@ -92,6 +92,11 @@ const SECTIONS = {
         title: { label: "COURSE / SEMINAR TITLE" },
         organizer: { label: "ORGANIZER / PROVIDER" },
         date: { label: "DATE" },
+        description: {
+          label: "DESCRIPTION (OPTIONAL)",
+          placeholder:
+            "What you learned or did there, e.g. Built a REST API in Node.js as the final project",
+        },
       },
     },
     skills: {
@@ -117,6 +122,8 @@ export const enTokens = {
   },
   /** Section headings of the resume itself; the other sections use their form's title */
   preview: {
+    // Shown until the user types their name
+    namePlaceholder: "Your Name",
     summary: "Professional Summary",
     experience: "Experience",
   },

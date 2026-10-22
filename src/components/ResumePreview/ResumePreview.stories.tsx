@@ -89,6 +89,8 @@ export const Filled: Story = {
         title: "Advanced Design Systems",
         organizer: "Interaction Design Foundation",
         date: "2023-04",
+        description:
+          "Built a token-based component library as the final project.",
       },
     ],
     education: [

@@ -12,6 +12,7 @@ const defaultEntries: Entry[] = [
     title: "Advanced React Patterns",
     organizer: "Frontend Masters",
     date: "2024-05",
+    description: "Compound components, render props and custom hooks.",
   },
 ];
 
@@ -23,7 +24,13 @@ const withState = (_Story: unknown, context: { args: CoursesFormProps }) => {
   const handleAdd = () =>
     setEntries((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), title: "", organizer: "", date: "" },
+      {
+        id: crypto.randomUUID(),
+        title: "",
+        organizer: "",
+        date: "",
+        description: "",
+      },
     ]);
 
   const handleDelete = (id: string) =>
@@ -84,6 +91,7 @@ export const MultipleEntries: Story = {
         title: "Certified Scrum Master",
         organizer: "Scrum Alliance",
         date: "2023-11",
+        description: "",
       },
     ],
   },

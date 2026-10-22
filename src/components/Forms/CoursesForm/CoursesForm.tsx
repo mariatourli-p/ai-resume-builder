@@ -21,6 +21,8 @@ export type CourseEntry = {
   organizer: string;
   /** Month as `YYYY-MM`, or `""` */
   date: string;
+  /** What the user learned or did there, in their own words; may be `""` */
+  description: string;
 };
 
 /**
@@ -47,8 +49,9 @@ const MonthField = lazy(() => import("../MonthField"));
 /**
  * Form section for courses, seminars and certifications.
  *
- * Each entry has a title, an organizer and the month it took place. Kept
- * short on purpose: a few fields are enough for this section of a resume.
+ * Each entry has a title, an organizer, the month it took place and an
+ * optional description in the user's own words. Kept short on purpose: a
+ * few fields are enough for this section of a resume.
  *
  * This is a controlled component - the parent owns `entries` and must handle
  * `onChange`, `onAdd`, and `onDelete` to keep state in sync.
@@ -161,6 +164,20 @@ export const CoursesForm = ({
                 />
               </Suspense>
             </Box>
+
+            {/* Optional: what the user learned or did, in their own words */}
+            <TextField
+              label={courses.fields.description.label}
+              placeholder={courses.fields.description.placeholder}
+              fullWidth
+              multiline
+              minRows={2}
+              value={entry.description}
+              onChange={(e) =>
+                onChange?.(entry.id, "description", e.target.value)
+              }
+              sx={{ mt: 2 }}
+            />
 
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
               <IconButton
