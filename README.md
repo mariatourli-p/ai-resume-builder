@@ -127,7 +127,7 @@ Chrome has an AI model built in, **Gemini Nano**, and gives web pages access to 
   - At least 22 GB of free disk space.
   - A graphics card with more than 4 GB of memory, or 16 GB of RAM and 4 CPU cores.
 
-The app uses these parts of the API, all in `src/services/browserAI/browserAI.ts`:
+The app uses these parts of the API, all in `src/services/browserAI/`:
 
 | API                                      | What it does                                                                                  | When the app uses it                                         |
 | ---------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -174,7 +174,7 @@ Every call goes through the same path:
 View (src/routes/ResumeBuilder/ResumeForms/*View)
   → useAI().improve (src/hooks/useAI)            find profession → write text → check result
   → askAI (src/services/aiService.ts)
-  → generateWithBrowserAI (src/services/browserAI/browserAI.ts)
+  → generateWithBrowserAI (src/services/browserAI/)
   → Chrome's LanguageModel (Gemini Nano, on this computer)
 ```
 

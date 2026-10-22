@@ -29,7 +29,7 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
   - Only the free built-in AI is supported. Don't add paid providers or API key fields.
   - No online AI. An online Gemini API version was built and removed on purpose: Google's free tier may not be offered to users in the EEA, Switzerland or the UK (most users are in Greece), and on the free tier Google may use what is sent and human reviewers may read it. Don't add it back.
   - The AI is English only (`expectedInputs`/`expectedOutputs` are English text). Greek support was removed on purpose.
-- **Where `LanguageModel` is touched:** only in `src/services/browserAI/browserAI.ts`. Everything else goes through its exports:
+- **Where `LanguageModel` is touched:** only in `src/services/browserAI/` (`languageModel.ts` reads it; `availability`, `download`, `sessions` and `generateWithBrowserAI` use it). Everything else goes through the folder's barrel:
   - `getBrowserAIAvailability()` - `availability()`; runs once on app start in `AISettingsProvider`. It returns `"unsupported_browser"` when there is no `LanguageModel`.
   - `prepareBrowserAI()` - an empty `create()` from the Settings download button, to start the one-time download (Chrome needs a user click).
   - `onBrowserAIDownloadProgress()` - the `monitor`'s `downloadprogress` events, for the progress bar and toast.

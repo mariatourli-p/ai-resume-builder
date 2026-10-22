@@ -38,26 +38,18 @@ const FONT_SIZE = {
   meta: 11.5,
 } as const;
 
-/** Longest link shown in the header; longer ones end with "…" */
-const LINK_MAX_LENGTH = 40;
-
 /**
- * A link as people read it on paper: without `https://`, `www.`, the query
- * or a trailing slash (e.g. `https://www.site.com/me?ref=x` -> `site.com/me`).
- * Cut here, not with CSS, because the PDF capture (html2canvas) doesn't
- * draw `text-overflow: ellipsis`.
+ * A link as people read it on paper, without `https://`, `www.` or a
+ * trailing slash (e.g. `https://www.site.com/me/` -> `site.com/me`). The
+ * rest is kept whole: a reader of the PDF has to type it, so a cut link
+ * leads nowhere.
  */
-const showLink = (url: string) => {
-  const link = url
+const showLink = (url: string) =>
+  url
     .trim()
     .replace(/^https?:\/\//i, "")
     .replace(/^www\./i, "")
-    .replace(/[?#].*$/, "")
     .replace(/\/$/, "");
-  return link.length > LINK_MAX_LENGTH
-    ? `${link.slice(0, LINK_MAX_LENGTH - 1)}…`
-    : link;
-};
 
 /** Icon size in the contact line: about the height of its letters */
 const CONTACT_ICON_SIZE = 11;
@@ -449,7 +441,8 @@ export const ResumePreview = memo(
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 0.625,
-                        whiteSpace: "nowrap",
+                        // A long link wraps onto the next line instead of being cut
+                        whiteSpace: field === "portfolio" ? "normal" : "nowrap",
                         fontSize: FONT_SIZE.meta,
                         color: "text.secondary",
                         letterSpacing: "0.02em",

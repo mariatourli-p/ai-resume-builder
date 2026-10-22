@@ -77,7 +77,7 @@ export const AISettingsProvider = ({
   /**
    * Why the AI can't run: another browser, or a Chrome on a computer that
    * doesn't meet the model's requirements. While the check is still running
-   * (`null`), let the request go through: the browser provider reports the
+   * (`null`), let the request go through: `generateWithBrowserAI` reports the
    * reason itself if needed.
    */
   const unsupportedReason: AISettingsContextType["unsupportedReason"] =
