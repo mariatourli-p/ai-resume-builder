@@ -1,9 +1,9 @@
 export {
-  browserProvider,
+  generateWithBrowserAI,
   getBrowserAIAvailability,
   onBrowserAIDownloadProgress,
   prepareBrowserAI,
   type BrowserAIAvailability,
   type BrowserAIStatus,
-} from "./browserProvider";
+} from "./browserAI";
 export * from "./types";

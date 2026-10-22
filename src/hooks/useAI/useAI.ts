@@ -1,7 +1,7 @@
 import { enTokens } from "@/locale/en";
 import { toggleDialog } from "@/redux/resume";
 import { useAppDispatch } from "@/redux";
-import { AIProviderError, askAI } from "@/services";
+import { AIError, askAI } from "@/services";
 import { AI_PROMPTS } from "@/services";
 import { findVolunteerArea } from "@/utils/findVolunteerArea";
 import { resolveJobTitle } from "@/utils/resolveJobTitle";
@@ -161,8 +161,7 @@ export const useAI = () => {
         return result;
       } catch (error) {
         if (import.meta.env.DEV) console.info("[AI] Request failed", error);
-        const code =
-          error instanceof AIProviderError ? error.code : "request_failed";
+        const code = error instanceof AIError ? error.code : "request_failed";
         dispatch(toggleDialog({ type: "aiError", message: code }));
         return null;
       } finally {

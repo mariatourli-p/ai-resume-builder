@@ -35,7 +35,7 @@ const parseReply = (reply: string, title: string): string | null => {
  * @param title - What the user typed in the job title field
  * @returns The job title to write about, or `null` if the input isn't in
  *   English or can't be linked to any kind of work
- * @throws {AIProviderError} If the AI request fails
+ * @throws {AIError} If the AI request fails
  *
  * @example
  * await resolveJobTitle("Sr. accountant"); // "Senior Accountant"

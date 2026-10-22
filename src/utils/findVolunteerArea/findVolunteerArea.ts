@@ -35,7 +35,7 @@ const parseReply = (reply: string, details: string): string | null => {
  *   `Volunteer role: Tutor, Organization: Hope Center`
  * @returns The area of the work (e.g. "Education"), or `null` if neither
  *   the role nor the organization shows one
- * @throws {AIProviderError} If the AI request fails
+ * @throws {AIError} If the AI request fails
  *
  * @example
  * await findVolunteerArea("Volunteer role: Beach cleanup"); // "Environmental cleanup"

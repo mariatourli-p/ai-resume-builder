@@ -1,3 +1,3 @@
 export * from "./aiService";
-export * from "./providers";
+export * from "./browserAI";
 export * from "./aiPrompts";

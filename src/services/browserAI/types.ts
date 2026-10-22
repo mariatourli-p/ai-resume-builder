@@ -15,10 +15,6 @@ export type GenerateParams = {
   responseSchema?: object;
 };
 
-export type AIProvider = {
-  generate: (params: GenerateParams) => Promise<string>;
-};
-
 /**
  * - `unsupported`: this browser has no built-in AI (not Chrome, or too old)
  * - `unsupported_device`: Chrome has it, but this computer can't run the
@@ -27,19 +23,19 @@ export type AIProvider = {
  *   disk space or connection)
  * - `request_failed`: anything else went wrong
  */
-export type AIProviderErrorCode =
+export type AIErrorCode =
   "unsupported" | "unsupported_device" | "download_failed" | "request_failed";
 
 /**
- * Error thrown by the AI provider so the UI can show a message based on
+ * Error thrown by the built-in AI so the UI can show a message based on
  * `code` instead of parsing browser errors.
  */
-export class AIProviderError extends Error {
-  readonly code: AIProviderErrorCode;
+export class AIError extends Error {
+  readonly code: AIErrorCode;
 
-  constructor(code: AIProviderErrorCode, message: string) {
+  constructor(code: AIErrorCode, message: string) {
     super(message);
-    this.name = "AIProviderError";
+    this.name = "AIError";
     this.code = code;
   }
 }

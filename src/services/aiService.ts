@@ -1,4 +1,4 @@
-import { browserProvider, type GenerateParams } from "./providers";
+import { generateWithBrowserAI, type GenerateParams } from "./browserAI";
 
 /**
  * Sends one request to the built-in browser AI, which runs on the user's
@@ -9,10 +9,10 @@ import { browserProvider, type GenerateParams } from "./providers";
  *   from {@link AI_PROMPTS}).
  * @param text - The user content the AI works on (e.g. a job title, notes).
  * @returns The AI's reply as text.
- * @throws {AIProviderError} If the built-in AI is unavailable or the request fails.
+ * @throws {AIError} If the built-in AI is unavailable or the request fails.
  */
 export const askAI = (params: GenerateParams): Promise<string> =>
-  browserProvider.generate(params);
+  generateWithBrowserAI(params);
 
 /** The two answers validators allow, used to constrain the model's output */
 export const VERDICT_CHOICES = ["VALID", "INVALID"];

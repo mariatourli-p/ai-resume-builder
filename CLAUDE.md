@@ -29,13 +29,13 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
   - Only the free built-in AI is supported. Don't add paid providers or API key fields.
   - No online AI. An online Gemini API version was built and removed on purpose: Google's free tier may not be offered to users in the EEA, Switzerland or the UK (most users are in Greece), and on the free tier Google may use what is sent and human reviewers may read it. Don't add it back.
   - The AI is English only (`expectedInputs`/`expectedOutputs` are English text). Greek support was removed on purpose.
-- **Where `LanguageModel` is touched:** only in `src/services/providers/browserProvider.ts`. Everything else goes through its exports:
+- **Where `LanguageModel` is touched:** only in `src/services/browserAI/browserAI.ts`. Everything else goes through its exports:
   - `getBrowserAIAvailability()` - `availability()`; runs once on app start in `AISettingsProvider`. It returns `"unsupported_browser"` when there is no `LanguageModel`.
   - `prepareBrowserAI()` - an empty `create()` from the Settings download button, to start the one-time download (Chrome needs a user click).
   - `onBrowserAIDownloadProgress()` - the `monitor`'s `downloadprogress` events, for the progress bar and toast.
-  - `browserProvider.generate()` - every text request.
+  - `generateWithBrowserAI()` - every text request.
 - **Call sites:** the only views that generate text are `PersonalInfoFormView.onSmartRewrite`, `WorkExperienceFormView.onGenerateAchievements` (Work Experience and Volunteering) and `SkillsFormView.handleSuggest`. Each starts with `if (!ensureAIAvailable()) return;`, which opens the `aiError` dialog from `AISettingsProvider`'s `unsupportedReason`.
-- **Request flow:** View → `useAI().improve()` (`src/hooks/useAI`) → `askAI` (`src/services/aiService.ts`) → `browserProvider.generate` → `LanguageModel`.
+- **Request flow:** View → `useAI().improve()` (`src/hooks/useAI`) → `askAI` (`src/services/aiService.ts`) → `generateWithBrowserAI` → `LanguageModel`.
 - **`improve(promptKey, input, validatorType, { jobTitle })`** makes up to 3 model calls:
   1. `resolveJobTitle` asks the AI which profession the title or keyword points to (e.g. "React" → "React Developer"). If it finds none, it shows the invalid-title dialog. Results are cached per lowercased title until reload.
   2. The AI writes the text from that profession. Pass `input` as a function `(profession) => string`.
@@ -51,8 +51,8 @@ The AI is Gemini Nano, the model built into Chrome, used through the Prompt API 
   - Volunteering uses `generateVolunteeringAchievements` and skips `resolveJobTitle`: its titles are often a cause or an area ("Advocacy & Awareness"), not a profession. It sends the role as written, the organization and the user's notes. Instead, `findVolunteerArea` (`VOLUNTEER_AREA_PROMPT`) first asks the AI for the area of the work (e.g. "Health and safety") from the role and organization (not the notes), and sends it as `Area of work`. With no area it shows the `invalidVolunteerWork` message. Naming an area is more reliable for the small model than a yes/no check.
   - On failure the field is never touched: the AI never deletes the user's text without writing a new one.
   - Editing or deleting a title keeps its text (the user may be retyping it); only the AI button replaces it.
-- **Sessions:** `browserProvider` creates one base session per system prompt (`availability()` check, then `create({ initialPrompts })`), caches it, and runs each request on a `clone()` that is destroyed afterwards. A failed base session is removed from the cache so the next click retries. Keep prompts constant (no per-request text in the system prompt) so the cache works.
-- **Errors:** `AIProviderError` codes `unsupported` (no `LanguageModel`), `unsupported_device` (Chrome says `unavailable`), `download_failed` (the first `create()` fails while the model isn't on the computer yet) and `request_failed` open the `aiError` dialog. A rejected title or volunteer role, or an `INVALID` check, opens the `moreContext` dialog. The header's `AIStatusBadge` (`useAIStatusBadge`) always shows the AI status, with the reason on hover.
+- **Sessions:** `generateWithBrowserAI` creates one base session per system prompt (`availability()` check, then `create({ initialPrompts })`), caches it, and runs each request on a `clone()` that is destroyed afterwards. A failed base session is removed from the cache so the next click retries. Keep prompts constant (no per-request text in the system prompt) so the cache works.
+- **Errors:** `AIError` codes `unsupported` (no `LanguageModel`), `unsupported_device` (Chrome says `unavailable`), `download_failed` (the first `create()` fails while the model isn't on the computer yet) and `request_failed` open the `aiError` dialog. A rejected title or volunteer role, or an `INVALID` check, opens the `moreContext` dialog. The header's `AIStatusBadge` (`useAIStatusBadge`) always shows the AI status, with the reason on hover.
 - **Debugging:** in development, the console logs each title's resolution (`[AI] Job title: ...`) per-step timings (`[AI] smartRewrite: ...ms`) and each failed request (`[AI] Request failed`, with the error). `chrome://on-device-internals` shows the model's status in Chrome.
 
 ## Performance

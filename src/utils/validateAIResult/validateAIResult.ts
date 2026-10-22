@@ -8,7 +8,7 @@ import { AI_PROMPTS } from "@/services";
  *
  * @param result - The AI-generated text to validate
  * @returns `true` if the result is a valid professional bio/summary, `false` otherwise
- * @throws {AIProviderError} If the validation request itself fails, so the
+ * @throws {AIError} If the validation request itself fails, so the
  *   caller can show the real error instead of asking for more context.
  *
  * @example

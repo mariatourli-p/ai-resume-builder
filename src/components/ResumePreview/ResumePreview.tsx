@@ -297,6 +297,21 @@ const CourseEntryItem = memo(({ entry }: { entry: CourseEntry }) => (
   </Box>
 ));
 
+// Saved with a card for the app's own use, not written by the user
+const HIDDEN_FIELDS = new Set(["id", "achievementsRole"]);
+
+/**
+ * `true` when the user wrote something in the card. A card just added, still
+ * empty, stays out of the resume, so it shows no empty entry or timeline dot.
+ */
+const hasContent = (entry: object) =>
+  Object.entries(entry).some(
+    ([key, value]) =>
+      !HIDDEN_FIELDS.has(key) &&
+      typeof value === "string" &&
+      value.trim() !== "",
+  );
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 // Memoized: the preview only re-renders when its data actually changes
@@ -305,10 +320,10 @@ export const ResumePreview = memo(
     (
       {
         personalInfo,
-        workExperience,
-        volunteering,
-        education,
-        courses,
+        workExperience: allWorkExperience,
+        volunteering: allVolunteering,
+        education: allEducation,
+        courses: allCourses,
         skills,
         accentColor,
         fontFamily,
@@ -325,6 +340,11 @@ export const ResumePreview = memo(
         professionalSummary,
         photo,
       } = personalInfo;
+
+      const workExperience = allWorkExperience.filter(hasContent);
+      const volunteering = allVolunteering.filter(hasContent);
+      const education = allEducation.filter(hasContent);
+      const courses = allCourses.filter(hasContent);
 
       const contacts = [
         { field: "location", Icon: IconLocation, text: location },

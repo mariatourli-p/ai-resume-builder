@@ -1,4 +1,4 @@
-import { AIProviderError, type AIProvider, type GenerateParams } from "./types";
+import { AIError, type GenerateParams } from "./types";
 
 /**
  * Minimal typings for Chrome's built-in Prompt API (`LanguageModel`),
@@ -6,10 +6,7 @@ import { AIProviderError, type AIProvider, type GenerateParams } from "./types";
  * @see https://developer.chrome.com/docs/ai/prompt-api
  */
 export type BrowserAIAvailability =
-  | "unavailable"
-  | "downloadable"
-  | "downloading"
-  | "available";
+  "unavailable" | "downloadable" | "downloading" | "available";
 
 /**
  * What the app knows about the built-in AI: Chrome's own answer, or
@@ -137,7 +134,7 @@ const createBaseSession = async (
   });
   // The browser has the AI, but this computer can't run the model
   if (status === "unavailable") {
-    throw new AIProviderError(
+    throw new AIError(
       "unsupported_device",
       "This computer doesn't meet the built-in AI requirements.",
     );
@@ -158,7 +155,7 @@ const createBaseSession = async (
      * gets its own message.
      */
     if (status !== "available") {
-      throw new AIProviderError(
+      throw new AIError(
         "download_failed",
         error instanceof Error
           ? error.message
@@ -216,40 +213,47 @@ const runRequest = async (
   }
 };
 
-/** On-device model via Chrome's Prompt API. Free and needs no API key. */
-export const browserProvider: AIProvider = {
-  generate: async (params) => {
-    const languageModel = getLanguageModel();
+/**
+ * Sends one request to the on-device model through Chrome's Prompt API.
+ * Free and needs no API key. Retries once on a fresh session.
+ *
+ * @throws {AIError} If the built-in AI is unavailable or the request fails
+ */
+export const generateWithBrowserAI = async (
+  params: GenerateParams,
+): Promise<string> => {
+  const languageModel = getLanguageModel();
 
-    if (!languageModel) {
-      throw new AIProviderError(
-        "unsupported",
-        "Built-in AI is not available in this browser.",
-      );
+  if (!languageModel) {
+    throw new AIError(
+      "unsupported",
+      "Built-in AI is not available in this browser.",
+    );
+  }
+
+  try {
+    return await runRequest(languageModel, params);
+  } catch (error) {
+    if (error instanceof AIError) throw error;
+    // One retry on a fresh session fixes a session Chrome has dropped
+    discardBaseSession(params.prompt);
+  }
+
+  try {
+    return await runRequest(languageModel, params);
+  } catch (error) {
+    if (error instanceof AIError) throw error;
+    // Removed so the user's next click starts on a fresh session too
+    discardBaseSession(params.prompt);
+
+    if (import.meta.env.DEV) {
+      console.error("[AI] Request failed:", error);
     }
-
-    for (let attempt = 1; ; attempt++) {
-      try {
-        return await runRequest(languageModel, params);
-      } catch (error) {
-        if (error instanceof AIProviderError) throw error;
-
-        discardBaseSession(params.prompt);
-        // One retry on a fresh session fixes a session Chrome has dropped
-        if (attempt === 1) continue;
-
-        if (import.meta.env.DEV) {
-          console.error("[AI] Request failed:", error);
-        }
-        const isUnsupported =
-          error instanceof DOMException && error.name === "NotSupportedError";
-        throw new AIProviderError(
-          isUnsupported ? "unsupported" : "request_failed",
-          error instanceof Error
-            ? error.message
-            : "Built-in AI request failed.",
-        );
-      }
-    }
-  },
+    const isUnsupported =
+      error instanceof DOMException && error.name === "NotSupportedError";
+    throw new AIError(
+      isUnsupported ? "unsupported" : "request_failed",
+      error instanceof Error ? error.message : "Built-in AI request failed.",
+    );
+  }
 };

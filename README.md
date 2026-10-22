@@ -127,7 +127,7 @@ Chrome has an AI model built in, **Gemini Nano**, and gives web pages access to 
   - At least 22 GB of free disk space.
   - A graphics card with more than 4 GB of memory, or 16 GB of RAM and 4 CPU cores.
 
-The app uses these parts of the API, all in `src/services/providers/browserProvider.ts`:
+The app uses these parts of the API, all in `src/services/browserAI/browserAI.ts`:
 
 | API                                      | What it does                                                                                  | When the app uses it                                         |
 | ---------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -174,13 +174,13 @@ Every call goes through the same path:
 View (src/routes/ResumeBuilder/ResumeForms/*View)
   → useAI().improve (src/hooks/useAI)            find profession → write text → check result
   → askAI (src/services/aiService.ts)
-  → browserProvider.generate (src/services/providers/browserProvider.ts)
+  → generateWithBrowserAI (src/services/browserAI/browserAI.ts)
   → Chrome's LanguageModel (Gemini Nano, on this computer)
 ```
 
 ### Sessions: why later clicks are faster
 
-Creating a session loads the model and reads the instructions, which takes a few seconds. So `browserProvider` creates **one base session per prompt** the first time that prompt is used, keeps it in memory, and runs every request on a `clone()` of it, which it destroys afterwards. The base session never sees the requests, so each one starts clean.
+Creating a session loads the model and reads the instructions, which takes a few seconds. So `generateWithBrowserAI` creates **one base session per prompt** the first time that prompt is used, keeps it in memory, and runs every request on a `clone()` of it, which it destroys afterwards. The base session never sees the requests, so each one starts clean.
 
 There are eight prompts, so at most eight base sessions: find profession, find volunteer area, summary, achievements, volunteering achievements, skills and the two validators. The first click after loading the page is the slowest. Reloading the page starts over.
 
